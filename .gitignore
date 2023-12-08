@@ -161,3 +161,4 @@ cython_debug/
 #.idea/
 
 postgres-data/
+.env_prod

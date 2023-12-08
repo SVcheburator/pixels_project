@@ -18,7 +18,7 @@ services:
     ports:
       - "9000:9000"
     env_file:
-      - ./.env
+      - ./.env_prod
     depends_on:
       - postgres
     healthcheck:
