@@ -1,0 +1,31 @@
+# docker-compose  --file docker-compose-project.yml --env-file .env  up -d 
+version: "3.8"
+name: pixels
+services:
+  postgres:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+  code :
+    build: ./
+    ports:
+      - "9000:9000"
+    env_file:
+      - ./.env
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD", "curl","-f","-X","GET","http://localhost:9000/api/healthchecker","-H","accept: application/json", "||", "exit", "1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      start_interval: 15s
+
