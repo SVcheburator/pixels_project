@@ -5,10 +5,11 @@
 
 ### DOCKER COMPOSE PROJECT PIXELS
 
-### DOCKER BUILD
+#### DOCKER BUILD
+
+`docker-compose  --file docker-compose-project.yml --env-file .env_prod build`
 
 ```
-docker-compose  --file docker-compose-project.yml --env-file .env_prod build
 2023/12/08 22:49:34 http2: server: error reading preface from client //./pipe/docker_engine: file has already been closed
 [+] Building 93.9s (14/14) FINISHED                                                                                                      docker:default 
  => [code internal] load build definition from Dockerfile                                                                                          0.0s
@@ -35,9 +36,9 @@ docker-compose  --file docker-compose-project.yml --env-file .env_prod build
 ```
 #### DOCKER RUN
 
-```
+`docker-compose  --file docker-compose-project.yml --env-file .env_prod up`
 
-docker-compose  --file docker-compose-project.yml --env-file .env_prod up    
+```
 [+] Building 0.0s (0/0)                                                                                                                  docker:default
 [+] Running 3/3
  ✔ Network pixels_default   Created                                                                                                                0.1s 
@@ -59,3 +60,16 @@ pixels-code-1  | INFO  [alembic.runtime.migration] Will assume transactional DDL
 pixels-code-1  | INFO  [alembic.runtime.migration] Running upgrade  -> d1f389de1cc3, 'Init'
 
 ```
+
+### DEPLOY TO koyeb.com
+
+#### Config env
+![Config](doc/deploy-koyeb-03.png)
+
+
+#### Build
+![Build](doc/deploy-koyeb-02.png)
+
+
+#### Run
+![Run](doc/deploy-koyeb-01.png)
