@@ -289,6 +289,9 @@ pydantic-core==2.14.5 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:f5e412d717366e0677ef767eac93566582518fe8be923361a5c204c1a62eaafe \
     --hash=sha256:fb2ed8b3fe4bf4506d6dab3b93b83bbc22237e230cba03866d561c3577517d18 \
     --hash=sha256:fe0a5a1025eb797752136ac8b4fa21aa891e3d74fd340f864ff982d649691867
+pydantic-settings==2.1.0 ; python_version >= "3.11" and python_version < "4.0" \
+    --hash=sha256:26b1492e0a24755626ac5e6d715e9077ab7ad4fb5f19a8b7ed7011d52f36141c \
+    --hash=sha256:7621c0cb5d90d1140d2f0ef557bdf03573aac7035948109adf2574770b77605a
 pydantic==2.5.2 ; python_version >= "3.11" and python_version < "4.0" \
     --hash=sha256:80c50fb8e3dcecfddae1adbcc00ec5822918490c99ab31f6cf6140ca1c1429f0 \
     --hash=sha256:ff177ba64c6faf73d7afa2e8cad38fd456c0dbe01c9954e71038001cd15a6edd
