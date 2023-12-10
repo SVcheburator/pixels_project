@@ -66,3 +66,10 @@ class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     name = Column(String(25), nullable=False)
+
+
+class Bannedlist(Base):
+    __tablename__ = "bannedlist"
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), nullable=False, unique=True)
+    created_at = Column('crated_at', DateTime, default=func.now())
