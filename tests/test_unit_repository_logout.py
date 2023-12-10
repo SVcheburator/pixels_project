@@ -26,15 +26,16 @@ from src.repository.logout import add_token, check_token, purge_old
 
 class TestContactsRepository(unittest.IsolatedAsyncioTestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls):        
+        cls.test_token = "123.456.987"
         DATABASE_URL = "sqlite:///tests/db.sqlite"
-        cls.engine = create_engine(DATABASE_URL, echo=True)
+        cls.engine = create_engine(DATABASE_URL, echo=False)
         SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=cls.engine)
         cls.session = SessionLocal()
         Base.metadata.drop_all(bind=cls.engine)
         Base.metadata.create_all(bind=cls.engine)
-        cls.test_token = "123.456.987"
 
+        # If want use REAL database can use it:
         # cls.session = next(get_db())
 
     @classmethod
