@@ -106,3 +106,40 @@ tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_e
 
 =========================================================== 7 passed in 1.36s ============================================================ 
 ```
+
+
+
+## DOCS SPHINX
+
+```
+sphinx-quickstart docs
+cd docs
+.\make.bat html
+```
+
+```
+Running Sphinx v7.2.6
+loading pickled environment... done
+building [mo]: targets for 0 po files that are out of date
+writing output... 
+building [html]: targets for 1 source files that are out of date
+updating environment: 0 added, 1 changed, 0 removed
+reading sources... [100%] index
+looking for now-outdated files... none found
+pickling environment... done
+checking consistency... done
+preparing documents... done
+copying assets... copying static files... done
+copying extra files... done
+done
+writing output... [100%] index
+generating indices... genindex py-modindex done
+writing additional pages... search done
+dumping search index in English (code: en)... done
+dumping object inventory... done
+build succeeded.
+
+The HTML pages are in _build\html.
+
+```
+![](doc/docs-01.png)
