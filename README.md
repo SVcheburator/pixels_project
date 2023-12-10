@@ -73,3 +73,36 @@ pixels-code-1  | INFO  [alembic.runtime.migration] Running upgrade  -> d1f389de1
 
 #### Run
 ![Run](doc/deploy-koyeb-01.png)
+
+
+
+## TEST
+
+### UNIT TEST REPOSITORY
+#### LOGOUT
+`python.exe "tests\test_unit_repository_logout.py"`
+```
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.365s
+
+OK
+```
+
+`pytest tests -v`
+```
+========================================================== test session starts ===========================================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
+plugins: anyio-3.7.1
+collected 7 items
+
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                                                 [ 14%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED                                     [ 28%] 
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED                                      [ 42%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED                                            [ 57%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED                                        [ 71%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                                               [ 85%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED                                         [100%]
+
+=========================================================== 7 passed in 1.36s ============================================================ 
+```
