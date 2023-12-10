@@ -163,3 +163,4 @@ cython_debug/
 postgres-data/
 postgres-data-prod/
 .env_prod
+tests/db.sqlite
