@@ -14,7 +14,11 @@ psycopg2 = "^2.9.9"
 sqlalchemy = "^2.0.23"
 pydantic = "^2.5.2"
 pydantic-settings = "^2.1.0"
+pytest = "^7.4.3"
 
+
+[tool.poetry.group.dev.dependencies]
+sphinx = "^7.2.6"
 
 [build-system]
 requires = ["poetry-core"]
