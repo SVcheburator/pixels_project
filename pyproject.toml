@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "pixels-project"
+version = "0.1.0"
+description = ""
+authors = ["Cheburator <sashadanilenko06@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.1"
+uvicorn = {extras = ["standard"], version = "^0.24.0.post1"}
+alembic = "^1.13.0"
+psycopg2 = "^2.9.9"
+sqlalchemy = "^2.0.23"
+pydantic = "^2.5.2"
+pydantic-settings = "^2.1.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
