@@ -70,7 +70,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+docs/_build/*
+!docs/_build/html/
 
 # PyBuilder
 .pybuilder/
@@ -163,3 +164,4 @@ cython_debug/
 postgres-data/
 postgres-data-prod/
 .env_prod
+tests/db.sqlite

@@ -1,9 +1,9 @@
 import enum
 from sqlalchemy import Column, Integer, String, Boolean, Table, func, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -66,3 +66,10 @@ class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     name = Column(String(25), nullable=False)
+
+
+class Bannedlist(Base):
+    __tablename__ = "bannedlist"
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), nullable=False, unique=True)
+    created_at = Column('crated_at', DateTime, default=func.now())

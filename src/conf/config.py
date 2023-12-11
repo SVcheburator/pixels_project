@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -9,10 +9,14 @@ class Settings(BaseSettings):
     # postgres_port: str
     sqlalchemy_database_url: str | None = None
 
-    class Config:
-        extra = "ignore"
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(
+        extra="ignore", env_file=".env", env_file_encoding="utf-8"
+    )
+
+    # class Config:
+    #     extra = "ignore"
+    #     env_file = ".env"
+    #     env_file_encoding = "utf-8"
 
 
 settings = Settings()
