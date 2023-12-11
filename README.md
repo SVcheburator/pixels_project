@@ -73,3 +73,73 @@ pixels-code-1  | INFO  [alembic.runtime.migration] Running upgrade  -> d1f389de1
 
 #### Run
 ![Run](doc/deploy-koyeb-01.png)
+
+
+
+## TEST
+
+### UNIT TEST REPOSITORY
+#### LOGOUT
+`python.exe "tests\test_unit_repository_logout.py"`
+```
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.365s
+
+OK
+```
+
+`pytest tests -v`
+```
+========================================================== test session starts ===========================================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
+plugins: anyio-3.7.1
+collected 7 items
+
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                                                 [ 14%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED                                     [ 28%] 
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED                                      [ 42%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED                                            [ 57%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED                                        [ 71%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                                               [ 85%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED                                         [100%]
+
+=========================================================== 7 passed in 1.36s ============================================================ 
+```
+
+
+
+## DOCS SPHINX
+
+```
+sphinx-quickstart docs
+cd docs
+.\make.bat html
+```
+
+```
+Running Sphinx v7.2.6
+loading pickled environment... done
+building [mo]: targets for 0 po files that are out of date
+writing output... 
+building [html]: targets for 1 source files that are out of date
+updating environment: 0 added, 1 changed, 0 removed
+reading sources... [100%] index
+looking for now-outdated files... none found
+pickling environment... done
+checking consistency... done
+preparing documents... done
+copying assets... copying static files... done
+copying extra files... done
+done
+writing output... [100%] index
+generating indices... genindex py-modindex done
+writing additional pages... search done
+dumping search index in English (code: en)... done
+dumping object inventory... done
+build succeeded.
+
+The HTML pages are in _build\html.
+
+```
+![](doc/docs-01.png)
