@@ -2,6 +2,10 @@
 version: '3'
 name: pixels-db
 services:
+  redis:
+    image: redis:alpine
+    ports:
+      - "${REDIS_PORT}:${REDIS_PORT}"
   postgres:
     image: postgres:12
     environment:
