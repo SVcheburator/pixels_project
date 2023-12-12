@@ -81,6 +81,9 @@ async def refresh_token(credentials: HTTPAuthorizationCredentials = Security(sec
     :rtype: dict
     """
     token = credentials.credentials
+    token_banned_is = await repository_logout.check_token(token, db)
+    if token_banned_is:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid auth token")
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
     if user.refresh_token != token:
@@ -154,5 +157,8 @@ async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
     :rtype: dict
     """
     token = credentials.credentials
+    token_banned_is = await repository_logout.check_token(token, db)
+    if token_banned_is:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid auth token")
     await repository_logout.add_token(token, db)
     return {}
