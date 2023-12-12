@@ -1,5 +1,8 @@
 # pixels_project
 
+**ALTER TABLE tags**
+**ADD CONSTRAINT unique_name UNIQUE (name);**
+
 
 ## DEPLOY
 

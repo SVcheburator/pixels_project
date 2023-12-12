@@ -4,24 +4,34 @@ from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
 import shutil
 import uuid
 from typing import Any
+from typing import List
 
 from sqlalchemy.orm import Session
 from starlette import status
 from starlette.status import HTTP_404_NOT_FOUND
 
 from src.database.models import User, Image, Comment
-from src.schemas import CommentCreate, CommentList, PostCreate, PostList, PostSingle
+from src.schemas import (
+    CommentCreate, 
+    CommentList, 
+    PostCreate, 
+    PostList, 
+    PostSingle, 
+    TagModel)
 from src.database.db import get_db
 from src.services.auth import auth_service
 # from src.services.core import create_p, get_p, update_p, remove_p
 from src.services.posts import PostServices, CommentServices
-
+from src.services.tags import TagServices, Tag
 
 
 posts_router = APIRouter(prefix='/posts')
+tags_router = APIRouter(prefix='/tags')
 
+tag_services = TagServices(Tag)
 post_services = PostServices(Image)
 comment_services = CommentServices(Comment)
+
 
 
 @posts_router.get('/user/{user_id}', response_model=list[PostList])
@@ -45,6 +55,7 @@ async def create_post(
     img: UploadFile = File(...),
     db: Session = Depends(get_db),
     text: str = Form(...),
+    tags: List[TagModel] = Form(...),
     user: User = Depends(auth_service.get_current_user),
 ):
     """
@@ -63,9 +74,15 @@ async def create_post(
     post_in = PostCreate(text=text, image=url, user=user.id)
     
     # Використання оновленого сервісу для створення публікації
-    return await post_services.create_p(db=db, obj_in=post_in)
+    created_post = await post_services.create_p(db=db, obj_in=post_in)
+    
+    # Додаємо теги до створеної публікації
+    # якщо прибрати з конструкції [:5], обмеження зникне
+    created_tags = await tag_services.create_or_get_tags(db=db, tag_data=tags[:5]) 
+    created_post.tags.extend(created_tags)
+    db.commit()
 
-
+    return created_post
 
 
 @posts_router.get('/{id}', response_model=PostSingle)

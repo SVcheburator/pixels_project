@@ -65,4 +65,4 @@ class Comment(Base):
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
-    name = Column(String(25), nullable=False)
+    name = Column(String(25), nullable=False, unique=True) # Додаємо опцію unique

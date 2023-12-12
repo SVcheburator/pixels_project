@@ -89,3 +89,19 @@ class CommentUpdate(CommentBaseCreateUpdate):
     Схема зміни коментарів
     """
 
+
+class TagModel(BaseModel):
+    """
+    Схема для тегів
+    """
+    name: str = Field(max_length=25)
+
+
+class TagResponse(TagModel):
+    """
+    Схема перетворення при роботі з тегами
+    """
+    id: int
+
+    class Config:
+        orm_mode = True

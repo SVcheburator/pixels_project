@@ -9,6 +9,10 @@ class Settings(BaseSettings):
     postgres_port: str
     sqlalchemy_database_url: str | None = None
 
+    cloudinary_name: str = 'name'
+    cloudinary_api_key: int = 247459982199157
+    cloudinary_api_secret: str = 'secret'
+
     class Config:
         extra = "ignore"
         env_file = ".env"

@@ -5,6 +5,7 @@ import logging
 from fastapi_limiter.depends import RateLimiter #speed limit
 
 from src.routes.posts import posts_router
+from src.routes.cloudinary import cloud_router
 
 app = FastAPI()
 
@@ -19,6 +20,8 @@ app.add_middleware(
 
 app.include_router(posts_router, prefix='/posts',
                    dependencies=[Depends(RateLimiter(times=2, seconds=5))])
+app.include_router(cloud_router, prefix='/cloudinary'
+                   )
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
