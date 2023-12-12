@@ -1,11 +1,14 @@
 from os import environ
 from pathlib import Path
+# from dotenv import load_dotenv
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-BASE_PATH_PROJECT = Path(__file__).resolve().parent.parent.parent
+BASE_PATH_PROJECT = Path(__file__).resolve().parent.parent
 BASE_PATH = BASE_PATH_PROJECT.parent
 ENV_PATH = BASE_PATH.joinpath(".env")
+assert ENV_PATH.is_file(), f"ENV_PATH must be {ENV_PATH}"
+# load_dotenv(ENV_PATH)
 
 class Settings(BaseSettings):
     sqlalchemy_database_url: str | None = None
@@ -25,8 +28,10 @@ class Settings(BaseSettings):
     cloudinary_api_secret: str = ""
 
     model_config = SettingsConfigDict(
-        extra="ignore", env_file=ENV_PATH, env_file_encoding="utf-8"
+        extra="ignore", env_file=str(ENV_PATH), env_file_encoding="utf-8"
     )
 
 
 settings = Settings()
+# print(f"settings : {ENV_PATH=}")
+# print(f"settings {settings.sqlalchemy_database_url=}")

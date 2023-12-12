@@ -10,12 +10,12 @@ Welcome to pixels_project's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. REST API main
-.. ===================
-.. .. automodule:: main
-..   :members:
-..   :undoc-members:
-..   :show-inheritance:
+REST API main
+===================
+.. automodule:: main
+  :members:
+  :undoc-members:
+  :show-inheritance:
 
 REST API repository Users
 ============================
@@ -58,8 +58,6 @@ REST API service Email
   :members:
   :undoc-members:
   :show-inheritance:
-
-
 
 Indices and tables
 ==================

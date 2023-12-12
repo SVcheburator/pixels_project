@@ -4,8 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 
-from src.routes import users, auth
 from src.conf.config import settings
+from src.routes import users, auth
 
 app = FastAPI()
 
