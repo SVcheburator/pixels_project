@@ -1,5 +1,11 @@
+from os import environ
+from pathlib import Path
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+BASE_PATH_PROJECT = Path(__file__).resolve().parent.parent.parent
+BASE_PATH = BASE_PATH_PROJECT.parent
+ENV_PATH = BASE_PATH.joinpath(".env")
 
 class Settings(BaseSettings):
     sqlalchemy_database_url: str | None = None
@@ -19,7 +25,7 @@ class Settings(BaseSettings):
     cloudinary_api_secret: str = ""
 
     model_config = SettingsConfigDict(
-        extra="ignore", env_file=".env", env_file_encoding="utf-8"
+        extra="ignore", env_file=ENV_PATH, env_file_encoding="utf-8"
     )
 
 
