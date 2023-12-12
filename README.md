@@ -74,26 +74,71 @@ http://localhost:9000/docs
 `docker-compose  --file docker-compose-project.yml --env-file .env_prod up`
 
 ```
-[+] Building 0.0s (0/0)                                                                                                                  docker:default
+[+] Building 0.0s (0/0)                                                                                    docker:default
 [+] Running 3/3
- ✔ Network pixels_default   Created                                                                                                                0.1s 
- ✔ Container pixels-pg-1    Created                                                                                                                1.4s 
- ✔ Container pixels-code-1  Created                                                                                                                0.3s 
-Attaching to pixels-code-1, pixels-pg-1
-pixels-code-1  | Sleep 5...
-pixels-pg-1    | 
-pixels-pg-1    | PostgreSQL Database directory appears to contain a database; Skipping initialization
-pixels-pg-1    |
-pixels-pg-1    | 2023-12-08 20:51:20.140 UTC [1] LOG:  starting PostgreSQL 12.17 (Debian 12.17-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
-pixels-pg-1    | 2023-12-08 20:51:20.140 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
-pixels-pg-1    | 2023-12-08 20:51:20.140 UTC [1] LOG:  listening on IPv6 address "::", port 5432
-pixels-pg-1    | 2023-12-08 20:51:20.182 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
-pixels-pg-1    | 2023-12-08 20:51:20.374 UTC [28] LOG:  database system was shut down at 2023-12-08 20:49:14 UTC
-pixels-pg-1    | 2023-12-08 20:51:20.478 UTC [1] LOG:  database system is ready to accept connections
-pixels-code-1  | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
-pixels-code-1  | INFO  [alembic.runtime.migration] Will assume transactional DDL.
-pixels-code-1  | INFO  [alembic.runtime.migration] Running upgrade  -> d1f389de1cc3, 'Init'
-
+ ✔ Container pixels-pg-1     Created                                                                                 0.0s 
+ ✔ Container pixels-redis-1  Created                                                                                 0.0s 
+ ✔ Container pixels-code-1   Recreated                                                                               0.8s 
+Attaching to pixels-code-1, pixels-pg-1, pixels-redis-1
+pixels-redis-1  | 1:C 12 Dec 2023 18:34:26.534 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+pixels-redis-1  | 1:C 12 Dec 2023 18:34:26.535 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+pixels-redis-1  | 1:C 12 Dec 2023 18:34:26.535 * Redis version=7.2.3, bits=64, commit=00000000, modified=0, pid=1, just started
+pixels-redis-1  | 1:C 12 Dec 2023 18:34:26.535 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.536 * monotonic clock: POSIX clock_gettime
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.536 * Running mode=standalone, port=6379.
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.560 * Server initialized
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * Loading RDB produced by version 7.2.3
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * RDB age 8 seconds
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * RDB memory usage when created 0.83 Mb
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * Done loading RDB, keys loaded: 0, keys expired: 0.
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * DB loaded from disk: 0.000 seconds
+pixels-redis-1  | 1:M 12 Dec 2023 18:34:26.561 * Ready to accept connections tcp
+pixels-code-1   | Sleep 5...
+pixels-pg-1     | 
+pixels-pg-1     | PostgreSQL Database directory appears to contain a database; Skipping initialization
+pixels-pg-1     |
+pixels-pg-1     | 2023-12-12 18:34:31.299 UTC [1] LOG:  starting PostgreSQL 12.17 (Debian 12.17-1.pgdg120+1) on x86_64-pc-linux-gnu, compiled by gcc (Debian 12.2.0-14) 12.2.0, 64-bit
+pixels-pg-1     | 2023-12-12 18:34:31.300 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+pixels-pg-1     | 2023-12-12 18:34:31.301 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+pixels-pg-1     | 2023-12-12 18:34:31.486 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+pixels-pg-1     | 2023-12-12 18:34:31.714 UTC [27] LOG:  database system was shut down at 2023-12-12 18:34:18 UTC
+pixels-pg-1     | 2023-12-12 18:34:31.867 UTC [1] LOG:  database system is ready to accept connections
+pixels-code-1   | INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+pixels-code-1   | INFO  [alembic.runtime.migration] Will assume transactional DDL.
+pixels-code-1   | INFO  [alembic.runtime.migration] Running upgrade  -> d1f389de1cc3, 'Init'
+pixels-code-1   | INFO  [alembic.runtime.migration] Running upgrade d1f389de1cc3 -> 16cee3a17066, BanList
+pixels-code-1   | INFO:     Started server process [9]
+pixels-code-1   | INFO:     Waiting for application startup.
+pixels-code-1   | INFO:     Application startup complete.
+pixels-code-1   | INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+pixels-code-1   | INFO:     127.0.0.1:35428 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:35586 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:34896 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET / HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /docs/ HTTP/1.1" 307 Temporary Redirect
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /docs HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /openapi.json HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+pixels-code-1   | INFO:     172.30.0.1:58140 - "POST /api/auth/login HTTP/1.1" 401 Unauthorized
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /client/index.html?error=login HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET / HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:58194 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /docs/ HTTP/1.1" 307 Temporary Redirect
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /docs HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     172.30.0.1:58140 - "GET /openapi.json HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:53348 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:34928 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:60840 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:55090 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:35110 - "GET /api/healthchecker HTTP/1.1" 200 OK
+pixels-code-1   | INFO:     127.0.0.1:41156 - "GET /api/healthchecker HTTP/1.1" 200 OK
+Gracefully stopping... (press Ctrl+C again to force)
+Aborting on container exit...
+[+] Stopping 3/3
+ ✔ Container pixels-code-1   Stopped                                                                                10.8s     
+ ✔ Container pixels-redis-1  Stopped                                                                                 1.1s     
+ ✔ Container pixels-pg-1     Stopped                                                                                 2.4s     
+canceled
 ```
 
 ### DEPLOY TO koyeb.com
