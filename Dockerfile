@@ -15,7 +15,11 @@ COPY . .
 # COPY .env .env
 COPY run.sh run.sh 
 COPY src/ src/
+COPY templates/ templates/
+COPY static/ static/
+COPY docs/ docs/
 COPY main.py main.py
+
 COPY requirements.txt requirements.txt
 
 # Встановимо залежності всередині контейнера

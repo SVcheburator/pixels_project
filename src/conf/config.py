@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     cloudinary_api_key: str = ""
     cloudinary_api_secret: str = ""
 
+    app_host: str = "0.0.0.0"
+    app_port: int = 9000
+    SPHINX_DIRECTORY: str = str(BASE_PATH.joinpath("docs", "_build", "html"))
+    STATIC_DIRECTORY: str = str(BASE_PATH.joinpath("static"))
+
     model_config = SettingsConfigDict(
         extra="ignore", env_file=str(ENV_PATH), env_file_encoding="utf-8"
     )
