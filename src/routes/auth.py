@@ -9,6 +9,7 @@ from src.database.db import get_db
 from src.database.models import Role
 from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
 from src.repository import users as repository_users
+from src.repository import logout as repository_logout
 from src.services.auth import auth_service
 from src.services.emails import send_email
 
@@ -138,3 +139,20 @@ async def request_email(body: RequestEmail, background_tasks: BackgroundTasks, r
     if user:
         background_tasks.add_task(send_email, user.email, user.username, request.base_url)
     return {"message": "Check your email for confirmation."}
+
+
+@router.get('/logout', status_code=status.HTTP_204_NO_CONTENT)
+async def logout(credentials: HTTPAuthorizationCredentials = Security(security), db: Session = Depends(get_db)):
+    """
+    logout and add token token to banlist.
+
+    :param credentials: Credentials.
+    :type credentials: HTTPAuthorizationCredentials
+    :param db: The database session.
+    :type db: Session
+    :return: empty content. 204 status code.
+    :rtype: dict
+    """
+    token = credentials.credentials
+    await repository_logout.add_token(token, db)
+    return {}
