@@ -12,8 +12,11 @@
 
 
 
-
 # Виконнаня
+
+## STATIC INDEX HTML PAGE
+
+![](doc/web-index-01.png)
 
 
 ## Auth Email Confirm
