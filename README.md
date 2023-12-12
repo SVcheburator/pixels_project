@@ -15,6 +15,15 @@
 
 # Виконнаня
 
+
+## Auth Email Confirm
+
+![](/doc/auth-02.png)
+
+![](/doc/auth-01.png)
+
+![](/doc/auth-03.png)
+
 ## FastAPI docs
 
 http://localhost:9000/docs
