@@ -180,7 +180,7 @@ The HTML pages are in _build\html.
 ![](doc/docs-01.png)
 
 
-## PyTEST
+## PyTEST Cover
 
 poetry add pytest-cov -G test
 
