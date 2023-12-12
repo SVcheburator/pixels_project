@@ -166,3 +166,56 @@ The HTML pages are in _build\html.
 
 ```
 ![](doc/docs-01.png)
+
+
+## PyTEST
+
+poetry add pytest-cov -G test
+
+### Run terminal report:
+
+```
+pytest --cov=. --cov-report term  tests/
+
+===================================================== test session starts ======================================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
+plugins: anyio-3.7.1, cov-4.1.0
+collected 7 items
+
+tests\test_unit_repository_logout.py .......                                                                              [100%]
+
+---------- coverage: platform win32, python 3.11.6-final-0 -----------
+Name                                   Stmts   Miss  Cover
+----------------------------------------------------------
+main.py                                   17     17     0%
+src\conf\config.py                        16      0   100%
+src\database\db.py                        12      4    67%
+src\database\models.py                    52      0   100%
+src\repository\logout.py                  25      3    88%
+tests\test_unit_repository_logout.py      57      1    98%
+----------------------------------------------------------
+TOTAL                                    179     25    86%
+
+
+====================================================== 7 passed in 1.95s ======================================================= 
+
+```
+
+### Run HTML report to folder htmlcov
+```
+pytest --cov=. --cov-report html  tests/ 
+===================================================== test session starts ======================================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
+rootdir: C:\Users\lexxa\Developments\GoIT\Python\Python 15\Web\Project_group_5\pixels_project
+plugins: anyio-3.7.1, cov-4.1.0
+collected 7 items
+
+tests\test_unit_repository_logout.py .......                                                                              [100%]
+
+---------- coverage: platform win32, python 3.11.6-final-0 -----------
+Coverage HTML written to dir htmlcov
+
+====================================================== 7 passed in 2.13s =======================================================  
+
+```
+![pyetst](doc/pytest-01.png)
