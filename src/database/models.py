@@ -60,6 +60,8 @@ class Comment(Base):
     owner_id = Column('owner_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     created_at = Column('crated_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
+    owner = relationship("User", backref="comments")
+    image = relationship("Image", backref="comments")
 
 
 class Tag(Base):
