@@ -23,11 +23,19 @@ redis = "4.2"
 fastapi-limiter = "^0.1.5"
 cloudinary = "^1.37.0"
 pytest = "^7.4.3"
+python-dotenv = "^1.0.0"
 
 
 [tool.poetry.group.dev.dependencies]
 sphinx = "^7.2.6"
 
+
+[tool.poetry.group.test.dependencies]
+pytest-cov = "^4.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
