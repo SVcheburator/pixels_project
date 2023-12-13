@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.database.models import User
-from src.services import auth as auth_service
+from src.services.auth import auth_service
 from src.schemas import CommentBase, CommentResponse
 from src.repository import comments as repository_comments
 from src.conf import messages
