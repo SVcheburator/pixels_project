@@ -1,9 +1,9 @@
 import enum
 from sqlalchemy import Column, Integer, String, Boolean, Table, func, Enum
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import DateTime
-from sqlalchemy.ext.declarative import declarative_base
+# from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
 
@@ -36,6 +36,9 @@ class User(Base):
     active = Column(Boolean, default=False)
     created_at = Column('crated_at', DateTime, default=func.now())
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class Image(Base):
     __tablename__ = "images"
@@ -60,9 +63,18 @@ class Comment(Base):
     owner_id = Column('owner_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     created_at = Column('crated_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
+    owner = relationship("User", backref="comments")
+    image = relationship("Image", backref="comments")
 
 
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
     name = Column(String(25), nullable=False, unique=True) # Додаємо опцію unique
+
+
+class Bannedlist(Base):
+    __tablename__ = "bannedlist"
+    id = Column(Integer, primary_key=True)
+    token = Column(String(255), nullable=False, unique=True)
+    created_at = Column('crated_at', DateTime, default=func.now())    

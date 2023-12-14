@@ -1,12 +1,15 @@
-# pixels_project\src\routes\posts.py
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile
-
+# src\routes\posts.py
+from fastapi import APIRouter, HTTPException, UploadFile, Depends, File, Form
+import cloudinary.uploader
+import cloudinary.api
+import os
 import shutil
 import uuid
-from typing import Any
-from typing import List
+from typing import Any, List, Optional
+import aiofiles
 
 from sqlalchemy.orm import Session
+from starlette.requests import Request
 from starlette import status
 from starlette.status import HTTP_404_NOT_FOUND
 
@@ -20,10 +23,19 @@ from src.schemas import (
     TagModel)
 from src.database.db import get_db
 from src.services.auth import auth_service
-# from src.services.core import create_p, get_p, update_p, remove_p
 from src.services.posts import PostServices, CommentServices
 from src.services.tags import TagServices, Tag
+from src.conf.config import settings
 
+
+
+class Cloudinary:
+    cloudinary.config(
+        cloud_name=settings.cloudinary_name,
+        api_key=settings.cloudinary_api_key,
+        api_secret=settings.cloudinary_api_secret,
+        secure=True,
+    )
 
 posts_router = APIRouter(prefix='/posts')
 tags_router = APIRouter(prefix='/tags')
@@ -46,43 +58,55 @@ async def post_list_by_user(user_id: int,
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Записи не знайдені')
     return posts
 
+UPLOADS_DIR = "uploads"
+MAX_FILE_SIZE = 100000000  # максимальний розмір файлу в байтах
 
+
+def save_file_sync(file, destination):
+    file_size = 0
+    with open(destination, "wb") as file_object:
+        while True:
+            chunk = file.read(1024)
+            if not chunk:
+                break
+            file_size += len(chunk)
+            if file_size > MAX_FILE_SIZE:
+                raise HTTPException(status_code=413, detail="File size is over the limit")
+            file_object.write(chunk)
 
 
 @posts_router.post('/create', status_code=status.HTTP_201_CREATED)
 async def create_post(
-    *,
     img: UploadFile = File(...),
     db: Session = Depends(get_db),
     text: str = Form(...),
-    tags: List[TagModel] = Form(...),
+    tags: Optional[List[TagModel]] = Form(None),
     user: User = Depends(auth_service.get_current_user),
 ):
     """
     Створення світлини
     """
-    # Змінено шлях до зображення на URL-рядок
-    url = f'media/{uuid.uuid4()}{img.filename}'
-    
-    try:
-        with open(url, "wb") as buffer:
-            shutil.copyfileobj(img.file, buffer)
-    finally:
-        img.file.close()
-    
-    # Використання PostCreate для передачі даних в сервіс
-    post_in = PostCreate(text=text, image=url, user=user.id)
-    
-    # Використання оновленого сервісу для створення публікації
-    created_post = await post_services.create_p(db=db, obj_in=post_in)
-    
-    # Додаємо теги до створеної публікації
-    # якщо прибрати з конструкції [:5], обмеження зникне
-    created_tags = await tag_services.create_or_get_tags(db=db, tag_data=tags[:5]) 
-    created_post.tags.extend(created_tags)
-    db.commit()
 
-    return created_post
+    try:
+        # Зберігання файлу в теку uploads
+        file_path = os.path.join(UPLOADS_DIR, f'{uuid.uuid4()}{img.filename}')
+
+        save_file_sync(img.file, file_path)
+
+        # Зберігання інформації про фото в базу даних
+        post_in = PostCreate(text=text, user=user.id, img=file_path)
+        created_post = await post_services.create_post(db=db, post_data=post_in, file_path=file_path)
+
+        # Додаємо теги до створеної публікації, якщо вони передані
+        if tags is not None:
+            created_tags = await tag_services.create_or_get_tags(db=db, tag_data=tags[:5])
+            created_post.tags.extend(created_tags)
+
+        db.commit()
+        return created_post
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
 
 
 @posts_router.get('/{id}', response_model=PostSingle)
@@ -111,14 +135,18 @@ async def comment_list_by_post(post_id: int, db: Session = Depends(get_db)):
 
 @posts_router.post('/{post_id}/comments/create', status_code=status.HTTP_201_CREATED)
 async def create_comment(
-    *, db: Session = Depends(get_db), user: User = Depends(auth_service.get_current_user), 
-    comment_in: CommentCreate, post_id: int
+    *,
+    db: Session = Depends(get_db),
+    user: User = Depends(auth_service.get_current_user),
+    comment_in: CommentCreate,
+    post_id: int
 ):
     """
     Створення коментаря
     """
-    comment_in.post = post_id
-    return await post_services.create_p(db=db, obj_in=comment_in)
+    comment_in.post_id = post_id  # Змінено post на post_id
+    return await comment_services.create_comment(db=db, obj_in=comment_in)
+
 
 
 
@@ -132,17 +160,14 @@ async def update_image_description(
     """
     Редагування опису світлини
     """
-    post = post_services.get_p(db=db, id=id)
-    if not post:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
-    
-    # Перевірка, чи користувач є власником світлини
-    if post.user != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ви не маєте прав для редагування цієї світлини')
-    
-    post.text = description
-    return await post_services.update_p(db=db, obj_in=post)
-
+    try:
+        # Використання оновленого сервісу для оновлення опису
+        updated_post = await post_services.update_p(db=db, obj_in=dict(id=id, text=description))
+        
+        return updated_post
+    except Exception as e:
+        # Обробка помилок
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 
 

@@ -1,15 +1,109 @@
+# src\schemas.py
 from datetime import datetime
+from src.database.models import Role, User
+from typing import List, Optional, Union
+from pydantic import BaseModel, Field, EmailStr
+from fastapi import UploadFile
 
-from pydantic import BaseModel, Field
+class UserModel(BaseModel):
+    # username: str = Field(min_length=5, max_length=16)
+    # email: str
+    # password: str = Field(min_length=6, max_length=10)
+    ...
 
+class User(BaseModel):
+    user: int 
+    # email: str
+    # password: str 
+
+#     def __get_pydantic_core_schema__(self, handler):
+#         custom_schema = {
+#             'title': 'User',
+#             'type': 'object',
+#             'properties': {
+#                 'username': {'type': 'string', 'minLength': 5, 'maxLength': 16},
+#                 'email': {'type': 'string'},
+#                 'password': {'type': 'string', 'minLength': 6, 'maxLength': 10},
+#             },
+#             'required': ['username', 'email', 'password'],
+#         }
+#         return custom_schema
+
+# # Генерація схеми
+# schema = User.schema()
+
+# # Виведення схеми у консолі
+# print(schema)
+
+class UserDb(BaseModel):
+    id: int
+    username: str
+    email: str
+    role: Role = Role.user
+    created_at: datetime
+    avatar: str
+    active: bool
+
+    class Config:
+        from_attributes = True
+
+class UserResponse(BaseModel):
+    user: UserDb
+    detail: str = "User successfully created"
+
+    class Config:
+        from_attributes = True
+
+class TokenModel(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+class RequestEmail(BaseModel):
+    email: EmailStr
+
+class CommentBasePost(BaseModel):  # Отримуємо нову назву тут
+    comment: str = Field(min_length=1, max_length=255)
+
+class CommentResponse(CommentBasePost):  # А також тут
+    id: int
+    image_id: int
+    owner_id: int
+    created_at: datetime
+    updated_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class PostCreate(BaseModel):
+    """
+    Створення посту
+    """
+    text: str
+    user: int
+    # img: str 
+    url_original: str  # Use the correct attribute name here
+    # img: Optional[str] = None  
+    # img: Optional[UploadFile] = None
+
+    class Config:
+            orm_mode = True
 
 class PostBase(BaseModel):
     """
     Схема опублікування
     """
-
-    image: str = Field(..., title="Світлина")
-    text: str = Field(..., title="Текст")
+    img: str
+    text: str
+    user: int
+    # img: str = Field(..., title="Світлина")
+    # text: str = Field(..., title="Текст")
+    # tags: Optional[List[str]] = None
+    # user: Optional[int] = None
+    
+    class Config:
+        from_attributes = True
 
 
 class PostList(PostBase):
@@ -27,14 +121,13 @@ class PostBaseCreateUpdate(PostBase):
     """
     Схема створення/редагування посту
     """
-
-    user: int
-
+    user: Union[User, int]
 
 class PostCreate(PostBaseCreateUpdate):
     """
     Створення посту
     """
+    user: int
 
 
 class PostUpdate(PostBaseCreateUpdate):
@@ -97,11 +190,11 @@ class TagModel(BaseModel):
     name: str = Field(max_length=25)
 
 
-class TagResponse(TagModel):
-    """
-    Схема перетворення при роботі з тегами
-    """
-    id: int
+# class TagResponse(TagModel):
+#     """
+#     Схема перетворення при роботі з тегами
+#     """
+#     id: int
 
-    class Config:
-        orm_mode = True
+#     class Config:
+#         orm_mode = True
