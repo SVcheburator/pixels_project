@@ -22,31 +22,34 @@
       </style>
     <link href="css/signin.css" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
-    <title>Login</title>
+    <title>Sign Up</title>
 </head>
 <body class="text-center d-flex h-100 text-center text-white bg-dark" data-bs-theme="dark" >
     <main class="form-signin">
         <form class="mb-5" method="post">
           <img class="mb-4" src="images/logo-5.png" alt="Logo Cats app" height="169">
-          <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-      
+          <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
           <div class="form-floating">
-            <input type="email" class="form-control" name="username"  id="username" placeholder="name@example.com">
+            <input type="text" class="form-control" name="username"  id="username" placeholder="Username">
+            <label for="floatingInput">Username</label>
+          </div>
+          <div class="form-floating">
+            <input type="email" class="form-control" name="email"  id="email" placeholder="name@example.com">
             <label for="floatingInput">Email address</label>
           </div>
           <div class="form-floating">
             <input type="password" class="form-control" name="password"  id="password" placeholder="Password">
             <label for="floatingPassword">Password</label>
           </div>
-          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+          <button class="w-100 btn btn-lg btn-primary" type="submit">Sign up</button>
         </form>
         <p class="mt-5 mb-5">
           <a href="/" class="btn btn-sm btn-secondary">Home</a>
-          <a href="/static/client/signup.html" class="btn btn-sm btn-secondary">Sign up</a>
+          <a href="/static/client/index.html" class="btn btn-sm btn-secondary">Sign in</a>
         </p>
         <p class="mt-5 mb-3 text-muted">&copy; 2023</p>
       </main>
       <script src="js/config.js?ver=2023120602"></script>
-      <script src="js/main.js?ver=2023120602"></script>
+      <script src="js/signup.js?ver=2023120602"></script>
 </body>
 </html>
