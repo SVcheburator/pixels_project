@@ -32,6 +32,10 @@ class Settings(BaseSettings):
     SPHINX_DIRECTORY: str = str(BASE_PATH.joinpath("docs", "_build", "html"))
     STATIC_DIRECTORY: str = str(BASE_PATH.joinpath("static"))
 
+    hcaptcha_enabled: bool = False
+    hcaptcha_site_key: str = ""
+    hcaptcha_secret_key: str= ""
+
     model_config = SettingsConfigDict(
         extra="ignore", env_file=str(ENV_PATH), env_file_encoding="utf-8"
     )
