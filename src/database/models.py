@@ -59,7 +59,7 @@ class Comment(Base):
     image_id = Column('image_id', ForeignKey('images.id', ondelete='CASCADE'), default=None)
     owner_id = Column('owner_id', ForeignKey('users.id', ondelete='CASCADE'), default=None)
     created_at = Column('crated_at', DateTime, default=func.now())
-    updated_at = Column('updated_at', DateTime)
+    updated_at = Column('updated_at', DateTime, default=func.now(), onupdate=func.now())
     owner = relationship("User", backref="comments")
     image = relationship("Image", backref="comments")
 

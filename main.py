@@ -8,7 +8,7 @@ from fastapi_limiter import FastAPILimiter
 import uvicorn
 
 from src.conf.config import settings
-from src.routes import users, auth, tools, static
+from src.routes import users, auth, tools, static, comments
 
 
 templates = Jinja2Templates(directory="templates")
@@ -18,6 +18,7 @@ app = FastAPI()
 app.include_router(users.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(tools.router, prefix="/api")
+app.include_router(comments.router, prefix="/api")
 
 app.add_middleware(
     CORSMiddleware,

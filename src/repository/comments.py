@@ -10,6 +10,16 @@ from src.schemas import CommentBase
 async def get_comments(
     image_id: int, limit: int, offset: int, db: Session
 ) -> List[Comment]:
+    """
+    The get_comments function returns a list of comments for the image with the given id.
+    The limit and offset parameters are used to paginate through results.
+
+    :param image_id: int: Filter the comments by image_id
+    :param limit: int: Limit the number of comments returned
+    :param offset: int: Specify the number of comments to skip before returning the results
+    :param db: Session: Pass the database session to the function
+    :return: A list of comment objects
+    """
     return (
         db.query(Comment)
         .filter(Comment.image_id == image_id)
@@ -20,6 +30,14 @@ async def get_comments(
 
 
 def get_comment_by_id(image_id: int, comment_id: int, db: Session) -> Comment | None:
+    """
+    The get_comment_by_id function returns a comment by its id.
+
+    :param image_id: int: Filter the comments by image_id
+    :param comment_id: int: Filter the comments by their id
+    :param db: Session: Pass the database session to the function
+    :return: A comment object or none
+    """
     return (
         db.query(Comment)
         .filter(Comment.image_id == image_id, Comment.id == comment_id)
@@ -30,6 +48,15 @@ def get_comment_by_id(image_id: int, comment_id: int, db: Session) -> Comment | 
 async def create_comment(
     body: CommentBase, image_id: int, owner: User, db: Session
 ) -> Comment:
+    """
+    The create_comment function creates a new comment for an image.
+
+    :param body: CommentBase: Pass in the comment object from the request body
+    :param image_id: int: Get the image id from the database
+    :param owner: User: Get the user that is making the comment
+    :param db: Session: Pass in the database session
+    :return: A comment object
+    """
     comment = Comment(owner=owner, image_id=image_id, comment=body.comment)
 
     db.add(comment)

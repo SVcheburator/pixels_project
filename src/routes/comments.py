@@ -27,8 +27,20 @@ async def get_comments(
     image_id: int = Path(ge=1),
     limit: int = Query(5, le=100),
     offset: int = 0,
+    owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The get_comments function returns a list of comments for the image with the given id.
+    The limit and offset parameters are used to paginate through all comments.
+
+    :param image_id: int: Get the image id from the url
+    :param limit: int: Limit the number of comments that are returned
+    :param offset: int: Get the next set of comments
+    :param owner: User: Get the current user
+    :param db: Session: Pass the database session to the repository_comments
+    :return: A list of comments for a given image
+    """
     return await repository_comments.get_comments(image_id, limit, offset, db)
 
 
@@ -42,8 +54,18 @@ async def get_comments(
 async def get_comment(
     image_id: int = Path(ge=1),
     comment_id: int = Path(ge=1),
+    owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The get_comment function returns a comment by its id.
+
+    :param image_id: int: Get the image id from the url
+    :param comment_id: int: Get the comment id from the url
+    :param owner: User: Check if the user is logged in
+    :param db: Session: Pass the database session to the repository layer
+    :return: A comment object
+    """
     comment = repository_comments.get_comment_by_id(image_id, comment_id, db)
 
     if comment is None:
@@ -68,6 +90,17 @@ async def create_comment(
     owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The create_comment function creates a new comment in the database.
+        The function takes an image_id and a body as input, and returns the created comment.
+
+
+    :param body: CommentBase: Get the data from the request body
+    :param image_id: int: Get the image id from the path
+    :param owner: User: Get the current user
+    :param db: Session: Pass the database session to the repository layer
+    :return: A commentbase object
+    """
     contact = await repository_comments.create_comment(body, image_id, owner, db)
 
     return contact
