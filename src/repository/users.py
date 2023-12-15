@@ -15,6 +15,16 @@ def clear_user_cache(user: User) -> None:
     auth_service.r.delete(f"user:{user.email}")
 
 
+async def is_present_admin(db: Session) -> bool :
+    """ search if is present admin in users
+    :param db: The database session.
+    :type db: Session
+    :return: True if any admin is
+    :rtype: bool
+    """
+    result = db.query(User).filter(User.role == Role.admin).first()
+    return  result is not None
+
 async def get_user_by_email(email: str, db: Session) -> User:
     """
     Retrieves a user by his email.
@@ -47,6 +57,9 @@ async def create_user(body: UserModel, db: Session) -> User:
     except Exception as e:
         print(e)
     new_user = User(**body.model_dump(), avatar=avatar)
+    # Search any admin if not present assign thios user as admin
+    if not await is_present_admin(db):
+        new_user.role = Role.admin
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
