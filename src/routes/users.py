@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 import cloudinary
 import cloudinary.uploader
@@ -14,6 +14,7 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 # allowed_operations_roles = RoleAccess([Role.admin])
 
+
 @router.get("/me/", response_model=UserDb)
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
     """
@@ -27,9 +28,12 @@ async def read_users_me(current_user: User = Depends(auth_service.get_current_us
     return current_user
 
 
-@router.patch('/avatar', response_model=UserDb)
-async def update_avatar_user(file: UploadFile = File(), current_user: User = Depends(auth_service.get_current_user),
-                             db: Session = Depends(get_db)):
+@router.patch("/avatar", response_model=UserDb)
+async def update_avatar_user(
+    file: UploadFile = File(),
+    current_user: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
     """
     Updates user's avatar.
 
@@ -46,18 +50,91 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
         cloud_name=settings.cloudinary_name,
         api_key=settings.cloudinary_api_key,
         api_secret=settings.cloudinary_api_secret,
-        secure=True
+        secure=True,
     )
 
-    r = cloudinary.uploader.upload(file.file, public_id=f'ContactsApp/{current_user.username}', overwrite=True)
-    src_url = cloudinary.CloudinaryImage(f'ContactsApp/{current_user.username}')\
-                        .build_url(width=250, height=250, crop='fill', version=r.get('version'))
-    user = await repository_users.update_avatar(current_user.email, src_url, db)
+    r = cloudinary.uploader.upload(
+        file.file, public_id=f"ContactsApp/{current_user.username}", overwrite=True
+    )
+    src_url = cloudinary.CloudinaryImage(
+        f"ContactsApp/{current_user.username}"
+    ).build_url(width=250, height=250, crop="fill", version=r.get("version"))
+    user = await repository_users.update_avatar(current_user.email, src_url, db)  # type: ignore
     return user
 
 
-@router.get("/ban/{user_id}", 
-             # dependencies=[Depends(allowed_operations_roles)],  
-             name="Ban user by id, allowed admin only")
-async def ban_user(user_id: int, owner: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
-    ...
+@router.get(
+    "/ban/{user_id}",
+    # dependencies=[Depends(allowed_operations_roles)],
+    status_code=status.HTTP_200_OK,
+    response_description="accepted",
+    name="Ban user by id, allowed admin only",
+)
+async def ban_user(
+    user_id: int,
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Ban user by their ID, does not allow users to log in
+
+    :param user_id: id of user
+    :type user_id: int
+    :param owner: _description_, defaults to Depends(auth_service.get_current_user)
+    :type owner: User, optional
+    :param db: _description_, defaults to Depends(get_db)
+    :type db: Session, optional
+    """
+
+    if str(owner.role) != "Role.admin":
+        print(f"{str(owner.role)=}")
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+        )
+    if owner.id == user_id:  # type: ignore
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Can't ban himself"
+        )
+    user = await repository_users.update_active(user_id, active=False, db=db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+        )
+    return {"detail": "accepted"}
+
+
+@router.get(
+    "/unban/{user_id}",
+    # dependencies=[Depends(allowed_operations_roles)],
+    status_code=status.HTTP_200_OK,
+    response_description="accepted",
+    name="UnBan user by id, allowed admin only",
+)
+async def unban_user(
+    user_id: int,
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Unban user by their ID, allow users to log in
+
+    :param user_id: id of user
+    :type user_id: int
+    :param owner: _description_, defaults to Depends(auth_service.get_current_user)
+    :type owner: User, optional
+    :param db: _description_, defaults to Depends(get_db)
+    :type db: Session, optional
+    """
+    if str(owner.role) != "Role.admin":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+        )
+    if owner.id == user_id:  # type: ignore
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Can't unban himself",
+        )
+    user = await repository_users.update_active(user_id, active=True, db=db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+        )
+    return {"detail": "accepted"}

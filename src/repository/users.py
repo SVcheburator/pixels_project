@@ -3,6 +3,16 @@ from sqlalchemy.orm import Session
 
 from src.database.models import User, Role
 from src.schemas import UserModel
+from src.services.auth import auth_service
+
+
+def clear_user_cache(user: User) -> None:
+    """_summary_
+
+    :param user: Clear user from cached storage
+    :type user: User
+    """
+    auth_service.r.delete(f"user:{user.email}")
 
 
 async def get_user_by_email(email: str, db: Session) -> User:
@@ -15,7 +25,7 @@ async def get_user_by_email(email: str, db: Session) -> User:
     :type db: Session
     :return: The user.
     :rtype: User
-    """ 
+    """
     return db.query(User).filter(User.email == email).first()
 
 
@@ -36,7 +46,7 @@ async def create_user(body: UserModel, db: Session) -> User:
         avatar = g.get_image()
     except Exception as e:
         print(e)
-    new_user = User(**body.dict(), avatar=avatar)
+    new_user = User(**body.model_dump(), avatar=avatar)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -56,8 +66,10 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
     :return: None.
     :rtype: None
     """
-    user.refresh_token = token
-    db.commit()
+    if user:
+        user.refresh_token = token  # type: ignore
+        db.commit()
+        clear_user_cache(user)
 
 
 async def confirmed_email(email: str, db: Session) -> None:
@@ -72,9 +84,10 @@ async def confirmed_email(email: str, db: Session) -> None:
     :rtype: None
     """
     user = await get_user_by_email(email, db)
-    user.confirmed = True
-    user.active = True
-    db.commit()
+    if user:
+        user.confirmed = True  # type: ignore
+        user.active = True  # type: ignore
+        db.commit()
 
 
 async def update_avatar(email: str, url: str, db: Session) -> User:
@@ -91,6 +104,43 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     :rtype: User
     """
     user = await get_user_by_email(email, db)
-    user.avatar = url
-    db.commit()
+    if user:
+        user.avatar = url  # type: ignore
+        db.commit()
+        clear_user_cache(user)
+    return user
+
+
+async def get_user_by_id(id: int, db: Session) -> User:
+    """
+    Retrieves a user by his id.
+
+    :param id: An id to get user from the database by.
+    :type id: int
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    return db.query(User).filter(User.id == id).first()
+
+
+async def update_active(user_id: int, active: bool, db: Session) -> User:
+    """
+    Updates user's active state.
+
+    :param user_id: The email.
+    :type user_id: int
+    :param active: The active state of user.
+    :type active: bool
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    user = await get_user_by_id(user_id, db)
+    if user:
+        user.active = active  # type: ignore
+        db.commit()
+        clear_user_cache(user)
     return user
