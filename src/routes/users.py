@@ -4,11 +4,11 @@ import cloudinary
 import cloudinary.uploader
 
 from src.database.db import get_db
-from src.database.models import User
+from src.database.models import User, Role
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.config import settings
-from src.schemas import UserDb
+from src.schemas import UserDb, UserRole
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -133,6 +133,45 @@ async def unban_user(
             detail="Can't unban himself",
         )
     user = await repository_users.update_active(user_id, active=True, db=db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+        )
+    return {"detail": "accepted"}
+
+
+@router.patch(
+    "/role/{user_id}",
+    # dependencies=[Depends(allowed_operations_roles)],
+    status_code=status.HTTP_200_OK,
+    response_description="accepted",
+    name="Change role user by id, allowed admin only",
+)
+async def update_role_user(
+    user_id: int,
+    user_role: UserRole,
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Unban user by their ID, allow users to log in
+
+    :param user_id: id of user
+    :type user_id: int
+    :param owner: _description_, defaults to Depends(auth_service.get_current_user)
+    :type owner: User, optional
+    :param db: _description_, defaults to Depends(get_db)
+    :type db: Session, optional
+    """
+    if str(owner.role) != "Role.admin":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+        )
+    if owner.id == user_id:  # type: ignore
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="Can't unban himself",
+        )
+    user = await repository_users.update_role_user(user_id, role=user_role.role, db=db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="users not found"

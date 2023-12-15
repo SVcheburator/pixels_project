@@ -129,7 +129,7 @@ async def update_active(user_id: int, active: bool, db: Session) -> User:
     """
     Updates user's active state.
 
-    :param user_id: The email.
+    :param user_id:  id of user.
     :type user_id: int
     :param active: The active state of user.
     :type active: bool
@@ -141,6 +141,27 @@ async def update_active(user_id: int, active: bool, db: Session) -> User:
     user = await get_user_by_id(user_id, db)
     if user:
         user.active = active  # type: ignore
+        db.commit()
+        clear_user_cache(user)
+    return user
+
+
+async def update_role_user(user_id: int, role: Role, db: Session) -> User:
+    """
+    Updates user's role.
+
+    :param user_id: id of user.
+    :type user_id: int
+    :param active: role of user.
+    :type active: str
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    user = await get_user_by_id(user_id, db)
+    if user:
+        user.role = role  # type: ignore
         db.commit()
         clear_user_cache(user)
     return user

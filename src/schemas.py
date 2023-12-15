@@ -59,3 +59,7 @@ class CommentResponse(CommentBase):
 
     class Config:
         from_attributes = True
+
+
+class UserRole(BaseModel):
+    role: Role
