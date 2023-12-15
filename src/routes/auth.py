@@ -16,7 +16,7 @@ from fastapi.security import (
 )
 from sqlalchemy.orm import Session
 
-
+from src.conf import messages
 from src.database.db import get_db
 from src.database.models import Role
 from src.schemas import (
@@ -62,7 +62,7 @@ async def signup(
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Account already exists"
+            status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
         )
     body.password = auth_service.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
@@ -93,19 +93,19 @@ async def login(
     user = await repository_users.get_user_by_email(body.username, db)
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_INVALID
         )
     if not user.confirmed:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not confirmed"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_NOT_CONF
         )
     if not user.active:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Email not active"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_NOT_ACTIVE
         )
     if not auth_service.verify_password(body.password, user.password):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_PASSW
         )
     # Generate JWT
     access_token = await auth_service.create_access_token(data={"sub": user.email})
@@ -137,14 +137,14 @@ async def refresh_token(
     token_banned_is = await repository_logout.check_token(token, db)
     if token_banned_is:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid auth token"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_AUTH_TOKEN
         )
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
     if user.refresh_token != token:
         await repository_users.update_token(user, None, db)
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid refresh token"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_REF_TOKEN
         )
 
     access_token = await auth_service.create_access_token(data={"sub": email})
@@ -173,7 +173,7 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     user = await repository_users.get_user_by_email(email, db)
     if user is None:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Verification error"
+            status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
         )
     if user.confirmed:
         return {"message": "Your email is already confirmed"}
@@ -232,7 +232,7 @@ async def logout(
     token_banned_is = await repository_logout.check_token(token, db)
     if token_banned_is:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid auth token"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_TOKEN
         )
     await repository_logout.add_token(token, db)
     return {}
@@ -264,13 +264,13 @@ async def signup_cap(
     captcha_ok = await hcaptcha_service.verify(body.h_captcha_response)
     if not captcha_ok:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid captha"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_CAPTCHA
         )
     del body.h_captcha_response
     exist_user = await repository_users.get_user_by_email(body.email, db)
     if exist_user:
         raise HTTPException(
-            status_code=status.HTTP_409_CONFLICT, detail="Account already exists"
+            status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
         )
     try:
         body.password = auth_service.get_password_hash(body.password)
@@ -286,5 +286,5 @@ async def signup_cap(
     except Exception as err:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Some troubles with create: {err}",
+            detail=messages.AUTH_TROUBLES.format(err)
         )
