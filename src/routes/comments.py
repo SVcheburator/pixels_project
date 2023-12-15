@@ -66,7 +66,7 @@ async def get_comment(
     :param db: Session: Pass the database session to the repository layer
     :return: A comment object
     """
-    comment = repository_comments.get_comment_by_id(image_id, comment_id, db)
+    comment = await repository_comments.get_comment_by_id(image_id, comment_id, db)
 
     if comment is None:
         raise HTTPException(
