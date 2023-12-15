@@ -15,15 +15,16 @@ def clear_user_cache(user: User) -> None:
     auth_service.r.delete(f"user:{user.email}")
 
 
-async def is_present_admin(db: Session) -> bool :
-    """ search if is present admin in users
+async def is_present_admin(db: Session) -> bool:
+    """search if is present admin in users
     :param db: The database session.
     :type db: Session
     :return: True if any admin is
     :rtype: bool
     """
     result = db.query(User).filter(User.role == Role.admin).first()
-    return  result is not None
+    return result is not None
+
 
 async def get_user_by_email(email: str, db: Session) -> User:
     """
@@ -36,7 +37,21 @@ async def get_user_by_email(email: str, db: Session) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.email == email).first()
+    return db.query(User).filter(User.email == email, User.active == True).first()
+
+
+async def get_user_by_username(username: str, db: Session) -> User:
+    """
+    Retrieves a user by his username.
+
+    :param username: An username to get user from the database by.
+    :type username: str
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    return db.query(User).filter(User.username == username, User.active == True).first()
 
 
 async def create_user(body: UserModel, db: Session) -> User:
@@ -124,7 +139,7 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     return user
 
 
-async def get_user_by_id(id: int, db: Session) -> User:
+async def get_user_by_id(id: int, db: Session, active: bool = True) -> User:
     """
     Retrieves a user by his id.
 
@@ -135,7 +150,7 @@ async def get_user_by_id(id: int, db: Session) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.id == id).first()
+    return db.query(User).filter(User.id == id, User.active == active).first()
 
 
 async def update_active(user_id: int, active: bool, db: Session) -> User:
@@ -151,7 +166,7 @@ async def update_active(user_id: int, active: bool, db: Session) -> User:
     :return: The user.
     :rtype: User
     """
-    user = await get_user_by_id(user_id, db)
+    user = await get_user_by_id(user_id, active=not active, db=db)
     if user:
         user.active = active  # type: ignore
         db.commit()

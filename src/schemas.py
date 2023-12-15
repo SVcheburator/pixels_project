@@ -63,3 +63,7 @@ class CommentResponse(CommentBase):
 
 class UserRole(BaseModel):
     role: Role
+
+
+class RequestUserName(BaseModel):
+    username: str = Field(min_length=5, max_length=16)
