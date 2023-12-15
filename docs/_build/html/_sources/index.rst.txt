@@ -58,6 +58,13 @@ REST API service Email
   :members:
   :undoc-members:
   :show-inheritance:
+
+REST API service hCaptcha
+============================
+.. automodule:: src.services.hcaptcha
+  :members:
+  :undoc-members:
+  :show-inheritance:
   
 REST API routes Comments 
 ===============================

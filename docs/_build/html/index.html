@@ -621,6 +621,26 @@
 <dd></dd></dl>
 
 </section>
+<section id="module-src.services.hcaptcha">
+<span id="rest-api-service-hcaptcha"></span><h1>REST API service hCaptcha<a class="headerlink" href="#module-src.services.hcaptcha" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.services.hcaptcha.verify">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.hcaptcha.</span></span><span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">h_captcha_response</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#src.services.hcaptcha.verify" title="Link to this definition">¶</a></dt>
+<dd><p>Verify response from hCaptcha service</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>h_captcha_response</strong> (<em>str</em>) – h-captcha-response</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if success</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="module-src.routes.comments">
 <span id="rest-api-routes-comments"></span><h1>REST API routes Comments<a class="headerlink" href="#module-src.routes.comments" title="Link to this heading">¶</a></h1>
 <dl class="py function">
@@ -906,6 +926,10 @@ The limit and offset parameters are used to paginate through results.</p>
 </li>
 <li><a class="reference internal" href="#module-src.services.emails">REST API service Email</a><ul>
 <li><a class="reference internal" href="#src.services.emails.send_email"><code class="docutils literal notranslate"><span class="pre">send_email()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-src.services.hcaptcha">REST API service hCaptcha</a><ul>
+<li><a class="reference internal" href="#src.services.hcaptcha.verify"><code class="docutils literal notranslate"><span class="pre">verify()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-src.routes.comments">REST API routes Comments</a><ul>
