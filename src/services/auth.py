@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.repository import users as repository_users
+from src.repository import logout as repository_logout
 from src.conf.config import settings
 
 
@@ -66,7 +67,10 @@ class Auth:
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
+        # check user token is banned 
+        token_banned_is = await repository_logout.check_token(token, db)
+        if token_banned_is:
+            raise credentials_exception
         try:
             # Decode JWT
             payload = jwt.decode(token, self.SECRET_KEY, algorithms=[self.ALGORITHM])
@@ -87,7 +91,9 @@ class Auth:
             self.r.expire(f"user:{email}", 900)
         else:
             user = pickle.loads(user)
-
+        # check user is active and confirmed
+        if not user.active or not user.confirmed:
+            raise credentials_exception
         return user
 
 
