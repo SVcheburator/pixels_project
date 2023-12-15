@@ -1,6 +1,6 @@
 from typing import List
 
-# from sqlalchemy import or_, and_
+from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session
 
 from src.database.models import Comment, User
@@ -29,7 +29,9 @@ async def get_comments(
     )
 
 
-def get_comment_by_id(image_id: int, comment_id: int, db: Session) -> Comment | None:
+async def get_comment_by_id(
+    image_id: int, comment_id: int, db: Session
+) -> Comment | None:
     """
     The get_comment_by_id function returns a comment by its id.
 
@@ -62,5 +64,68 @@ async def create_comment(
     db.add(comment)
     db.commit()
     db.refresh(comment)
+
+    return comment
+
+
+async def update_comment(
+    image_id: int, comment_id: int, body: CommentBase, owner: User, db: Session
+) -> Comment | None:
+    """
+    The update_comment function updates a comment in the database.
+    
+    :param image_id: int: Identify the image that the comment belongs to
+    :param comment_id: int: Filter the comment that is being updated
+    :param body: CommentBase: Pass the new comment to the function
+    :param owner: User: Check if the user is the owner of the comment
+    :param db: Session: Access the database
+    :return: A comment object or none
+    """
+    comment = (
+        db.query(Comment)
+        .filter(
+            and_(
+                Comment.image_id == image_id,
+                Comment.id == comment_id,
+                Comment.owner_id == owner.id,
+            )
+        )
+        .first()
+    )
+
+    if comment:
+        comment.comment = body.comment
+        db.commit()
+
+    return comment
+
+
+async def remove_comment(
+    image_id: int, comment_id: int, owner: User, db: Session
+) -> Comment | None:
+    """
+    The remove_comment function removes a comment from the database.
+    
+    :param image_id: int: Find the image that the comment is on
+    :param comment_id: int: Identify the comment to be removed
+    :param owner: User: Check if the user is the owner of the comment
+    :param db: Session: Access the database
+    :return: A comment object or none
+    """
+    comment = (
+        db.query(Comment)
+        .filter(
+            and_(
+                Comment.image_id == image_id,
+                Comment.id == comment_id,
+                Comment.owner_id == owner.id,
+            )
+        )
+        .first()
+    )
+
+    if comment:
+        db.delete(comment)
+        db.commit()
 
     return comment
