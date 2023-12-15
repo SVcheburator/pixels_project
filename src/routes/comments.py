@@ -104,7 +104,7 @@ async def create_comment(
     comment = await repository_comments.create_comment(body, image_id, owner, db)
     if not comment:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="comment not created"
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.COMMENT_NOT_CREATED
         )
     return comment
 
