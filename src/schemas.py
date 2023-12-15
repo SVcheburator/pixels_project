@@ -10,6 +10,10 @@ class UserModel(BaseModel):
     password: str = Field(min_length=6, max_length=10)
 
 
+class UserModelCaptcha(UserModel):
+    h_captcha_response: str 
+
+
 class UserDb(BaseModel):
     id: int
     username: str

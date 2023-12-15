@@ -24,7 +24,7 @@ form?.addEventListener("submit", async (e) => {
     "username": username,
     "email": email,
     "password": password,
-    "h-captcha-response": h_captcha_response.value
+    "h_captcha_response": h_captcha_response.value
   };
   const URL = `${BASE_URL}/api/auth/signup/cap`;
   await fetch(URL, {

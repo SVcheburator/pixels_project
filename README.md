@@ -314,3 +314,18 @@ Coverage HTML written to dir htmlcov
 
 ```
 ![pyetst](doc/pytest-01.png)
+
+
+## Бонусне завдання
+### Простий JavaScript client (Front-end)
+
+### Signup with hCaptha service.
+
+![captha](doc/auth-cap-01.png)
+
+![captha](doc/auth-cap-02.png)
+
+![captha](doc/auth-cap-03.png)
+
+![captha](doc/auth-cap-04.png)
+
