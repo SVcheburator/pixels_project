@@ -11,7 +11,7 @@ class UserModel(BaseModel):
 
 
 class UserModelCaptcha(UserModel):
-    h_captcha_response: str 
+    h_captcha_response: str = Field(alias="h-captcha-response")
 
 
 class UserDb(BaseModel):
