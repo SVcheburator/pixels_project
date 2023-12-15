@@ -21,7 +21,7 @@ router = APIRouter(prefix="/comments/{image_id}", tags=["Comments by picture"])
     response_model=List[CommentResponse],
     # description="No more than 10 requests per minute",
     # dependencies=[Depends(RateLimiter(times=10, seconds=60))],
-    name="Get comments",
+    name="Show comments",
 )
 async def get_comments(
     image_id: int = Path(ge=1),
@@ -49,7 +49,7 @@ async def get_comments(
     response_model=CommentResponse,
     # description="No more than 10 requests per minute",
     # dependencies=[Depends(RateLimiter(times=10, seconds=60))],
-    name="Get comment by id",
+    name="Show comment by id",
 )
 async def get_comment(
     image_id: int = Path(ge=1),
@@ -104,3 +104,71 @@ async def create_comment(
     contact = await repository_comments.create_comment(body, image_id, owner, db)
 
     return contact
+
+
+@router.patch(
+    "/{comment_id}",
+    response_model=CommentResponse,
+    # description="No more than 10 requests per minute",
+    # dependencies=[Depends(RateLimiter(times=10, seconds=30))],
+    name="Change comment",
+)
+async def update_comment(
+    body: CommentBase,
+    image_id: int = Path(ge=1),
+    comment_id: int = Path(ge=1),
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    The update_comment function updates a comment in the database.
+    
+    :param body: CommentBase: Pass the data of the comment that will be updated
+    :param image_id: int: Get the image id from the url
+    :param comment_id: int: Identify the comment that is to be updated
+    :param owner: User: Get the current user
+    :param db: Session: Get the database session
+    :return: A comment
+    """
+    comment = await repository_comments.update_comment(
+        image_id, comment_id, body, owner, db
+    )
+
+    if comment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.COMMENT_NOT_FOUND
+        )
+
+    return comment
+
+
+@router.delete(
+    "/{comment_id}",
+    response_model=CommentResponse,
+    # description="No more than 10 requests per minute",
+    # dependencies=[Depends(RateLimiter(times=10, seconds=30))],
+    name="Remove comment",
+)
+async def remove_comment(
+    image_id: int = Path(ge=1),
+    comment_id: int = Path(ge=1),
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """
+    The remove_comment function removes a comment from an image.
+    
+    :param image_id: int: Get the image id from the url
+    :param comment_id: int: Identify which comment to remove
+    :param owner: User: Get the current user and check if they are authorized to delete the comment
+    :param db: Session: Pass the database session to the repository layer
+    :return: A comment object
+    """
+    comment = await repository_comments.remove_comment(image_id, comment_id, owner, db)
+
+    if comment is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.COMMENT_NOT_FOUND
+        )
+
+    return comment
