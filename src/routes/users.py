@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 import cloudinary
 import cloudinary.uploader
 
+from src.conf import messages
 from src.database.db import get_db
 from src.database.models import User, Role
 from src.repository import users as repository_users
@@ -88,16 +89,17 @@ async def ban_user(
     if str(owner.role) != "Role.admin":
         print(f"{str(owner.role)=}")
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
         )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="Can't ban himself"
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=messages.USER_CANT_OPERATE_HIMSELF,
         )
     user = await repository_users.update_active(user_id, active=False, db=db)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
     return {"detail": "accepted"}
 
@@ -125,17 +127,17 @@ async def unban_user(
     """
     if str(owner.role) != "Role.admin":
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
         )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Can't unban himself",
+            detail=messages.USER_CANT_OPERATE_HIMSELF,
         )
     user = await repository_users.update_active(user_id, active=True, db=db)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
     return {"detail": "accepted"}
 
@@ -164,16 +166,16 @@ async def update_role_user(
     """
     if str(owner.role) != "Role.admin":
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid role"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
         )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-            detail="Can't unban himself",
+            detail=messages.USER_CANT_OPERATE_HIMSELF,
         )
     user = await repository_users.update_role_user(user_id, role=user_role.role, db=db)
     if not user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="users not found"
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
     return {"detail": "accepted"}
