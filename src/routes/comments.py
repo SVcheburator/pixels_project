@@ -101,9 +101,12 @@ async def create_comment(
     :param db: Session: Pass the database session to the repository layer
     :return: A commentbase object
     """
-    contact = await repository_comments.create_comment(body, image_id, owner, db)
-
-    return contact
+    comment = await repository_comments.create_comment(body, image_id, owner, db)
+    if not comment:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="comment not created"
+        )
+    return comment
 
 
 @router.patch(
