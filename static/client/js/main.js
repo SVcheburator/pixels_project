@@ -46,7 +46,17 @@ form?.addEventListener("submit", async (e) => {
     .catch((err) => {
       console.log("ERROR", err);
       setTimeout(() => {
-        window.location = "index.html?error=login";
+        window.location = "index.html?error=login err:"+err;
       }, 500);
     });
 });
+
+
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const error_msg = urlParams.get('error')
+console.log("error_msg", error_msg)
+if (error_msg){
+  alert(error_msg)
+}

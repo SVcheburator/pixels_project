@@ -166,3 +166,4 @@ postgres-data-prod/
 .env_prod
 tests/db.sqlite
 .env_prod_kolab
+

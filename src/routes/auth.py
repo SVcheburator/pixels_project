@@ -7,9 +7,10 @@ from sqlalchemy.orm import Session
 
 from src.database.db import get_db
 from src.database.models import Role
-from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail
+from src.schemas import UserModel, UserResponse, TokenModel, RequestEmail, UserModelCaptcha
 from src.repository import users as repository_users
 from src.repository import logout as repository_logout
+from src.services import hcaptcha as hcaptcha_service
 from src.services.auth import auth_service
 from src.services.emails import send_email
 
@@ -162,3 +163,35 @@ async def logout(credentials: HTTPAuthorizationCredentials = Security(security),
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid auth token")
     await repository_logout.add_token(token, db)
     return {}
+
+
+@router.post("/signup/cap", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
+async def signup_cap(body: UserModelCaptcha, background_tasks: BackgroundTasks, request: Request, db: Session = Depends(get_db)):
+    """
+    Signups user with Captha.
+
+    :param body: The data for the user to sign up.
+    :type body: UserModelCaptcha
+    :param background_tasks: Background tasks.
+    :type background_tasks: BackgroundTasks
+    :param request: The request.
+    :type request: Request
+    :param db: The database session.
+    :type db: Session
+    :return: The UserResponse model with the new user and information about successfull user creation.
+    :rtype: dict
+    """
+    captcha_ok = await hcaptcha_service.verify(body.h_captcha_response)
+    if not captcha_ok:
+         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid captha")
+    del body.h_captcha_response
+    exist_user = await repository_users.get_user_by_email(body.email, db)
+    if exist_user:
+        raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Account already exists")
+    try:
+        body.password = auth_service.get_password_hash(body.password)
+        new_user = await repository_users.create_user(body, db)
+        background_tasks.add_task(send_email, new_user.email, new_user.username, request.base_url)
+        return {"user": new_user, "role": Role.user, "detail": "User successfully created. Check your email for confirmation."}
+    except Exception as err:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Some troubles with create: {err}")
