@@ -12,6 +12,7 @@ from src.schemas import UserDb
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+# allowed_operations_roles = RoleAccess([Role.admin])
 
 @router.get("/me/", response_model=UserDb)
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
@@ -53,3 +54,10 @@ async def update_avatar_user(file: UploadFile = File(), current_user: User = Dep
                         .build_url(width=250, height=250, crop='fill', version=r.get('version'))
     user = await repository_users.update_avatar(current_user.email, src_url, db)
     return user
+
+
+@router.get("/ban/{user_id}", 
+             # dependencies=[Depends(allowed_operations_roles)],  
+             name="Ban user by id, allowed admin only")
+async def ban_user(user_id: int, owner: User = Depends(auth_service.get_current_user), db: Session = Depends(get_db)):
+    ...
