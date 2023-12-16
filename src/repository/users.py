@@ -193,3 +193,22 @@ async def update_role_user(user_id: int, role: Role, db: Session) -> User:
         db.commit()
         clear_user_cache(user)
     return user
+
+
+async def delete_user(user_id: int, db: Session) -> User:
+    """
+    Delete user's with not active state.
+
+    :param user_id:  id of user.
+    :type user_id: int
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    user = await get_user_by_id(user_id, active=False, db=db)
+    if user:
+        db.delete(user)
+        db.commit()
+        clear_user_cache(user)
+    return user

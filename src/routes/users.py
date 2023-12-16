@@ -16,6 +16,8 @@ router = APIRouter(prefix="/users", tags=["users"])
 
 allowed_operations_roles = RoleAccess([Role.admin])
 allowed_operations_bans = RoleAccess([Role.admin])
+allowed_operations_delete = RoleAccess([Role.admin])
+
 
 @router.get("/me/", response_model=UserDb)
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
@@ -70,7 +72,7 @@ async def update_avatar_user(
     dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
     response_description=messages.USER_ACCEPDED,
-    name="Ban user by id, allowed admin only",
+    name="Ban user",
 )
 async def ban_user(
     user_id: int,
@@ -110,7 +112,7 @@ async def ban_user(
     dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
     response_description=messages.USER_ACCEPDED,
-    name="UnBan user by id, allowed admin only",
+    name="UnBan user",
 )
 async def unban_user(
     user_id: int,
@@ -148,7 +150,7 @@ async def unban_user(
     dependencies=[Depends(allowed_operations_roles)],
     status_code=status.HTTP_200_OK,
     response_description=messages.USER_ACCEPDED,
-    name="Change role user by id, allowed admin only",
+    name="Change role of user",
 )
 async def update_role_user(
     user_id: int,
@@ -156,7 +158,7 @@ async def update_role_user(
     owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Unban user by their ID, allow users to log in.  Allowed for roles: admin.
+    """Unban user by their ID, allow users to log in..
 
     :param user_id: id of user
     :type user_id: int
@@ -175,6 +177,40 @@ async def update_role_user(
             detail=messages.USER_CANT_OPERATE_HIMSELF,
         )
     user = await repository_users.update_role_user(user_id, role=user_role.role, db=db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
+        )
+    return {"detail": messages.USER_ACCEPDED}
+
+
+@router.delete(
+    "/{user_id}",
+    dependencies=[Depends(allowed_operations_delete)],
+    status_code=status.HTTP_200_OK,
+    response_description=messages.USER_ACCEPDED,
+    name="Delete user",
+)
+async def delete_user(
+    user_id: int,
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Delete user by their ID, with not active state.  Allowed for roles: admin.
+
+    :param user_id: id of user
+    :type user_id: int
+    :param owner: _description_, defaults to Depends(auth_service.get_current_user)
+    :type owner: User, optional
+    :param db: _description_, defaults to Depends(get_db)
+    :type db: Session, optional
+    """
+    if owner.id == user_id:  # type: ignore
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=messages.USER_CANT_OPERATE_HIMSELF,
+        )
+    user = await repository_users.delete_user(user_id, db=db)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
