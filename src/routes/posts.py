@@ -5,7 +5,7 @@ UploadFile,
 Depends, File, Form, 
 Response, Query)
 from fastapi.responses import JSONResponse
-
+from pydantic import ValidationError
 import cloudinary.uploader
 import cloudinary.api
 import os
@@ -62,6 +62,7 @@ comment_services = CommentServices(Comment)
 async def upload_images_user(
     file: UploadFile = File(),
     text: str = Form(...),
+    tags: List[str] = Form([]),
     current_user: UserDb = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
@@ -70,22 +71,50 @@ async def upload_images_user(
         public_id = f"image_{current_user.id}_{uuid.uuid4()}"
 
         # Завантаження на Cloudinary
-        response = cloudinary.uploader.upload(img_content, 
-                                              public_id=public_id, 
-                                              overwrite=True, 
-                                              folder="publication")
+        response = cloudinary.uploader.upload(
+            img_content,
+            public_id=public_id,
+            overwrite=True,
+            folder="publication"
+        )
 
         # Зберігання в базі даних
-        image = Image(owner_id=current_user.id,
-                      url_original=response['secure_url'],
-                      description=text,  
-                      url_original_qr="",
-                      updated_at=datetime.now())
+        image = Image(
+            owner_id=current_user.id,
+            url_original=response['secure_url'],
+            description=text,
+            url_original_qr="",
+            updated_at=datetime.now()
+        )
+
+        # Розділення тегів та перевірка кількості
+        for tags_str in tags:
+            tag_list = tags_str.split(',')
+            tag_count = len(tag_list)
+            print(f"Кількість тегів: {tag_count}")
+
+            if tag_count > 5:
+                raise HTTPException(status_code=400, detail="Максимальна кількість тегів - 5")
+
+            for tag_name in tag_list:
+                tag_name = tag_name.strip()
+                tag = db.query(Tag).filter_by(name=tag_name).first()
+                if not tag:
+                    tag = Tag(name=tag_name)
+                    db.add(tag)
+                    db.commit()
+                    db.refresh(tag)
+
+                image.tags.append(tag)
+
         db.add(image)
         db.commit()
 
         user_db = UserDb(**current_user.__dict__)
         return UserResponse(user=user_db)
+    except HTTPException as e:
+        logging.error(f"Помилка валідації форми: {e}")
+        raise
     except Exception as e:
         logging.error(f"Помилка завантаження зображення: {e}")
         raise
@@ -111,7 +140,7 @@ async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
     item = await post_services.get_p(db=db, id=id)
 
     if not item:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запис не знайдений')
 
     post_data = {
         'id': item.id,

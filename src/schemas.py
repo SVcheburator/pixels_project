@@ -2,8 +2,8 @@
 from datetime import datetime
 from src.database.models import Role, User
 from typing import List, Optional, Union
-from pydantic import BaseModel, Field, EmailStr
-from fastapi import UploadFile
+from pydantic import BaseModel, Field, EmailStr, ValidationError, validator
+from fastapi import UploadFile, Form, File
 
 class UserModel(BaseModel):
     # username: str = Field(min_length=5, max_length=16)
@@ -101,7 +101,8 @@ class PostBase(BaseModel):
     # text: str = Field(..., title="Текст")
     # tags: Optional[List[str]] = None
     # user: Optional[int] = None
-    
+
+
     class Config:
         from_attributes = True
 
@@ -211,3 +212,12 @@ class TagModel(BaseModel):
 
 #     class Config:
 #         orm_mode = True
+
+# class ImageUploadForm(BaseModel):
+#     tags: List[str] = Form([])
+
+#     @validator("tags")
+#     def validate_tags(cls, value):
+#         if len(value) > 5:
+#             raise ValueError("Максимальна кількість тегів - 5")
+#         return value

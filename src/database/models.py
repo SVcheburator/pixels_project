@@ -55,7 +55,6 @@ class Image(Base):
     created_at = Column('crated_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
     
-
     def json(self):
         return {
             "id": self.id,
