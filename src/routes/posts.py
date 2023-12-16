@@ -1,5 +1,11 @@
 # src\routes\posts.py
-from fastapi import APIRouter, HTTPException, UploadFile, Depends, File, Form
+from fastapi import (APIRouter, 
+HTTPException, 
+UploadFile, 
+Depends, File, Form, 
+Response, Query)
+from fastapi.responses import JSONResponse
+
 import cloudinary.uploader
 import cloudinary.api
 import os
@@ -7,6 +13,8 @@ import shutil
 import uuid
 from typing import Any, List, Optional
 import aiofiles
+import logging
+from datetime import datetime
 
 from sqlalchemy.orm import Session
 from starlette.requests import Request
@@ -20,12 +28,16 @@ from src.schemas import (
     PostCreate, 
     PostList, 
     PostSingle, 
+    UserResponse, 
+    UserDb,
     TagModel)
 from src.database.db import get_db
 from src.services.auth import auth_service
 from src.services.posts import PostServices, CommentServices
 from src.services.tags import TagServices, Tag
 from src.conf.config import settings
+from src.services.cloudinary import CloudinaryService
+from cloudinary.uploader import upload
 
 
 
@@ -45,143 +57,187 @@ post_services = PostServices(Image)
 comment_services = CommentServices(Comment)
 
 
+# публікуємо світлину
+@posts_router.post("/publication", response_model=UserResponse, response_model_exclude_unset=True)
+async def upload_images_user(
+    file: UploadFile = File(),
+    text: str = Form(...),
+    current_user: UserDb = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    try:
+        img_content = await file.read()
+        public_id = f"image_{current_user.id}_{uuid.uuid4()}"
 
+        # Завантаження на Cloudinary
+        response = cloudinary.uploader.upload(img_content, 
+                                              public_id=public_id, 
+                                              overwrite=True, 
+                                              folder="publication")
+
+        # Зберігання в базі даних
+        image = Image(owner_id=current_user.id,
+                      url_original=response['secure_url'],
+                      description=text,  
+                      url_original_qr="",
+                      updated_at=datetime.now())
+        db.add(image)
+        db.commit()
+
+        user_db = UserDb(**current_user.__dict__)
+        return UserResponse(user=user_db)
+    except Exception as e:
+        logging.error(f"Помилка завантаження зображення: {e}")
+        raise
+
+
+
+
+# отримаємо списк світлин по ідентифікації користувача
 @posts_router.get('/user/{user_id}', response_model=list[PostList])
 async def post_list_by_user(user_id: int, 
                             db: Session = Depends(get_db), 
                             user: User = Depends(auth_service.get_current_user)):
-    """
-    Список світлин
-    """
-    posts = await post_services.post_list_by_user(db=db, user_id=user_id)
+    posts = post_services.post_list_by_user(db=db, user_id=user_id)
     if not posts:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Записи не знайдені')
-    return posts
-
-UPLOADS_DIR = "uploads"
-MAX_FILE_SIZE = 100000000  # максимальний розмір файлу в байтах
-
-
-def save_file_sync(file, destination):
-    file_size = 0
-    with open(destination, "wb") as file_object:
-        while True:
-            chunk = file.read(1024)
-            if not chunk:
-                break
-            file_size += len(chunk)
-            if file_size > MAX_FILE_SIZE:
-                raise HTTPException(status_code=413, detail="File size is over the limit")
-            file_object.write(chunk)
-
-
-@posts_router.post('/create', status_code=status.HTTP_201_CREATED)
-async def create_post(
-    img: UploadFile = File(...),
-    db: Session = Depends(get_db),
-    text: str = Form(...),
-    tags: Optional[List[TagModel]] = Form(None),
-    user: User = Depends(auth_service.get_current_user),
-):
-    """
-    Створення світлини
-    """
-
-    try:
-        # Зберігання файлу в теку uploads
-        file_path = os.path.join(UPLOADS_DIR, f'{uuid.uuid4()}{img.filename}')
-
-        save_file_sync(img.file, file_path)
-
-        # Зберігання інформації про фото в базу даних
-        post_in = PostCreate(text=text, user=user.id, img=file_path)
-        created_post = await post_services.create_post(db=db, post_data=post_in, file_path=file_path)
-
-        # Додаємо теги до створеної публікації, якщо вони передані
-        if tags is not None:
-            created_tags = await tag_services.create_or_get_tags(db=db, tag_data=tags[:5])
-            created_post.tags.extend(created_tags)
-
-        db.commit()
-        return created_post
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+    return JSONResponse(content=[post.json() for post in posts])
 
 
 
+# отримувати світлину за унікальним посиланням в БД
 @posts_router.get('/{id}', response_model=PostSingle)
 async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
-    """
-    Отримання світлини
-    """
-    item = post_services.get_p(db=db, id=id)
+    item = await post_services.get_p(db=db, id=id)
+
     if not item:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
-    return item
+
+    post_data = {
+        'id': item.id,
+        'owner_id': item.owner_id,
+        'url_original': item.url_original,
+        'tags': [],
+        'description': item.description,
+        'pub_date': item.created_at,
+        'img': item.url_original, 
+        'text': '',  
+        'user': '',  
+    }
+
+    return PostSingle(**post_data)
 
 
 
-@posts_router.get('/{post_id}/comments', response_model=list[CommentList])
-async def comment_list_by_post(post_id: int, db: Session = Depends(get_db)):
-    """
-    Список світлин
-    """
-    comments = await comment_services.comments_by_post(db=db, post_id=post_id)
-    if not comments:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Комментарии не найдены')
-    return comments
+# отримувати світлину за унікальним посиланням в cloudinary
+# по аналогії пошуку за параметром в БД, але відповідь "detail": "Not Found"
+# @posts_router.get('/post-url/{url_original}', response_model=PostSingle)
+# async def get_post_by_url(url_original: str,
+#                            db: Session = Depends(get_db),
+#                            user: User = Depends(auth_service.get_current_user)):
+
+#     try:
+#         item = await post_services.get_post_url(db=db, url_original=url_original)
+
+#         print("Item from the database:", item)  # Додайте це логування
+
+#         if not item:
+#             raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запис не знайдено')
+
+#         post_data = {
+#             'id': item.id,
+#             'owner_id': item.owner_id,
+#             'url_original': item.url_original,
+#             'tags': [],  
+#             'description': item.description,
+#             'pub_date': item.created_at.isoformat(),
+#             'img': item.url_original,
+#             'text': '',
+#             'user': {
+#                 'id': user.id,
+#                 'username': user.username,
+#                 'created_at': user.created_at.isoformat(),
+#             },
+#         }
+
+#         return JSONResponse(content=post_data)
+
+#     except Exception as e:
+#         raise
 
 
 
-@posts_router.post('/{post_id}/comments/create', status_code=status.HTTP_201_CREATED)
-async def create_comment(
-    *,
-    db: Session = Depends(get_db),
-    user: User = Depends(auth_service.get_current_user),
-    comment_in: CommentCreate,
-    post_id: int
-):
-    """
-    Створення коментаря
-    """
-    comment_in.post_id = post_id  # Змінено post на post_id
-    return await comment_services.create_comment(db=db, obj_in=comment_in)
+# отримувати світлину за параметром в БД - працює та повертає значення
+@posts_router.get('/post-description/{description}', response_model=PostSingle)
+async def get_post_by_description(description: str,
+                                   db: Session = Depends(get_db),
+                                   user: User = Depends(auth_service.get_current_user)):
 
-
-
-
-@posts_router.put('/{id}', response_model=PostSingle)
-async def update_image_description(
-    id: int,
-    description: str,
-    db: Session = Depends(get_db),
-    user: User = Depends(auth_service.get_current_user),
-):
-    """
-    Редагування опису світлини
-    """
     try:
-        # Використання оновленого сервісу для оновлення опису
-        updated_post = await post_services.update_p(db=db, obj_in=dict(id=id, text=description))
-        
-        return updated_post
+        item = await post_services.get_post_by_description(db=db, description=description)
+
+        if not item:
+            raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запис не знайдено')
+
+        post_data = {
+            'id': item.id,
+            'owner_id': item.owner_id,
+            'url_original': item.url_original,
+            'tags': [],  
+            'description': item.description,
+            'pub_date': item.created_at.isoformat(),
+            'img': item.url_original,
+            'text': '',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'created_at': user.created_at.isoformat(),
+            },
+        }
+
+        return JSONResponse(content=post_data)
+
     except Exception as e:
-        # Обробка помилок
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+        raise
 
 
 
-@posts_router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
-async def delete_image(id: int, db: Session = Depends(get_db), user: User = Depends(auth_service.get_current_user)):
-    """
-    Видалення світлини
-    """
-    post = post_services.get_p(db=db, id=id)
-    if not post:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запис не знайдений')
-    
-    # Перевірка, чи користувач є власником світлини
-    if post.user != user.id:
-        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Ви не маєте прав для видалення цієї світлини')
-    
-    await post_services.remove_p(db=db, id=id)
+# редагування опису світлини 
+@posts_router.put('/{id}', response_model=PostSingle)
+async def update_image_description(id: int, description: str, db: Session = Depends(get_db)) -> Any:
+    item = await post_services.get_p(db=db, id=id)
+
+    if not item:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
+
+    item.description = description
+    db.commit()
+
+    updated_post_data = {
+        'id': item.id,
+        'owner_id': item.owner_id,
+        'url_original': item.url_original,
+        'tags': [],
+        'description': item.description,
+        'pub_date': item.created_at,
+        'img': item.url_original, 
+        'text': '',  
+        'user': '',  
+    }
+
+    return PostSingle(**updated_post_data)
+
+
+
+# видалення світлини
+@posts_router.delete('/{id}', response_model=dict)
+async def delete_image(id: int, db: Session = Depends(get_db)) -> dict:
+    item = await post_services.get_p(db=db, id=id)
+
+    if not item:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
+    db.delete(item)
+    db.commit()
+
+    return {"message": "Запис видалено успішно"}
+

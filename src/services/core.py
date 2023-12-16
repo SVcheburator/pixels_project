@@ -1,6 +1,6 @@
 # pixels_project\src\services\core.py
 from sqlalchemy.orm import Session
-from src.database.models import Base
+from src.database.models import Base, Image
 
 from typing import Any, Generic, TypeVar, Type, Optional, Union
 from fastapi.encoders import jsonable_encoder
@@ -23,6 +23,17 @@ class BaseServices(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
 
     async def get_p(self, db: Session, id: int) -> Optional[ModelType]:
         return db.query(self.model).filter(self.model.id == id).first()
+
+
+
+    async def get_p_url(db: Session, id: int = None, url_original: str = None) -> Image:
+        if id is not None:
+            return db.query(Image).filter(Image.id == id).first()
+        elif url_original is not None:
+            return db.query(Image).filter(Image.url_original == url_original).first()
+        else:
+            return None
+
 
 
     async def create_p(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:

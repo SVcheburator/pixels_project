@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
-from src.services.cloudinary import Cloudinary
+from src.services.cloudinary import CloudinaryService
 
 cloud_router = APIRouter(prefix='/cloudinary')
 
@@ -16,7 +16,7 @@ async def get_transformed_image(image_id: str):
 
     # Створення посилання на трансформоване зображення
     try:
-        transformed_url = await Cloudinary.upload_and_transform_image_async(image_id, transformation_params)
+        transformed_url = await CloudinaryService.upload_and_transform_image_async(image_id, transformation_params)
 
         # Можете вивести результат у вигляді HTML-сторінки або іншого формату відповіді
         html_content = f"<img src='{transformed_url}' alt='Transformed Image'>"

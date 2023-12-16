@@ -51,8 +51,8 @@ class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
 
-    class Config:
-        from_attributes = True
+    # class Config:
+    #     from_attributes = True
 
 class TokenModel(BaseModel):
     access_token: str
@@ -76,19 +76,19 @@ class CommentResponse(CommentBasePost):  # А також тут
         from_attributes = True
 
 
+
 class PostCreate(BaseModel):
     """
     Створення посту
     """
     text: str
     user: int
-    # img: str 
-    url_original: str  # Use the correct attribute name here
-    # img: Optional[str] = None  
-    # img: Optional[UploadFile] = None
+    img: UploadFile
+    description: str
 
     class Config:
-            orm_mode = True
+        orm_mode = True
+
 
 class PostBase(BaseModel):
     """
@@ -137,9 +137,22 @@ class PostUpdate(PostBaseCreateUpdate):
 
 
 class PostSingle(PostBase):
-    """
-    Публікація при перегляді
-    """
+    img: str
+    text: str
+    user: str
+    id: int
+    owner_id: int
+    url_original: str
+    tags: List[str]
+    description: Optional[str]
+    pub_date: datetime
+
+    class Config:
+        orm_mode = True
+
+
+
+
 
     class Config:
         orm_mode = True
