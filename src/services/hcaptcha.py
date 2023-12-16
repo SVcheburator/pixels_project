@@ -6,6 +6,13 @@ verify_url = "https://api.hcaptcha.com/siteverify"
 
 
 async def verify(h_captcha_response: str) -> bool:
+    """Verify response from hCaptcha service
+
+    :param h_captcha_response: h-captcha-response
+    :type h_captcha_response: str
+    :return: True if success
+    :rtype: bool
+    """
     if not settings.hcaptcha_enabled:
         return True
     data = {

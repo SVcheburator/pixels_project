@@ -11,7 +11,7 @@ class UserModel(BaseModel):
 
 
 class UserModelCaptcha(UserModel):
-    h_captcha_response: str 
+    h_captcha_response: str = Field(alias="h-captcha-response")
 
 
 class UserDb(BaseModel):
@@ -59,3 +59,11 @@ class CommentResponse(CommentBase):
 
     class Config:
         from_attributes = True
+
+
+class UserRole(BaseModel):
+    role: Role
+
+
+class RequestUserName(BaseModel):
+    username: str = Field(min_length=5, max_length=16)

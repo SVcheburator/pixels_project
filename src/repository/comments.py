@@ -49,7 +49,7 @@ async def get_comment_by_id(
 
 async def create_comment(
     body: CommentBase, image_id: int, owner: User, db: Session
-) -> Comment:
+) -> Comment | None:
     """
     The create_comment function creates a new comment for an image.
 
@@ -59,14 +59,14 @@ async def create_comment(
     :param db: Session: Pass in the database session
     :return: A comment object
     """
-    comment = Comment(owner=owner, image_id=image_id, comment=body.comment)
-
-    db.add(comment)
-    db.commit()
-    db.refresh(comment)
-
-    return comment
-
+    try:
+        comment = Comment(owner=owner, image_id=image_id, comment=body.comment)
+        db.add(comment)
+        db.commit()
+        db.refresh(comment)
+        return comment
+    except Exception as err:
+        print(f"create_comment {err=}")
 
 async def update_comment(
     image_id: int, comment_id: int, body: CommentBase, owner: User, db: Session
