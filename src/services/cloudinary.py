@@ -4,6 +4,7 @@ import asyncio
 import aiohttp
 import cloudinary
 import cloudinary.uploader
+from cloudinary.uploader import upload
 from fastapi import HTTPException, APIRouter
 from concurrent.futures import ThreadPoolExecutor
 
@@ -27,38 +28,34 @@ class CloudinaryService:
     @staticmethod
     @cloud_router.post("/transform-image")
     async def transform_image(image: bytes):
-        # Завантаження в Cloudinary.
-        image = await cloudinary.uploader.upload(image)
+        original_image = await cloudinary.uploader.upload(image)
 
-        # Зміна розміру: 100 у ширину і 50 у висоту.
-        transformed_image = await cloudinary.api.transform(
-            image["public_id"], width=100, height=50
+        transformed_image = await cloudinary.uploader.upload(
+            original_image["url"],
+            width=100,
+            height=50,
+            public_id=original_image["public_id"] + "_transformed"  
         )
 
         # Отримання URL-адреси трансформованого зображення.
-        transformed_image_url = cloudinary.utils.url(transformed_image)
+        transformed_image_url = transformed_image["secure_url"]
 
         return {"transformed_image_url": transformed_image_url}
 
+
     
 
-
     # Асинхронна функція завантаження та трансформації зображення
-    @staticmethod
-    async def upload_and_transform_image_async(image_path, transformation_params):
-        loop = asyncio.get_event_loop()
+    @classmethod
+    async def upload_and_transform_image_async(cls, image_url, transformation_params):
         try:
-            response = await loop.run_in_executor(
-                thread_pool_executor,
-                lambda: cloudinary.uploader.upload(image_path)
+            result = await upload(
+                image_url,
+                transformation=transformation_params
             )
-
-            # Трансформація зображення
-            transformed_url = cloudinary.CloudinaryImage(response['public_id']).image(transformation_params)
-
-            return transformed_url
+            return result['url']
         except Exception as e:
-            raise HTTPException(status_code=500, detail=str(e))
+            raise e
 
 
 
@@ -89,16 +86,29 @@ class CloudinaryService:
 
 
  
-    # @staticmethod
-    # def generate_public_id_by_email(email: str, app_name: str = settings.cloudinary_name) -> str:
-    #     name = hashlib.sha224(email.encode("utf-8")).hexdigest()[:16]
-    #     return f"{app_name}/publication/{name}"
-
-
-
+    @staticmethod
     def generate_url(r, public_id) -> str:
-        src_url = cloudinary.CloudinaryImage(public_id)\
-        .build_url(
-            width=250, height=250, crop="fill", version=r.get("version") # type: ignore
+        src_url = cloudinary.CloudinaryImage(public_id).build_url(
+            width=250, height=250, crop="fill", version=r.get("version")
         )
         return src_url
+
+
+    @staticmethod
+    def upload_image(image_data: bytes, public_id: str):
+        """
+        Завантажує зображення на Cloudinary.
+
+        Args:
+            image_data: Дані зображення у вигляді байтів.
+            public_id: Публічний ідентифікатор для зображення.
+
+        Returns:
+            Відповідь від Cloudinary.
+        """
+        return cloudinary.uploader.upload(
+            image_data,
+            public_id=public_id,
+            overwrite=True,
+            folder="transformed_images"
+        )

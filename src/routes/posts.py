@@ -237,7 +237,7 @@ async def update_image_description(id: int, description: str, db: Session = Depe
     item = await post_services.get_p(db=db, id=id)
 
     if not item:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запись не найдена')
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail='Запис не знайдений')
 
     item.description = description
     db.commit()
