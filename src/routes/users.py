@@ -10,11 +10,12 @@ from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.config import settings
 from src.schemas import UserDb, UserRole
+from src.services.roles import RoleAccess
 
 router = APIRouter(prefix="/users", tags=["users"])
 
-# allowed_operations_roles = RoleAccess([Role.admin])
-
+allowed_operations_roles = RoleAccess([Role.admin])
+allowed_operations_bans = RoleAccess([Role.admin])
 
 @router.get("/me/", response_model=UserDb)
 async def read_users_me(current_user: User = Depends(auth_service.get_current_user)):
@@ -66,9 +67,9 @@ async def update_avatar_user(
 
 @router.get(
     "/ban/{user_id}",
-    # dependencies=[Depends(allowed_operations_roles)],
+    dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
-    response_description="accepted",
+    response_description=messages.USER_ACCEPDED,
     name="Ban user by id, allowed admin only",
 )
 async def ban_user(
@@ -76,7 +77,7 @@ async def ban_user(
     owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Ban user by their ID, does not allow users to log in
+    """Ban user by their ID, does not allow users to log in.  Allowed for roles: admin.
 
     :param user_id: id of user
     :type user_id: int
@@ -86,11 +87,11 @@ async def ban_user(
     :type db: Session, optional
     """
 
-    if str(owner.role) != "Role.admin":
-        print(f"{str(owner.role)=}")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
-        )
+    # if str(owner.role) != "Role.admin":
+    #     print(f"{str(owner.role)=}")
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
+    #     )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -101,14 +102,14 @@ async def ban_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": "accepted"}
+    return {"detail": messages.USER_ACCEPDED}
 
 
 @router.get(
     "/unban/{user_id}",
-    # dependencies=[Depends(allowed_operations_roles)],
+    dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
-    response_description="accepted",
+    response_description=messages.USER_ACCEPDED,
     name="UnBan user by id, allowed admin only",
 )
 async def unban_user(
@@ -116,7 +117,7 @@ async def unban_user(
     owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Unban user by their ID, allow users to log in
+    """Unban user by their ID, allow users to log in.  Allowed for roles: admin.
 
     :param user_id: id of user
     :type user_id: int
@@ -125,10 +126,10 @@ async def unban_user(
     :param db: _description_, defaults to Depends(get_db)
     :type db: Session, optional
     """
-    if str(owner.role) != "Role.admin":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
-        )
+    # if str(owner.role) != "Role.admin":
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
+    #     )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -139,14 +140,14 @@ async def unban_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": "accepted"}
+    return {"detail": messages.USER_ACCEPDED}
 
 
 @router.patch(
     "/role/{user_id}",
-    # dependencies=[Depends(allowed_operations_roles)],
+    dependencies=[Depends(allowed_operations_roles)],
     status_code=status.HTTP_200_OK,
-    response_description="accepted",
+    response_description=messages.USER_ACCEPDED,
     name="Change role user by id, allowed admin only",
 )
 async def update_role_user(
@@ -155,7 +156,7 @@ async def update_role_user(
     owner: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Unban user by their ID, allow users to log in
+    """Unban user by their ID, allow users to log in.  Allowed for roles: admin.
 
     :param user_id: id of user
     :type user_id: int
@@ -164,10 +165,10 @@ async def update_role_user(
     :param db: _description_, defaults to Depends(get_db)
     :type db: Session, optional
     """
-    if str(owner.role) != "Role.admin":
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
-        )
+    # if str(owner.role) != "Role.admin":
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
+    #     )
     if owner.id == user_id:  # type: ignore
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -178,4 +179,4 @@ async def update_role_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": "accepted"}
+    return {"detail": messages.USER_ACCEPDED}
