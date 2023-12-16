@@ -65,6 +65,13 @@ REST API service hCaptcha
   :members:
   :undoc-members:
   :show-inheritance:
+
+REST API service Roles
+============================
+.. automodule:: src.services.roles
+  :members:
+  :undoc-members:
+  :show-inheritance:
   
 REST API routes Comments 
 ===============================
