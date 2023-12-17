@@ -121,3 +121,26 @@ def test_login_wrong_email(client, user, mock_ratelimiter):
     assert response.status_code == 401, response.text
     data = response.json()
     assert data["detail"] == messages.AUTH_EMAIL_INVALID
+
+
+def test_refresh_token_user(client, user, mock_ratelimiter, session):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get("email"), "password": user.get("password")},
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["token_type"] == "bearer"
+
+    token = data["refresh_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    response = client.get(
+        "/api/auth/refresh_token",
+        headers=headers,
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["token_type"] == "bearer"
+
+    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
+    assert data["refresh_token"] == current_user.refresh_token

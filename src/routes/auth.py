@@ -150,7 +150,7 @@ async def refresh_token(
         )
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
-    if user.refresh_token != token:
+    if user and user.refresh_token != token:
         await repository_users.update_token(user, None, db)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_REF_TOKEN
