@@ -96,15 +96,30 @@
 
 ## Встановлення
 
-### Docker
-
-### Середовище розробника
-##### Завантаження проєкту
+### Завантаження проєкту
 ```
 git clone https://github.com/SVcheburator/pixels_project
 cd ./pixels_project
 git checkout *developer_branch*
 ```
+### Створення змінних оточення для проєкту
+- На овнові `env-example` створюємо новий файл `.env`
+- На овнові `env_prod-example` створюємо новий файл `.env_prod`
+
+
+### Docker
+```
+docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d 
+
+[+] Building 0.0s (0/0)                                                                                                      docker:default
+[+] Running 3/3
+ ✔ Container pixels-redis-1  Started                                                                                                   0.0s 
+ ✔ Container pixels-pg-1     Started                                                                                                   0.0s 
+ ✔ Container pixels-code-1   Started                                                                                                   0.0s
+```
+
+### Середовище розробника
+
 ##### Віртуальне оточення проєкту
 - venv
 ```
