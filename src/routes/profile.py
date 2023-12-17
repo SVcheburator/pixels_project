@@ -3,14 +3,13 @@ from sqlalchemy.orm import Session
 
 
 from src.conf import messages
+from src.conf.config import settings
 from src.database.db import get_db
 from src.database.models import User, Role
 from src.repository import profile as repository_profile
 from src.repository import users as repository_users
 from src.services.auth import auth_service
-from services import cloudinary_image as cloudinary_service
-
-from src.conf.config import settings
+from src.services import cloudinary_image as cloudinary_service
 from src.schemas import RequestUserName, UpdateProfile, UserDb, UserRole
 
 router = APIRouter(prefix="/users/profile", tags=["users"])
@@ -33,7 +32,6 @@ async def read_profile(
     """
     reasult = await repository_profile.read_profile(current_user, db)
     return reasult
-
 
 
 @router.patch("/", status_code=status.HTTP_200_OK)
@@ -77,7 +75,9 @@ async def update_avatar(
     :return: The User with a new avatar.
     :rtype: UserDb
     """
-    src_url = cloudinary_service.build_avatar_cloudinary_url(file, str(current_user.email))
+    src_url = cloudinary_service.build_avatar_cloudinary_url(
+        file, str(current_user.email)
+    )
     user = await repository_users.update_avatar(current_user.email, src_url, db)  # type: ignore
     return user
 
