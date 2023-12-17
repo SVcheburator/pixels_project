@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
 from src.database.models import Role
@@ -67,3 +68,6 @@ class UserRole(BaseModel):
 
 class RequestUserName(BaseModel):
     username: str = Field(min_length=5, max_length=16)
+
+class UpdateProfile(BaseModel):
+        username: Optional[str] = Field(min_length=5, max_length=16)

@@ -77,7 +77,7 @@ get_refresh_token = async () => {
 get_profile = async () => {
   get_profile.counter = (get_profile.counter || 0) + 1;
   //setLoading(user_profile);
-  const URL = `${BASE_URL}/api/users/profile/me`;
+  const URL = `${BASE_URL}/api/users/profile/`;
   const response = await fetch(URL, {
     method: "GET",
     headers: {
