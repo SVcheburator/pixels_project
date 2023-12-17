@@ -94,11 +94,11 @@ get_profile = async () => {
     item = await response.json();
     if (item) {
       const username = document.getElementById("username");
-      if (username) username.innerHTML = item?.username;
+      // if (username) username.innerHTML = item?.username;
       if (username) username.innerHTML = "Client1";
       const email = document.getElementById("email");
       if (email) email.innerHTML = item?.email;
-      if (email) email.innerHTML = "client1@example.com";
+      // if (email) email.innerHTML = "client1@example.com";
       const avatar = document.getElementById("avatar");
       if (avatar) avatar.src = item?.avatar;
       const created_at = document.getElementById("created_at");
