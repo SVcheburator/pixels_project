@@ -85,6 +85,16 @@ def user():
         "role": "user",
     }
 
+@pytest.fixture(scope="module")
+def next_user():
+    return {
+        "username": "nextuser",
+        "email": "nextuser@example.com",
+        "password": "qwerty",
+        "avatar": None,
+        "role": "user",
+    }
+
 
 # @pytest.fixture(scope="module")
 # def contact():

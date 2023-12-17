@@ -46,26 +46,23 @@ def test_repeat_create_same_user(client, user, mock_ratelimiter, monkeypatch):
     data = response.json()
     assert data["detail"] == messages.AUTH_ALREADY_EXIST
 
-def test_create_general_user(client, user, mock_ratelimiter, monkeypatch):
+def test_create_general_user(client, next_user, mock_ratelimiter, monkeypatch):
     mock_send_email = MagicMock()
     get_image = MagicMock(return_value="MOC_AVATAR")
     add_task = MagicMock()
     monkeypatch.setattr("src.services.emails.send_email", mock_send_email)
     monkeypatch.setattr("libgravatar.Gravatar.get_image", get_image)
     monkeypatch.setattr("fastapi.BackgroundTasks.add_task", add_task)
-    user_next = user.copy()
-    user_next["username"]  = "nextuser"
-    user_next["email"]  = "nextuser@example.com"
     response = client.post(
         "/api/auth/signup",
-        json=user_next,
+        json=next_user,
     )
     assert response.status_code == 201, response.text
     data = response.json()
     # print(data)
-    assert data["user"]["email"] == user_next.get("email")
+    assert data["user"]["email"] == next_user.get("email")
     assert data["detail"] == messages.AUTH_USER_CREATED_CONFIRM
-    assert data["user"]["role"] == user_next.get("role")
+    assert data["user"]["role"] == next_user.get("role")
     assert "id" in data["user"]
 
 
@@ -106,16 +103,14 @@ def test_login_user(client, user, mock_ratelimiter, session):
     assert data["token_type"] == "bearer"
 
 
-
-
-# def test_login_wrong_password(client, user, mock_ratelimiter):
-#     response = client.post(
-#         "/api/auth/login",
-#         data={"username": user.get("email"), "password": "password"},
-#     )
-#     assert response.status_code == 401, response.text
-#     data = response.json()
-#     assert data["detail"] == "Invalid credentianal"
+def test_login_wrong_password(client, user, mock_ratelimiter):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get("email"), "password": "password"},
+    )
+    assert response.status_code == 401, response.text
+    data = response.json()
+    assert data["detail"] == messages.AUTH_INVALID_PASSW
 
 
 # def test_login_wrong_email(client, user, mock_ratelimiter):
