@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="/static/favicon.ico" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <title>List</title>
+  </head>
+
+  <body class="d-flex h-100 text-white bg-dark" data-bs-theme="dark">
+    <div class="container">
+      <h2 class="text-center mt-3 mb-3">Simple Javascript client for easy demonstration of the backend engine</h2>
+      <div class="text-center row mt-3">
+        <h3>User profile</h3>
+        <div id="user_profile_loading" class="alert alert-primary" role="alert">Loading...</div>
+      </div>
+      <div class="row mt-3 invisible" id="user_profile">
+        <div class="col-2"></div>
+        <div class="col-6">
+          <table class="table table-striped">
+            <tbody>
+              <tr scope="row">
+                <th>Username:</th>
+                <td id="username"></td>
+              </tr>
+              <tr scope="row">
+                <th>Email:</th>
+                <td id="email"></td>
+              </tr>
+              <tr scope="row">
+                <th>Created:</th>
+                <td id="created_at"></td>
+              </tr>
+              <tr scope="row">
+                <th>Total images:</th>
+                <td id="images_count"></td>
+              </tr>
+              <tr scope="row">
+                <th>Total comments:</th>
+                <td id="comments_count"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col-2 text-center">
+          <img id="avatar" height="100%" alt="Avatar" />
+        </div>
+        <div class="col-2"></div>
+      </div>
+      <div class="row mt-3">
+        <!-- <div class="col-8">
+          <form id="ownerCreate">
+            <div class="mb-3">
+              <td for="owner_name" class="form-td"
+                >Enter email of new owner</td
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="owner_name"
+                name="email"
+                placeholder="name@example.com"
+              />
+            </div>
+            <button type="submit" class="btn btn-primary">Create</button>
+          </form>
+        </div> -->
+        <p class="mt-5 text-center">
+          <a href="/" class="btn btn-sm btn-secondary">Home</a>
+          <a href="index.html" class="btn btn-sm btn-secondary">Login</a>
+        </p>
+      </div>
+    </div>
+    <script src="js/config.js?ver=2023120602"></script>
+    <script src="js/app.js?ver=2023120602"></script>
+  </body>
+</html>

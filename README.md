@@ -172,6 +172,8 @@ http://localhost:9000/docs
 
 ![](doc/web-js-01.png)
 
+![](doc/web-js-02.png)
+
 
 ## DEPLOY
 

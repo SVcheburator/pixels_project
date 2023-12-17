@@ -5,8 +5,7 @@ let token = localStorage.getItem("access_token");
 //console.log(`token=${token}`);
 
 function setLoading(target) {
-  target.innerHTML =
-    '<div class="alert alert-primary" role="alert">Loading...</div>';
+  target.innerHTML = '<div class="alert alert-primary" role="alert">Loading...</div>';
 }
 
 get_refresh_token = async () => {
@@ -75,10 +74,10 @@ get_refresh_token = async () => {
 //   }
 // };
 
-get_contacts = async () => {
-  get_contacts.counter = (get_contacts.counter || 0) + 1;
-  setLoading(contacts);
-  const URL = `${BASE_URL}/api/contacts`;
+get_profile = async () => {
+  get_profile.counter = (get_profile.counter || 0) + 1;
+  //setLoading(user_profile);
+  const URL = `${BASE_URL}/api/users/profile/me`;
   const response = await fetch(URL, {
     method: "GET",
     headers: {
@@ -86,20 +85,46 @@ get_contacts = async () => {
     },
   });
   if (response.ok) {
-    get_contacts.counter = 0;
-    contacts.innerHTML = "";
-    result = await response.json();
-    for (contact of result) {
-      el = document.createElement("li");
-      el.className = "list-group-item";
-      el.innerHTML = `ID: ${contact?.id} ${contact?.first_name} ${contact?.last_name}, Email: <strong>${contact?.email}</strong>. User: ${contact?.user.username} `;
-      contacts.appendChild(el);
+    get_profile.counter = 0;
+    //user_profile.innerHTML = "";
+    const user_profile_loading = document.getElementById("user_profile_loading");
+    user_profile_loading?.classList.add("invisible");
+    const user_profile = document.getElementById("user_profile");
+
+    item = await response.json();
+    if (item) {
+      const username = document.getElementById("username");
+      if (username) username.innerHTML = item?.username;
+      if (username) username.innerHTML = "Client1";
+      const email = document.getElementById("email");
+      if (email) email.innerHTML = item?.email;
+      if (email) email.innerHTML = "client1@example.com";
+      const avatar = document.getElementById("avatar");
+      if (avatar) avatar.src = item?.avatar;
+      const created_at = document.getElementById("created_at");
+      if (created_at) {
+        d = new Date(item?.created_at);
+        created_at.innerHTML = d;
+      }
+      const images_count = document.getElementById("images_count");
+      if (images_count) images_count.innerHTML = item?.images_count;
+      const comments_count = document.getElementById("comments_count");
+      if (comments_count) comments_count.innerHTML = item?.comments_count;
+
+      // const el = document.createElement("li");
+      // el.className = "list-group-item";
+      // el.innerHTML = `ID: ${item?.id} ${item?.username}, Email: <strong>${item?.email}</strong>. Created: ${item?.created_at} `;
+      // user_profile.appendChild(el);
+      // const img = document.createElement("img");
+      // img.src = item?.avatar;
+      // user_profile.appendChild(img);
+      user_profile?.classList.remove("invisible");
     }
   } else if (response.status == 401) {
-    if (get_contacts.counter < 4) {
-      console.log(`Try: refresh_token counter: ${get_contacts.counter}`);
+    if (get_profile.counter < 4) {
+      console.log(`Try: refresh_token counter: ${get_profile.counter}`);
       token = await get_refresh_token();
-      setTimeout(get_contacts, 3000);
+      setTimeout(get_profile, 3000);
     } else {
       window.location = "index.html";
     }
@@ -108,7 +133,7 @@ get_contacts = async () => {
 
 // ownerCreate.addEventListener("submit", async (e) => {
 //   e.preventDefault();
-//   const URL = `${BASE_URL}/api/contacts/`;
+//   const URL = `${BASE_URL}/api/user_profile/`;
 //   const raw = JSON.stringify({
 //     email: ownerCreate?.email?.value,
 //   });
@@ -122,7 +147,7 @@ get_contacts = async () => {
 //   });
 //   if (response.status == 201) {
 //     ownerCreate.reset();
-//     get_contacts();
+//     get_profile();
 //   } else if (response.status == 401) {
 //     token = await get_refresh_token();
 //     console.log("Try again");
@@ -131,8 +156,10 @@ get_contacts = async () => {
 //   }
 // });
 
+const user_profile = document.getElementById("user_profile");
+
 // get_cats();
-get_contacts();
+get_profile();
 
 // setTimeout(() => {
 //   get_cats();
