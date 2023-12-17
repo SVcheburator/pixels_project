@@ -1,29 +1,31 @@
-# docker-compose  --file docker-compose-pytest.yml --env-file .env_prod  up -d 
+# docker-compose  --file docker-compose-pytest.yml  build 
+# docker-compose  --file docker-compose-pytest.yml  up 
+
 version: "3.8"
 name: pixels-test
 services:
   code :
     build: ./
     command: bash -c "pytest"
-    ports:
-      - "9000:9000"
-    environment:
-      SQLALCHEMY_DATABASE_URL: ${SQLALCHEMY_DATABASE_URL}
-      REDIS_HOST: ${REDIS_HOST}
-      REDIS_PORT: ${REDIS_PORT}
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
-      MAIL_USERNAME: ${MAIL_USERNAME}
-      MAIL_PASSWORD: ${MAIL_PASSWORD}
-      MAIL_FROM: ${MAIL_FROM}
-      MAIL_PORT: ${MAIL_PORT}
-      MAIL_SERVER: ${MAIL_SERVER}
-      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
-      CLOUDINARY_NAME: ${CLOUDINARY_NAME}
-      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
-      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
-      HCAPTCHA_ENABLED: ${HCAPTCHA_ENABLED}
-      HCAPTCHA_SITE_KEY: ${HCAPTCHA_SITE_KEY}
-      HCAPTCHA_SECRET_KEY: ${HCAPTCHA_SECRET_KEY}
+    # ports:
+    #   - "9000:9000"
+    # environment:
+      # SQLALCHEMY_DATABASE_URL: ${SQLALCHEMY_DATABASE_URL}
+      # REDIS_HOST: ${REDIS_HOST}
+      # REDIS_PORT: ${REDIS_PORT}
+      # REDIS_PASSWORD: ${REDIS_PASSWORD}
+      # MAIL_USERNAME: ${MAIL_USERNAME}
+      # MAIL_PASSWORD: ${MAIL_PASSWORD}
+      # MAIL_FROM: ${MAIL_FROM}
+      # MAIL_PORT: ${MAIL_PORT}
+      # MAIL_SERVER: ${MAIL_SERVER}
+      # MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      # CLOUDINARY_NAME: ${CLOUDINARY_NAME}
+      # CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      # CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      # HCAPTCHA_ENABLED: ${HCAPTCHA_ENABLED}
+      # HCAPTCHA_SITE_KEY: ${HCAPTCHA_SITE_KEY}
+      # HCAPTCHA_SECRET_KEY: ${HCAPTCHA_SECRET_KEY}
 
 
 
