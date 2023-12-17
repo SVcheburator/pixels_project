@@ -69,14 +69,14 @@ def test_create_general_user(client, user, mock_ratelimiter, monkeypatch):
     assert "id" in data["user"]
 
 
-# def test_login_user_not_confirmed(client, user, mock_ratelimiter):
-#     response = client.post(
-#         "/api/auth/login",
-#         data={"username": user.get("email"), "password": user.get("password")},
-#     )
-#     assert response.status_code == 401, response.text
-#     data = response.json()
-#     assert data["detail"] == "Not confirmed"
+def test_login_user_not_confirmed(client, user, mock_ratelimiter):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get("email"), "password": user.get("password")},
+    )
+    assert response.status_code == 401, response.text
+    data = response.json()
+    assert data["detail"] == messages.AUTH_EMAIL_NOT_CONF
 
 
 # def test_login_user(client, user, mock_ratelimiter, session):

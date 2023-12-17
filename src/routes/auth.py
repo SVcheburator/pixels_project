@@ -99,7 +99,7 @@ async def login(
     :return: The TokenModel model with the access token and refresh token.
     :rtype: dict
     """
-    user = await repository_users.get_user_by_email(body.username, db)
+    user = await repository_users.get_user_by_email(body.username, db, active=None)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_INVALID
