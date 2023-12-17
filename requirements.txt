@@ -1,3 +1,4 @@
+aiohttp==3.9.1
 aiosmtplib==2.0.2 ; python_version >= "3.11" and python_version < "4.0"
 alembic==1.13.0 ; python_version >= "3.11" and python_version < "4.0"
 annotated-types==0.6.0 ; python_version >= "3.11" and python_version < "4.0"
