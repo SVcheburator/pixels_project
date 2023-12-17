@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from pathlib import Path
 import sys
+import redis
 from unittest.mock import AsyncMock, MagicMock
 import pytest
 from fastapi.testclient import TestClient
@@ -47,6 +48,11 @@ def mock_ratelimiter(monkeypatch):
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.redis", mock_rate_limiter)
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.identifier", mock_rate_limiter)
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.http_callback", mock_rate_limiter)
+    mock_redis = MagicMock(return_value = None)
+    monkeypatch.setattr("src.services.auth.auth_service.r.delete", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.set", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.get", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.expire", mock_redis)
 
 
 @pytest.fixture(scope="module")
