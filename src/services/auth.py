@@ -10,6 +10,7 @@ from passlib.context import CryptContext
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 
+from src.conf import messages
 from src.database.db import get_db
 from src.repository import users as repository_users
 from src.repository import logout as repository_logout
@@ -78,12 +79,12 @@ class Auth:
                 return email
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid scope for token",
+                detail=messages.AUTH_INVALID_TOKEN_SCOPE,
             )
         except JWTError:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Could not validate credentials",
+                detail=messages.AUTH_NOT_VALID_CRED,
             )
 
     async def get_current_user(
@@ -91,7 +92,7 @@ class Auth:
     ):
         credentials_exception = HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Could not validate credentials",
+            detail=messages.AUTH_NOT_VALID_CRED,
             headers={"WWW-Authenticate": "Bearer"},
         )
         # check user token is banned
@@ -139,7 +140,7 @@ class Auth:
             print(e)
             raise HTTPException(
                 status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                detail="Invalid token for email verification",
+                detail=messages.AUTH_INVALID_TOKEN_EMAILVERIFY,
             )
 
 

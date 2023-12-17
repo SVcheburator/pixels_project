@@ -23,3 +23,6 @@ AUTH_USER_CREATED_CONFIRM = "User successfully created. Check your email for con
 AUTH_EMAIL_CONF = "Email confirmed"
 AUTH_EMAIL_ALREADY_CONF = "Your email is already confirmed"
 AUTH_EMAIL_CHECK_CONF = "Check your email for confirmation."
+AUTH_NOT_VALID_CRED = "Could not validate credentials"
+AUTH_INVALID_TOKEN_EMAILVERIFY = "Invalid token for email verification"
+AUTH_INVALID_TOKEN_SCOPE = "Invalid scope for token"

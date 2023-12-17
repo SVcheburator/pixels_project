@@ -7,7 +7,7 @@ os.environ["PATH"] += os.pathsep + hw_path
 # os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
 from src.conf import messages
-from src.database.models import User, Role
+from src.database.models import User, Bannedlist
 from src.services.auth import auth_service
 
 
@@ -188,3 +188,36 @@ def test_confirm_general_user(client, next_user, mock_ratelimiter, monkeypatch, 
     assert new_user.confirmed == True  # type: ignore
     assert new_user.active == True # type: ignore
 
+def test_logout_user(client, next_user, mock_ratelimiter, monkeypatch, session):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": next_user.get("email"), "password": next_user.get("password")},
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["token_type"] == "bearer"
+    token = data["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    response = client.get(
+        "/api/users/me/",
+        headers=headers
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["email"] == next_user.get("email")
+
+    response = client.get(
+        "/api/auth/logout",
+        headers=headers
+    )
+    assert response.status_code == 204, response.text
+    bann: Bannedlist = session.query(Bannedlist).filter(Bannedlist.token == token).first()
+    assert bann is not None
+    response = client.get(
+        "/api/users/me/",
+        headers=headers
+    )
+    assert response.status_code == 401, response.text
+    data = response.json()
+    assert data["detail"] == messages.AUTH_NOT_VALID_CRED
