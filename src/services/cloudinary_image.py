@@ -1,4 +1,4 @@
-import hashlib 
+import hashlib
 
 import cloudinary
 import cloudinary.uploader
@@ -6,7 +6,6 @@ import cloudinary.uploader
 from fastapi import UploadFile
 
 from src.conf.config import settings
-
 
 
 cloudinary.config(
@@ -18,12 +17,19 @@ cloudinary.config(
 
 app_name = "PixelApp"
 
-def build_avatar_cloudinary_url(file: UploadFile , email:str) -> str:
+
+def build_public_id(email: str) -> str:
     user_hash = hashlib.sha224(email.encode()).hexdigest()
+    public_id = f"{app_name}/{user_hash}"
+    return public_id
+
+
+def build_avatar_cloudinary_url(file: UploadFile, email: str) -> str:
+    public_id = build_public_id(email)
     r = cloudinary.uploader.upload(
-        file.file, public_id=f"{app_name}/{user_hash}", overwrite=True
+        file.file, public_id=public_id, overwrite=True
     )
-    src_url = cloudinary.CloudinaryImage(
-        f"{app_name}/{user_hash}"
-    ).build_url(width=250, height=250, crop="fill", version=r.get("version"))
+    src_url = cloudinary.CloudinaryImage(public_id).build_url(
+        width=250, height=250, crop="fill", version=r.get("version")
+    )
     return src_url
