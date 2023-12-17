@@ -7,7 +7,7 @@ from src.database.models import User, Role
 from src.repository import users as repository_users
 from src.services.auth import auth_service
 from src.conf.config import settings
-from src.schemas import UserDb, UserRole
+from src.schemas import UpdateUser, UserDb, UserRole
 from src.services.roles import RoleAccess
 
 router = APIRouter(prefix="/users", tags=["users"])
@@ -34,7 +34,7 @@ async def read_users_me(current_user: User = Depends(auth_service.get_current_us
     "/ban/{user_id}",
     dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
-    response_description=messages.USER_ACCEPDED,
+    response_description=messages.USER_ACCEPTED,
     name="Ban user",
 )
 async def ban_user(
@@ -67,14 +67,14 @@ async def ban_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": messages.USER_ACCEPDED}
+    return {"detail": messages.USER_ACCEPTED}
 
 
 @router.get(
     "/unban/{user_id}",
     dependencies=[Depends(allowed_operations_bans)],
     status_code=status.HTTP_200_OK,
-    response_description=messages.USER_ACCEPDED,
+    response_description=messages.USER_ACCEPTED,
     name="UnBan user",
 )
 async def unban_user(
@@ -105,14 +105,14 @@ async def unban_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": messages.USER_ACCEPDED}
+    return {"detail": messages.USER_ACCEPTED}
 
 
 @router.patch(
     "/role/{user_id}",
     dependencies=[Depends(allowed_operations_roles)],
     status_code=status.HTTP_200_OK,
-    response_description=messages.USER_ACCEPDED,
+    response_description=messages.USER_ACCEPTED,
     name="Change role of user",
 )
 async def update_role_user(
@@ -144,14 +144,56 @@ async def update_role_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": messages.USER_ACCEPDED}
+    return {"detail": messages.USER_ACCEPTED}
+
+
+
+@router.patch(
+    "/{user_id}",
+    dependencies=[Depends(allowed_operations_roles)],
+    status_code=status.HTTP_200_OK,
+    response_description=messages.USER_ACCEPTED,
+    name="Change user's data",
+)
+async def update_user(
+    user_id: int,
+    data: UpdateUser,
+    owner: User = Depends(auth_service.get_current_user),
+    db: Session = Depends(get_db),
+):
+    """ Update user data by their ID,.
+
+    :param user_id: id of user
+    :type user_id: int
+    :param owner: _description_, defaults to Depends(auth_service.get_current_user)
+    :type owner: User, optional
+    :param db: _description_, defaults to Depends(get_db)
+    :type db: Session, optional
+    """
+    # if str(owner.role) != "Role.admin":
+    #     raise HTTPException(
+    #         status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.USER_INVALID_ROLE
+    #     )
+    if owner.id == user_id:  # type: ignore
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=messages.USER_CANT_OPERATE_HIMSELF,
+        )
+
+    user = await repository_users.update_user(user_id, data=data, db=db)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
+        )
+    return {"detail": messages.USER_ACCEPTED}
+
 
 
 @router.delete(
     "/{user_id}",
     dependencies=[Depends(allowed_operations_delete)],
     status_code=status.HTTP_200_OK,
-    response_description=messages.USER_ACCEPDED,
+    response_description=messages.USER_ACCEPTED,
     name="Delete user",
 )
 async def delete_user(
@@ -178,4 +220,4 @@ async def delete_user(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.USER_NOT_FOUND
         )
-    return {"detail": messages.USER_ACCEPDED}
+    return {"detail": messages.USER_ACCEPTED}

@@ -36,7 +36,6 @@ class UserResponse(BaseModel):
         from_attributes = True
 
 
-
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
@@ -69,5 +68,12 @@ class UserRole(BaseModel):
 class RequestUserName(BaseModel):
     username: str = Field(min_length=5, max_length=16)
 
+
 class UpdateProfile(BaseModel):
-        username: Optional[str] = Field(min_length=5, max_length=16)
+    username: Optional[str] = Field(min_length=5, max_length=16)
+
+
+class UpdateUser(BaseModel):
+    username: Optional[ str | None] = Field(min_length=5, max_length=16, default=None)
+    is_active: Optional[bool | None] = None
+    role: Optional[Role | None] = None

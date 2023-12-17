@@ -179,7 +179,7 @@ def test_delete_general_user(
     )
     assert response.status_code == 200, response.text
     data = response.json()
-    assert data["detail"] == messages.USER_ACCEPDED
+    assert data["detail"] == messages.USER_ACCEPTED
 
 
 def test_confirm_general_user(

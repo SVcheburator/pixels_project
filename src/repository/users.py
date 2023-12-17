@@ -2,7 +2,7 @@ from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
 from src.database.models import User, Role
-from src.schemas import UserModel
+from src.schemas import UpdateUser, UserModel
 from src.services.auth import auth_service
 
 
@@ -153,7 +153,7 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     return user
 
 
-async def get_user_by_id(id: int, db: Session, active: bool = True) -> User:
+async def get_user_by_id(id: int, db: Session, active: bool | None = True) -> User:
     """
     Retrieves a user by his id.
 
@@ -164,7 +164,12 @@ async def get_user_by_id(id: int, db: Session, active: bool = True) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.id == id, User.active == active).first()
+    query = db.query(User).filter(
+        User.id == id,
+    )
+    if active is not None:
+        query = query.filter(User.active == active)
+    return query.first()
 
 
 async def update_active(user_id: int, active: bool, db: Session) -> User:
@@ -204,6 +209,34 @@ async def update_role_user(user_id: int, role: Role, db: Session) -> User:
     user = await get_user_by_id(user_id, db)
     if user:
         user.role = role  # type: ignore
+        db.commit()
+        clear_user_cache(user)
+    return user
+
+
+async def update_user(user_id: int, data: UpdateUser, db: Session) -> User:
+    """
+    Updates user's role.
+
+    :param user_id: id of user.
+    :type user_id: int
+    :param active: role of user.
+    :type active: str
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    user = await get_user_by_id(user_id, db, active=None)
+    if user:
+        if data.username is not None:
+            newuser: User = await get_user_by_username(str(data.username), db, active=None)
+            if not newuser:
+                user.username = data.username  # type: ignore
+        if data.is_active is not None:
+            user.active = data.is_active  # type: ignore
+        if data.role is not None:
+            user.role = data.role  # type: ignore
         db.commit()
         clear_user_cache(user)
     return user
