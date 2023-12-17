@@ -79,7 +79,10 @@
 #### Захист git branch 
 -  main - merge only owner
 -  build - merge require approval by 1 developer
-![](doc/deplot-git-protect-01.png)
+
+![](doc/deploy-github-protect-01.png)
+
+![](doc/deploy-github-protect-02.png)
 
 #### Перевірка перед merge - Git Action - Python Buld (СI)  (pytest)
 
