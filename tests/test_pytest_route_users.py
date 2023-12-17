@@ -113,11 +113,11 @@ def test_login_wrong_password(client, user, mock_ratelimiter):
     assert data["detail"] == messages.AUTH_INVALID_PASSW
 
 
-# def test_login_wrong_email(client, user, mock_ratelimiter):
-#     response = client.post(
-#         "/api/auth/login",
-#         data={"username": "email", "password": user.get("password")},
-#     )
-#     assert response.status_code == 401, response.text
-#     data = response.json()
-#     assert data["detail"] == "Invalid credentianal"
+def test_login_wrong_email(client, user, mock_ratelimiter):
+    response = client.post(
+        "/api/auth/login",
+        data={"username": "email", "password": user.get("password")},
+    )
+    assert response.status_code == 401, response.text
+    data = response.json()
+    assert data["detail"] == messages.AUTH_EMAIL_INVALID
