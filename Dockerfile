@@ -16,6 +16,7 @@ COPY . .
 COPY run.sh run.sh 
 COPY src/ src/
 COPY templates/ templates/
+COPY tests/ tests/
 COPY static/ static/
 COPY docs/ docs/
 COPY main.py main.py
