@@ -18,9 +18,9 @@ image_m2m_tag = Table(
 
 
 class Role(enum.Enum):
-    admin: str = "admin"
-    moderator: str = "moderator"  
     user: str = "user"
+    moderator: str = "moderator"  
+    admin: str = "admin"
 
 
 class User(Base):
