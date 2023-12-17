@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 hw_path: str = str(Path(__file__).resolve().parent.parent)
 os.environ["PATH"] += os.pathsep + hw_path
-os.environ["PYTHONPATH"] += os.pathsep + hw_path
+# os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
 from src.conf import messages
 from src.database.models import User, Role
