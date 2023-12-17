@@ -1,0 +1,22 @@
+Metadata-Version: 2.0
+Name: uncompyle2
+Version: 2.0.0
+Summary: Python byte-code to source-code converter
+Home-page: https://github.com/rocky/python-uncompyle6
+Author: Hartmut Goebel
+Author-email: h.goebel@crazy-compilers.com
+License: MIT
+Platform: UNKNOWN
+Classifier: Environment :: Console
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Classifier: Programming Language :: Python
+Requires-Dist: uncompyle6
+
+uncompyle2
+==========
+
+A Python 2.7 byte-code decompiler, written in Python 2.7 has moved to https://pypi.python.org/pypi/uncompyle6
+
+
