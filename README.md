@@ -376,6 +376,11 @@ Coverage HTML written to dir htmlcov
 ![pyetst](doc/pytest-01.png)
 
 
+## GitHub Action Python build (pytest)
+
+![GitHub Action](doc/deploy-github-action-01.png)
+
+
 ## Бонусне завдання
 ### Простий JavaScript client (Front-end)
 
