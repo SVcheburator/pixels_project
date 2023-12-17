@@ -263,6 +263,32 @@ The HTML pages are in _build\html.
 ![](doc/docs-01.png)
 
 
+## PyTEST
+pytest -s -v tests
+
+```
+===================================================== test session starts =====================================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
+configfile: pyproject.toml
+plugins: anyio-3.7.1, cov-4.1.0
+collected 11 items
+
+tests/test_pytest_route_users.py::test_create_admin_user PASSED
+tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED
+tests/test_pytest_route_users.py::test_create_general_user PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED
+tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED
+
+===================================================== 11 passed in 1.51s ====================================================== 
+```
+
+
 ## PyTEST Cover
 
 poetry add pytest-cov -G test
