@@ -380,6 +380,8 @@ Coverage HTML written to dir htmlcov
 
 ![GitHub Action](doc/deploy-github-action-01.png)
 
+![GitHub Action](doc/deploy-github-action-02.png)
+
 
 ## Бонусне завдання
 ### Простий JavaScript client (Front-end)
