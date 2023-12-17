@@ -27,7 +27,7 @@ def test_create_admin_user(client, user, mock_ratelimiter, monkeypatch):
     # print(data)
     assert data["user"]["email"] == user.get("email")
     assert data["detail"] == messages.AUTH_USER_CREATED_CONFIRM
-    assert data["user"]["role"] == 'admin'
+    assert data["user"]["role"] == "admin"
     assert "id" in data["user"]
 
 
@@ -46,6 +46,7 @@ def test_repeat_create_same_user(client, user, mock_ratelimiter, monkeypatch):
     assert response.status_code == 409, response.text
     data = response.json()
     assert data["detail"] == messages.AUTH_ALREADY_EXIST
+
 
 def test_create_general_user(client, next_user, mock_ratelimiter, monkeypatch):
     mock_send_email = MagicMock()
@@ -78,8 +79,10 @@ def test_login_user_not_confirmed(client, user, mock_ratelimiter):
 
 
 def test_login_user_not_active(client, user, mock_ratelimiter, session):
-    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
-    current_user.confirmed = True # type: ignore
+    current_user: User = (
+        session.query(User).filter(User.email == user.get("email")).first()
+    )
+    current_user.confirmed = True  # type: ignore
     session.commit()
     response = client.post(
         "/api/auth/login",
@@ -91,9 +94,11 @@ def test_login_user_not_active(client, user, mock_ratelimiter, session):
 
 
 def test_login_user(client, user, mock_ratelimiter, session):
-    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
-    current_user.confirmed = True # type: ignore
-    current_user.active = True # type: ignore
+    current_user: User = (
+        session.query(User).filter(User.email == user.get("email")).first()
+    )
+    current_user.confirmed = True  # type: ignore
+    current_user.active = True  # type: ignore
     session.commit()
     response = client.post(
         "/api/auth/login",
@@ -143,10 +148,15 @@ def test_refresh_token_user(client, user, mock_ratelimiter, session):
     data = response.json()
     assert data["token_type"] == "bearer"
 
-    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
+    current_user: User = (
+        session.query(User).filter(User.email == user.get("email")).first()
+    )
     assert data["refresh_token"] == current_user.refresh_token
 
-def test_delete_general_user(client, user, next_user, mock_ratelimiter, monkeypatch, session):
+
+def test_delete_general_user(
+    client, user, next_user, mock_ratelimiter, monkeypatch, session
+):
     # Admin login
     response_admin = client.post(
         "/api/auth/login",
@@ -158,7 +168,9 @@ def test_delete_general_user(client, user, next_user, mock_ratelimiter, monkeypa
     token = data["access_token"]
 
     # find ID og general user for delete
-    general_user: User = session.query(User).filter(User.email == next_user.get("email")).first()
+    general_user: User = (
+        session.query(User).filter(User.email == next_user.get("email")).first()
+    )
     user_id = general_user.id
     headers = {"Authorization": f"Bearer {token}"}
     response = client.delete(
@@ -170,7 +182,9 @@ def test_delete_general_user(client, user, next_user, mock_ratelimiter, monkeypa
     assert data["detail"] == messages.USER_ACCEPDED
 
 
-def test_confirm_general_user(client, next_user, mock_ratelimiter, monkeypatch, session):
+def test_confirm_general_user(
+    client, next_user, mock_ratelimiter, monkeypatch, session
+):
     test_create_general_user(client, next_user, mock_ratelimiter, monkeypatch)
 
     token = auth_service.create_email_token({"sub": next_user.get("email")})
@@ -183,15 +197,42 @@ def test_confirm_general_user(client, next_user, mock_ratelimiter, monkeypatch, 
     # print(data)
     assert data["message"] == messages.AUTH_EMAIL_CONF
 
-    new_user: User = session.query(User).filter(User.email == next_user.get("email")).first()
+    new_user: User = (
+        session.query(User).filter(User.email == next_user.get("email")).first()
+    )
     assert new_user is not None
     assert new_user.confirmed == True  # type: ignore
-    assert new_user.active == True # type: ignore
+    assert new_user.active == True  # type: ignore
+
+
+def test_profile_me(client, next_user, mock_ratelimiter, monkeypatch, session):
+    response = client.post(
+        "/api/auth/login",
+        data={
+            "username": next_user.get("email"),
+            "password": next_user.get("password"),
+        },
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["token_type"] == "bearer"
+    token = data["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    # print(headers)
+    response = client.get("/api/users/profile/me", headers=headers)
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["email"] == next_user.get("email")
+    assert data.get("images_count") is not None
+
 
 def test_logout_user(client, next_user, mock_ratelimiter, monkeypatch, session):
     response = client.post(
         "/api/auth/login",
-        data={"username": next_user.get("email"), "password": next_user.get("password")},
+        data={
+            "username": next_user.get("email"),
+            "password": next_user.get("password"),
+        },
     )
     assert response.status_code == 200, response.text
     data = response.json()
@@ -199,25 +240,18 @@ def test_logout_user(client, next_user, mock_ratelimiter, monkeypatch, session):
     token = data["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
 
-    response = client.get(
-        "/api/users/me/",
-        headers=headers
-    )
+    response = client.get("/api/users/me/", headers=headers)
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["email"] == next_user.get("email")
 
-    response = client.get(
-        "/api/auth/logout",
-        headers=headers
-    )
+    response = client.get("/api/auth/logout", headers=headers)
     assert response.status_code == 204, response.text
-    bann: Bannedlist = session.query(Bannedlist).filter(Bannedlist.token == token).first()
-    assert bann is not None
-    response = client.get(
-        "/api/users/me/",
-        headers=headers
+    bann: Bannedlist = (
+        session.query(Bannedlist).filter(Bannedlist.token == token).first()
     )
+    assert bann is not None
+    response = client.get("/api/users/me/", headers=headers)
     assert response.status_code == 401, response.text
     data = response.json()
     assert data["detail"] == messages.AUTH_NOT_VALID_CRED
