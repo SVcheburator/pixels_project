@@ -59,22 +59,31 @@ async def signup(
     :return: The UserResponse model with the new user and information about successfull user creation.
     :rtype: dict
     """
-    exist_user = await repository_users.get_user_by_email(body.email, db)
+    exist_user = await repository_users.get_user_by_email(body.email, db, active=None)
+    if exist_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
+        )
+    exist_user = await repository_users.get_user_by_username(body.username, db, active=None)
     if exist_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
         )
     body.password = auth_service.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
-    background_tasks.add_task(
-        send_email, new_user.email, new_user.username, request.base_url
+    if new_user:
+        background_tasks.add_task(
+            send_email, new_user.email, new_user.username, request.base_url
+        )
+        return {
+            "user": new_user,
+            "role": Role.user,
+            "detail": messages.AUTH_USER_CREATED_CONFIRM
+        }
+    print("SOME PROBLEM")
+    raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
     )
-    return {
-        "user": new_user,
-        "role": Role.user,
-        "detail": messages.AUTH_USER_CREATED_CONFIRM
-    }
-
 
 @router.post("/login", response_model=TokenModel)
 async def login(
