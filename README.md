@@ -172,6 +172,7 @@ http://localhost:9000/docs
 
 ![](doc/web-js-01.png)
 
+JavaScript Client with automatic token update.
 ![](doc/web-js-02.png)
 
 
