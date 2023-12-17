@@ -15,7 +15,7 @@ hw_path: str = str(curr_path.parent)
 
 sys.path.append(hw_path)
 # print(f"{hw_path=}", sys.path)
-os.environ["PYTHONPATH"] += os.pathsep + hw_path
+# os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
 from main import app
 from src.database.models import Base
