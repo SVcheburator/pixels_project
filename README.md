@@ -111,11 +111,11 @@ git checkout *developer_branch*
 ```
 docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d 
 
-[+] Building 0.0s (0/0)                                                                                                      docker:default
+[+] Building 0.0s (0/0)                                                                       docker:default
 [+] Running 3/3
- ✔ Container pixels-redis-1  Started                                                                                                   0.0s 
- ✔ Container pixels-pg-1     Started                                                                                                   0.0s 
- ✔ Container pixels-code-1   Started                                                                                                   0.0s
+ ✔ Container pixels-redis-1  Started                                                                   0.0s 
+ ✔ Container pixels-pg-1     Started                                                                   0.0s 
+ ✔ Container pixels-code-1   Started                                                                   0.0s
 ```
 
 ### Середовище розробника
