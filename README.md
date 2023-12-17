@@ -52,9 +52,85 @@
 
 # Виконнаня
 
-## STATIC INDEX HTML PAGE
+## Спільна робота
 
-![](doc/web-index-01.png)
+### Організаційні процеси
+#### Склад команди розробників
+1. [Team Lead](https://github.com/SVcheburator) @ SVcheburator 
+
+1. [Scrum Master](https://github.com/AlexanderBgit) @AlexanderBgit
+
+1. [Developer](https://github.com/OleksiiHladkov) @OleksiiHladkov
+
+1. [Developer](https://github.com/lexxai) 
+@lexxai 
+
+#### Trello Розподілення задач мід розробникми
+![](doc/softskill-trelo-01.png)
+
+### Спільний робочий простір розробки Git
+#### Розподілення git brach між розробникмми
+- Основна гілка розробки - built
+- main - фінальна для релізів
+- кожному розробнику власна гілка, корру сизронізуємо з built
+
+![](doc/deploy-github-branch-01.png)
+
+#### Захист git branch 
+-  main - merge only owner
+-  build - merge require approval by 1 developer
+![](doc/deplot-git-protect-01.png)
+
+#### Перевірка перед merge - Git Action - Python Buld (СI)  (pytest)
+
+![GitHub Action](doc/deploy-github-action-01.png)
+
+![GitHub Action](doc/deploy-github-action-02.png)
+
+
+
+## Розділи завдань
+
+## Встановлення
+
+### Docker
+
+### Середовище розробника
+##### Завантаженя проєкту
+```
+git clone https://github.com/SVcheburator/pixels_project
+cd ./pixels_project
+git checkout *developer_branch*
+```
+##### Віртуальне оточення проєкту
+- venv
+```
+python -m venv .venv
+./.venv/sctipt/activate
+pip install -r requirements.txt
+```
+- poetry
+```
+poetry init
+poetry shell
+poetry update
+```
+##### Запуск проєкту
+```
+python ./main.py
+                   
+INFO:     Will watch for changes in these directories: ['...\\Project_group_5\\pixels_project']
+INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+INFO:     Started reloader process [19228] using WatchFiles
+INFO:     Started server process [18616]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+```
+##### Підключення до проєкту
+
+Відкрити браузер за посиалянням http://localhost:9000 
+
+
 
 
 ## Auth Email Confirm
@@ -65,13 +141,18 @@
 
 ![](/doc/auth-03.png)
 
-## FastAPI docs
+## FastAPI docs (Swagger)
 
 http://localhost:9000/docs
 
 ![FastAPI docs](doc/fastapi-docs-01.png)
 
 
+## Тустування. Простий Front end. STATIC HTML / JavaScript Auth client.
+
+![](doc/web-index-01.png)
+
+![](doc/web-js-01.png)
 
 
 ## DEPLOY
@@ -376,13 +457,6 @@ Coverage HTML written to dir htmlcov
 
 ```
 ![pyetst](doc/pytest-01.png)
-
-
-## GitHub Action Python build (pytest)
-
-![GitHub Action](doc/deploy-github-action-01.png)
-
-![GitHub Action](doc/deploy-github-action-02.png)
 
 
 ## Бонусне завдання
