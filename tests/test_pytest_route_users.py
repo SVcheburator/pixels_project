@@ -219,7 +219,7 @@ def test_profile_me(client, next_user, mock_ratelimiter, monkeypatch, session):
     token = data["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
     # print(headers)
-    response = client.get("/api/users/profile/me", headers=headers)
+    response = client.get("/api/users/profile/", headers=headers)
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["email"] == next_user.get("email")
