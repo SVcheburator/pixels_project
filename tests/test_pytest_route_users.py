@@ -79,17 +79,33 @@ def test_login_user_not_confirmed(client, user, mock_ratelimiter):
     assert data["detail"] == messages.AUTH_EMAIL_NOT_CONF
 
 
-# def test_login_user(client, user, mock_ratelimiter, session):
-#     current_user: User = session.query(User).filter(User.email == user.get("email")).first()
-#     current_user.confirmed = True
-#     session.commit()
-#     response = client.post(
-#         "/api/auth/login",
-#         data={"username": user.get("email"), "password": user.get("password")},
-#     )
-#     assert response.status_code == 200, response.text
-#     data = response.json()
-#     assert data["token_type"] == "bearer"
+def test_login_user_not_active(client, user, mock_ratelimiter, session):
+    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
+    current_user.confirmed = True # type: ignore
+    session.commit()
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get("email"), "password": user.get("password")},
+    )
+    assert response.status_code == 401, response.text
+    data = response.json()
+    assert data["detail"] == messages.AUTH_EMAIL_NOT_ACTIVE
+
+
+def test_login_user(client, user, mock_ratelimiter, session):
+    current_user: User = session.query(User).filter(User.email == user.get("email")).first()
+    current_user.confirmed = True # type: ignore
+    current_user.active = True # type: ignore
+    session.commit()
+    response = client.post(
+        "/api/auth/login",
+        data={"username": user.get("email"), "password": user.get("password")},
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    assert data["token_type"] == "bearer"
+
+
 
 
 # def test_login_wrong_password(client, user, mock_ratelimiter):
