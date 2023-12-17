@@ -267,34 +267,35 @@ The HTML pages are in _build\html.
 pytest -v tests
 
 ```
-===================================================== test session starts =====================================================
+===================================================== test session starts ==================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
 configfile: pyproject.toml
 plugins: anyio-3.7.1, cov-4.1.0
-collected 20 items
+collected 21 items
 
-tests/test_pytest_route_users.py::test_create_admin_user PASSED                                                                   [  5%]
-tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                                             [ 10%]
-tests/test_pytest_route_users.py::test_create_general_user PASSED                                                                 [ 15%]
-tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                                            [ 20%]
-tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                                               [ 25%]
-tests/test_pytest_route_users.py::test_login_user PASSED                                                                          [ 30%]
-tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                                                [ 35%]
-tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                                                   [ 40%]
-tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                                                  [ 45%]
-tests/test_pytest_route_users.py::test_delete_general_user PASSED                                                                 [ 50%]
-tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                                                [ 55%]
-tests/test_pytest_route_users.py::test_logout_user PASSED                                                                         [ 60%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                                               [ 65%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED                                   [ 70%] 
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED                                    [ 75%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED                                          [ 80%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED                                      [ 85%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                                             [ 90%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED                                       [ 95%] 
-tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED                                                  [100%]
+tests/test_pytest_route_users.py::test_create_admin_user PASSED                                       [  4%]
+tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                 [  9%] 
+tests/test_pytest_route_users.py::test_create_general_user PASSED                                     [ 14%]
+tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                [ 19%] 
+tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                   [ 23%]
+tests/test_pytest_route_users.py::test_login_user PASSED                                              [ 28%]
+tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                    [ 33%]
+tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                       [ 38%] 
+tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                      [ 42%]
+tests/test_pytest_route_users.py::test_delete_general_user PASSED                                     [ 47%]
+tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                    [ 52%]
+tests/test_pytest_route_users.py::test_profile_me PASSED                                              [ 57%]
+tests/test_pytest_route_users.py::test_logout_user PASSED                                             [ 61%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                   [ 66%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED       [ 71%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED        [ 76%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED              [ 80%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED          [ 85%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                 [ 90%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED           [ 95%] 
+tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED                      [100%]
 
-========================================================== 20 passed in 3.83s ========================================================== 
+============================================ 21 passed in 3.97s ============================================
 ```
 
 
@@ -307,14 +308,14 @@ poetry add pytest-cov -G test
 ```
 pytest --cov=. --cov-report term  tests/
 
-===================================================== test session starts ======================================================
+===================================================== test session starts ======================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 plugins: anyio-3.7.1, cov-4.1.0
-collected 20 items
+collected 21 items
 
-tests\test_pytest_route_users.py ............                                                                                     [ 60%]
-tests\test_unit_repository_logout.py .......                                                                                      [ 95%]
-tests\test_unit_repository_user.py .                                                                                              [100%]
+tests\test_pytest_route_users.py .............                                                        [ 61%]
+tests\test_unit_repository_logout.py .......                                                          [ 95%]
+tests\test_unit_repository_user.py .                                                                  [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
 Name                                     Stmts   Miss  Cover
@@ -327,12 +328,12 @@ src\database\models.py                      54      0   100%
 src\repository\__init__.py                   0      0   100%
 src\repository\comments.py                  30     20    33%
 src\repository\logout.py                    25      3    88%
-src\repository\profile.py                   13      6    54%
+src\repository\profile.py                   13      0   100%
 src\repository\users.py                     79     23    71%
 src\routes\__init__.py                       0      0   100%
 src\routes\auth.py                         103     30    71%
 src\routes\comments.py                      42     17    60%
-src\routes\profile.py                       22      5    77%
+src\routes\profile.py                       22      3    86%
 src\routes\static.py                        16      3    81%
 src\routes\tools.py                         15      8    47%
 src\routes\users.py                         58     25    57%
@@ -344,16 +345,16 @@ src\services\hcaptcha.py                    11      7    36%
 src\services\roles.py                       14      1    93%
 tests\__init__.py                            0      0   100%
 tests\conftest.py                           58      1    98%
-tests\test_pytest_route_users.py           135      0   100%
+tests\test_pytest_route_users.py           147      0   100%
 tests\test_route_comments.py                 0      0   100%
 tests\test_unit_repository_comments.py       0      0   100%
 tests\test_unit_repository_logout.py        56      1    98%
 tests\test_unit_repository_user.py          44      1    98%
 ------------------------------------------------------------
-TOTAL                                     1020    183    82%
+TOTAL                                     1032    175    83%
 
 
-========================================================== 20 passed in 4.22s ==========================================================  
+============================================ 21 passed in 5.32s ============================================  
 
 ```
 
