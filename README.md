@@ -6,7 +6,7 @@
 
 ### Аутентифікація
 - Механізм аутентифікації. JWT токени.
-- Користувачі мають три ролі. Звичайний користувач, модератор, та адмінстратор. Перший користувач в системі завжди адміністратор
+- Користувачі мають три ролі. Звичайний користувач, модератор, та адміністратор. Перший користувач в системі завжди адміністратор
 - Для реалізації різних рівнів доступу (звичайний користувач, модератор і адміністратор) використовуються декоратори FastAPI для перевірки токена і ролі користувача. 
 
 ### Робота с світлинами
@@ -15,7 +15,7 @@
 - Користувачі можуть редагувати опис світлини (PUT).
 - Користувачі можуть отримувати світлину за унікальним посиланням (GET).
 - Можливість додавати до 5 тегів під світлину. Додавання тегу не обов'язкове при завантаженні світлини.
-- Теги унікальні для всього застосунку. Тег передається на сервер по імені. Якщо такого тега не існує, то він створюється, якщо існує, то для світлини береться існуючий тег з такою назвою.
+- Теги унікальні для всього застосунку. Тег передається на сервер по імені. Якщо такого тега не існує, то він створюється, якщо існує, то для світлини береться тег що існує з такою назвою.
 - Користувачі можуть виконувати базові операції над світлинами, які дозволяє сервіс Cloudinary (https://cloudinary.com/documentation/image_transformations). Можливо вибрати обмежений набір трансформацій над світлинами для свого застосунку з Cloudinary.
 - Користувачі можуть створювати посилання на трансформоване зображення для перегляду світлини в вигляді URL та QR-code (https://pypi.org/project/qrcode/). Операція POST, оскільки створюється окреме посилання на трансформоване зображення, яке зберігається в базі даних
 - Створені посилання зберігаються на сервері і через мобільний телефон ми можемо відсканувати QR-code та побачити зображення
@@ -29,8 +29,8 @@
 - Для коментарів обов'язково зберігати час створення та час редагування коментаря в базі даних. Для реалізації функціональності коментарів, ми можемо використовувати відношення "один до багатьох" між світлинами і коментарями в базі даних. Для тимчасового маркування коментарів, використовувати стовпці "created_at" і "updated_at" у таблиці коментарів.
 
 ### Додатковий функціонал
-- Створити маршрут для профіля користувача за його унікальним юзернеймом. Повинна повертатися вся інформація про користувача. Імя, коли зарєсттрований, кількість завантажених фото тощо
-- Користувач може редагувати інформацію про себе, та бачити інформацію про себе. Це мають бути різні маршрути з профілем користувача. Профіль для всіх користувачів, а інформація для себе - це те що можно редагувати
+- Створити маршрут для профіля користувача за його унікальним юзернеймом. Повинна повертатися вся інформація про користувача. Імя, коли зареєстрований, кількість завантажених фото тощо
+- Користувач може редагувати інформацію про себе, та бачити інформацію про себе. Це мають бути різні маршрути з профілем користувача. Профіль для всіх користувачів, а інформація для себе - це те що можна редагувати
 - Адміністратор може робити користувачів неактивними (банити). Неактивні користувачі не можуть заходити в застосунок
 
 
@@ -50,11 +50,105 @@
 
 
 
-# Виконнаня
+# Виконання
 
-## STATIC INDEX HTML PAGE
+## Спільна робота
 
-![](doc/web-index-01.png)
+### Організаційні процеси
+#### Склад команди розробників
+1. [Team Lead](https://github.com/SVcheburator) @ SVcheburator 
+
+1. [Scrum Master](https://github.com/AlexanderBgit) @AlexanderBgit
+
+1. [Developer](https://github.com/OleksiiHladkov) @OleksiiHladkov
+
+1. [Developer](https://github.com/lexxai) 
+@lexxai 
+
+#### Trello Розподілення задач мід розробниками
+![](doc/softskill-trelo-01.png)
+
+### Спільний робочий простір розробки Git
+#### Розподілення git brach між розробниками
+- Основна гілка розробки - built
+- main - фінальна для релізів
+- кожному розробнику створена власна гілка, котру розробник синхронізує з built
+
+![](doc/deploy-github-branch-01.png)
+
+#### Захист git branch 
+-  main - merge only owner
+-  build - merge require approval by 1 developer
+
+![](doc/deploy-github-protect-01.png)
+
+![](doc/deploy-github-protect-02.png)
+
+#### Перевірка перед merge - Git Action - Python Build (СI)  (pytest)
+
+![GitHub Action](doc/deploy-github-action-01.png)
+
+![GitHub Action](doc/deploy-github-action-02.png)
+
+
+
+## Розділи завдань
+
+## Встановлення
+
+### Завантаження проєкту
+```
+git clone https://github.com/SVcheburator/pixels_project
+cd ./pixels_project
+git checkout *developer_branch*
+```
+### Створення змінних оточення для проєкту
+- На овнові `env-example` створюємо новий файл `.env`
+- На овнові `env_prod-example` створюємо новий файл `.env_prod`
+
+
+### Docker
+```
+docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d 
+
+[+] Building 0.0s (0/0)                                                                       docker:default
+[+] Running 3/3
+ ✔ Container pixels-redis-1  Started                                                                   0.0s 
+ ✔ Container pixels-pg-1     Started                                                                   0.0s 
+ ✔ Container pixels-code-1   Started                                                                   0.0s
+```
+
+### Середовище розробника
+
+##### Віртуальне оточення проєкту
+- venv
+```
+python -m venv .venv
+./.venv/sctipt/activate
+pip install -r requirements.txt
+```
+- poetry
+```
+poetry init
+poetry shell
+poetry update
+```
+##### Запуск проєкту
+```
+python ./main.py
+                   
+INFO:     Will watch for changes in these directories: ['...\\Project_group_5\\pixels_project']
+INFO:     Uvicorn running on http://0.0.0.0:9000 (Press CTRL+C to quit)
+INFO:     Started reloader process [19228] using WatchFiles
+INFO:     Started server process [18616]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+```
+##### Підключення до проєкту
+
+Відкрити браузер за посиланням http://localhost:9000 
+
+
 
 
 ## Auth Email Confirm
@@ -65,13 +159,18 @@
 
 ![](/doc/auth-03.png)
 
-## FastAPI docs
+## FastAPI docs (Swagger)
 
 http://localhost:9000/docs
 
 ![FastAPI docs](doc/fastapi-docs-01.png)
 
 
+## Тестування. Простий Front end. STATIC HTML / JavaScript Auth client.
+
+![](doc/web-index-01.png)
+
+![](doc/web-js-01.png)
 
 
 ## DEPLOY
@@ -376,13 +475,6 @@ Coverage HTML written to dir htmlcov
 
 ```
 ![pyetst](doc/pytest-01.png)
-
-
-## GitHub Action Python build (pytest)
-
-![GitHub Action](doc/deploy-github-action-01.png)
-
-![GitHub Action](doc/deploy-github-action-02.png)
 
 
 ## Бонусне завдання
