@@ -40,7 +40,17 @@ class Settings(BaseSettings):
         extra="ignore", env_file=str(ENV_PATH), env_file_encoding="utf-8"
     )
 
+    postgres_db: str
+    postgres_user: str
+    postgres_password: str
+    postgres_host: str
+    postgres_port: str
+    sqlalchemy_database_url: str | None = None
+
 
 settings = Settings()
 # print(f"settings : {ENV_PATH=}")
 # print(f"settings {settings.sqlalchemy_database_url=}")
+
+SQLALCHEMY_DATABASE_URL = f"postgresql+psycopg2://{settings.postgres_user}:{settings.postgres_password}@{settings.postgres_host}:{settings.postgres_port}/{settings.postgres_db}"
+settings.sqlalchemy_database_url = SQLALCHEMY_DATABASE_URL
