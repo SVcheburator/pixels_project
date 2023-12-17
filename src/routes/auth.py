@@ -179,15 +179,18 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     :rtype: dict
     """
     email = await auth_service.get_email_from_token(token)
-    user = await repository_users.get_user_by_email(email, db)
+    user = await repository_users.get_user_by_email(email, db, active=None)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
         )
     if user.confirmed:
-        return {"message": "Your email is already confirmed"}
-    await repository_users.confirmed_email(email, db)
-    return {"message": "Email confirmed"}
+        return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
+    if await repository_users.confirmed_email(email, db):
+        return {"message": messages.AUTH_EMAIL_CONF}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
+    )
 
 
 @router.post("/request_email")
@@ -214,12 +217,12 @@ async def request_email(
     user = await repository_users.get_user_by_email(body.email, db)
 
     if user.confirmed:
-        return {"message": "Your email is already confirmed"}
+        return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
     if user:
         background_tasks.add_task(
             send_email, user.email, user.username, request.base_url
         )
-    return {"message": "Check your email for confirmation."}
+    return {"message": messages.AUTH_EMAIL_CHECK_CONF}
 
 
 @router.get("/logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -290,7 +293,7 @@ async def signup_cap(
         return {
             "user": new_user,
             "role": Role.user,
-            "detail": "User successfully created. Check your email for confirmation.",
+            "detail": messages.AUTH_USER_CREATED_CONFIRM,
         }
     except Exception as err:
         raise HTTPException(

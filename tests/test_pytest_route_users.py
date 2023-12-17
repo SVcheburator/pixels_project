@@ -8,6 +8,7 @@ os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
 from src.conf import messages
 from src.database.models import User, Role
+from src.services.auth import auth_service
 
 
 def test_create_admin_user(client, user, mock_ratelimiter, monkeypatch):
@@ -169,21 +170,21 @@ def test_delete_general_user(client, user, next_user, mock_ratelimiter, monkeypa
     assert data["detail"] == messages.USER_ACCEPDED
 
 
-# def test_confirm_general_user(client, next_user, mock_ratelimiter, monkeypatch):
-#     mock_send_email = MagicMock()
-#     get_image = MagicMock(return_value="MOC_AVATAR")
-#     add_task = MagicMock()
-#     monkeypatch.setattr("src.services.emails.send_email", mock_send_email)
-#     monkeypatch.setattr("libgravatar.Gravatar.get_image", get_image)
-#     monkeypatch.setattr("fastapi.BackgroundTasks.add_task", add_task)
-#     response = client.post(
-#         "/api/auth/signup",
-#         json=next_user,
-#     )
-#     assert response.status_code == 201, response.text
-#     data = response.json()
-#     # print(data)
-#     assert data["user"]["email"] == next_user.get("email")
-#     assert data["detail"] == messages.AUTH_USER_CREATED_CONFIRM
-#     assert data["user"]["role"] == next_user.get("role")
-#     assert "id" in data["user"]
+def test_confirm_general_user(client, next_user, mock_ratelimiter, monkeypatch, session):
+    test_create_general_user(client, next_user, mock_ratelimiter, monkeypatch)
+
+    token = auth_service.create_email_token({"sub": next_user.get("email")})
+    # print(f"{token=}")
+    response = client.get(
+        f"/api/auth/confirmed_email/{token}",
+    )
+    assert response.status_code == 200, response.text
+    data = response.json()
+    # print(data)
+    assert data["message"] == messages.AUTH_EMAIL_CONF
+
+    new_user: User = session.query(User).filter(User.email == next_user.get("email")).first()
+    assert new_user is not None
+    assert new_user.confirmed == True  # type: ignore
+    assert new_user.active == True # type: ignore
+

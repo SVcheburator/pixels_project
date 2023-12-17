@@ -26,7 +26,9 @@ async def is_present_admin(db: Session) -> bool:
     return result is not None
 
 
-async def get_user_by_email(email: str, db: Session, active: bool|None = True) -> User:
+async def get_user_by_email(
+    email: str, db: Session, active: bool | None = True
+) -> User:
     """
     Retrieves a user by his email.
 
@@ -43,7 +45,9 @@ async def get_user_by_email(email: str, db: Session, active: bool|None = True) -
     return query.first()
 
 
-async def get_user_by_username(username: str, db: Session, active: bool|None = True) -> User:
+async def get_user_by_username(
+    username: str, db: Session, active: bool | None = True
+) -> User:
     """
     Retrieves a user by his username.
 
@@ -109,7 +113,7 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
         clear_user_cache(user)
 
 
-async def confirmed_email(email: str, db: Session) -> None:
+async def confirmed_email(email: str, db: Session) -> bool | None:
     """
     Updates email confirmation status.
 
@@ -120,11 +124,12 @@ async def confirmed_email(email: str, db: Session) -> None:
     :return: None.
     :rtype: None
     """
-    user = await get_user_by_email(email, db)
+    user = await get_user_by_email(email, db, active=False)
     if user:
         user.confirmed = True  # type: ignore
         user.active = True  # type: ignore
         db.commit()
+        return True
 
 
 async def update_avatar(email: str, url: str, db: Session) -> User:
