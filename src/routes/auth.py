@@ -72,7 +72,7 @@ async def signup(
     return {
         "user": new_user,
         "role": Role.user,
-        "detail": "User successfully created. Check your email for confirmation.",
+        "detail": messages.AUTH_USER_CREATED_CONFIRM
     }
 
 

@@ -6,7 +6,8 @@ hw_path: str = str(Path(__file__).resolve().parent.parent)
 os.environ["PATH"] += os.pathsep + hw_path
 os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
-from src.database.models import User
+from src.conf import messages
+from src.database.models import User, Role
 
 
 def test_create_user(client, user, mock_ratelimiter, monkeypatch):
@@ -22,7 +23,10 @@ def test_create_user(client, user, mock_ratelimiter, monkeypatch):
     )
     assert response.status_code == 201, response.text
     data = response.json()
+    print(data)
     assert data["user"]["email"] == user.get("email")
+    assert data["detail"] == messages.AUTH_USER_CREATED_CONFIRM
+    assert data["user"]["role"] == 'admin'
     assert "id" in data["user"]
 
 
