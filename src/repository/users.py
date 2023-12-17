@@ -26,7 +26,9 @@ async def is_present_admin(db: Session) -> bool:
     return result is not None
 
 
-async def get_user_by_email(email: str, db: Session) -> User:
+async def get_user_by_email(
+    email: str, db: Session, active: bool | None = True
+) -> User:
     """
     Retrieves a user by his email.
 
@@ -37,10 +39,15 @@ async def get_user_by_email(email: str, db: Session) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.email == email, User.active == True).first()
+    query = db.query(User).filter(User.email == email)
+    if active is not None:
+        query = query.filter(User.active == active)
+    return query.first()
 
 
-async def get_user_by_username(username: str, db: Session) -> User:
+async def get_user_by_username(
+    username: str, db: Session, active: bool | None = True
+) -> User:
     """
     Retrieves a user by his username.
 
@@ -51,7 +58,10 @@ async def get_user_by_username(username: str, db: Session) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.username == username, User.active == True).first()
+    query = db.query(User).filter(User.username == username)
+    if active is not None:
+        query = query.filter(User.active == active)
+    return query.first()
 
 
 async def create_user(body: UserModel, db: Session) -> User:
@@ -75,10 +85,13 @@ async def create_user(body: UserModel, db: Session) -> User:
     # Search any admin if not present assign thios user as admin
     if not await is_present_admin(db):
         new_user.role = Role.admin
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
-    return new_user
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
+    except Exception as err:
+        print(f"ERROR create_user {err}")
 
 
 async def update_token(user: User, token: str | None, db: Session) -> None:
@@ -100,7 +113,7 @@ async def update_token(user: User, token: str | None, db: Session) -> None:
         clear_user_cache(user)
 
 
-async def confirmed_email(email: str, db: Session) -> None:
+async def confirmed_email(email: str, db: Session) -> bool | None:
     """
     Updates email confirmation status.
 
@@ -111,11 +124,12 @@ async def confirmed_email(email: str, db: Session) -> None:
     :return: None.
     :rtype: None
     """
-    user = await get_user_by_email(email, db)
+    user = await get_user_by_email(email, db, active=False)
     if user:
         user.confirmed = True  # type: ignore
         user.active = True  # type: ignore
         db.commit()
+        return True
 
 
 async def update_avatar(email: str, url: str, db: Session) -> User:

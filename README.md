@@ -263,6 +263,42 @@ The HTML pages are in _build\html.
 ![](doc/docs-01.png)
 
 
+## PyTEST
+pytest -v tests
+
+```
+===================================================== test session starts ==================================
+platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
+configfile: pyproject.toml
+plugins: anyio-3.7.1, cov-4.1.0
+collected 21 items
+
+tests/test_pytest_route_users.py::test_create_admin_user PASSED                                       [  4%]
+tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                 [  9%] 
+tests/test_pytest_route_users.py::test_create_general_user PASSED                                     [ 14%]
+tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                [ 19%] 
+tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                   [ 23%]
+tests/test_pytest_route_users.py::test_login_user PASSED                                              [ 28%]
+tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                    [ 33%]
+tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                       [ 38%] 
+tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                      [ 42%]
+tests/test_pytest_route_users.py::test_delete_general_user PASSED                                     [ 47%]
+tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                    [ 52%]
+tests/test_pytest_route_users.py::test_profile_me PASSED                                              [ 57%]
+tests/test_pytest_route_users.py::test_logout_user PASSED                                             [ 61%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                   [ 66%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED       [ 71%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED        [ 76%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED              [ 80%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED          [ 85%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                 [ 90%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED           [ 95%] 
+tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED                      [100%]
+
+============================================ 21 passed in 3.97s ============================================
+```
+
+
 ## PyTEST Cover
 
 poetry add pytest-cov -G test
@@ -272,27 +308,53 @@ poetry add pytest-cov -G test
 ```
 pytest --cov=. --cov-report term  tests/
 
-===================================================== test session starts ======================================================
+===================================================== test session starts ======================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 plugins: anyio-3.7.1, cov-4.1.0
-collected 7 items
+collected 21 items
 
-tests\test_unit_repository_logout.py .......                                                                              [100%]
+tests\test_pytest_route_users.py .............                                                        [ 61%]
+tests\test_unit_repository_logout.py .......                                                          [ 95%]
+tests\test_unit_repository_user.py .                                                                  [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
-Name                                   Stmts   Miss  Cover
-----------------------------------------------------------
-main.py                                   17     17     0%
-src\conf\config.py                        16      0   100%
-src\database\db.py                        12      4    67%
-src\database\models.py                    52      0   100%
-src\repository\logout.py                  25      3    88%
-tests\test_unit_repository_logout.py      57      1    98%
-----------------------------------------------------------
-TOTAL                                    179     25    86%
+Name                                     Stmts   Miss  Cover
+------------------------------------------------------------
+main.py                                     31      6    81%
+src\conf\config.py                          28      0   100%
+src\conf\messages.py                        25      0   100%
+src\database\db.py                          13      4    69%
+src\database\models.py                      54      0   100%
+src\repository\__init__.py                   0      0   100%
+src\repository\comments.py                  30     20    33%
+src\repository\logout.py                    25      3    88%
+src\repository\profile.py                   13      0   100%
+src\repository\users.py                     79     23    71%
+src\routes\__init__.py                       0      0   100%
+src\routes\auth.py                         103     30    71%
+src\routes\comments.py                      42     17    60%
+src\routes\profile.py                       22      3    86%
+src\routes\static.py                        16      3    81%
+src\routes\tools.py                         15      8    47%
+src\routes\users.py                         58     25    57%
+src\schemas.py                              44      0   100%
+src\services\__init__.py                     0      0   100%
+src\services\auth.py                        89     15    83%
+src\services\emails.py                      15      7    53%
+src\services\hcaptcha.py                    11      7    36%
+src\services\roles.py                       14      1    93%
+tests\__init__.py                            0      0   100%
+tests\conftest.py                           58      1    98%
+tests\test_pytest_route_users.py           147      0   100%
+tests\test_route_comments.py                 0      0   100%
+tests\test_unit_repository_comments.py       0      0   100%
+tests\test_unit_repository_logout.py        56      1    98%
+tests\test_unit_repository_user.py          44      1    98%
+------------------------------------------------------------
+TOTAL                                     1032    175    83%
 
 
-====================================================== 7 passed in 1.95s ======================================================= 
+============================================ 21 passed in 5.32s ============================================  
 
 ```
 
@@ -314,6 +376,13 @@ Coverage HTML written to dir htmlcov
 
 ```
 ![pyetst](doc/pytest-01.png)
+
+
+## GitHub Action Python build (pytest)
+
+![GitHub Action](doc/deploy-github-action-01.png)
+
+![GitHub Action](doc/deploy-github-action-02.png)
 
 
 ## Бонусне завдання

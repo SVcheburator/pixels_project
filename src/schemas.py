@@ -23,7 +23,7 @@ class UserDb(BaseModel):
     avatar: str
     active: bool
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -31,7 +31,7 @@ class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -57,7 +57,7 @@ class CommentResponse(CommentBase):
     created_at: datetime
     updated_at: datetime
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 

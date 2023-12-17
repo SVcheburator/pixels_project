@@ -1,4 +1,5 @@
 import redis.asyncio as redis
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -10,10 +11,16 @@ import uvicorn
 from src.conf.config import settings
 from src.routes import users, comments, auth, tools, static, profile
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await startup()
+    yield
+
+
 
 templates = Jinja2Templates(directory="templates")
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan) # type: ignore
 
 app.include_router(users.router, prefix="/api")
 app.include_router(profile.router, prefix="/api")
@@ -30,7 +37,7 @@ app.add_middleware(
 )
 
 
-@app.on_event("startup")
+# @app.on_event("startup")
 async def startup():
     """
     Startup function.

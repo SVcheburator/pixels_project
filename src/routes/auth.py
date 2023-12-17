@@ -59,22 +59,31 @@ async def signup(
     :return: The UserResponse model with the new user and information about successfull user creation.
     :rtype: dict
     """
-    exist_user = await repository_users.get_user_by_email(body.email, db)
+    exist_user = await repository_users.get_user_by_email(body.email, db, active=None)
+    if exist_user:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
+        )
+    exist_user = await repository_users.get_user_by_username(body.username, db, active=None)
     if exist_user:
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
         )
     body.password = auth_service.get_password_hash(body.password)
     new_user = await repository_users.create_user(body, db)
-    background_tasks.add_task(
-        send_email, new_user.email, new_user.username, request.base_url
+    if new_user:
+        background_tasks.add_task(
+            send_email, new_user.email, new_user.username, request.base_url
+        )
+        return {
+            "user": new_user,
+            "role": Role.user,
+            "detail": messages.AUTH_USER_CREATED_CONFIRM
+        }
+    print("SOME PROBLEM")
+    raise HTTPException(
+        status_code=status.HTTP_409_CONFLICT, detail=messages.AUTH_ALREADY_EXIST
     )
-    return {
-        "user": new_user,
-        "role": Role.user,
-        "detail": "User successfully created. Check your email for confirmation.",
-    }
-
 
 @router.post("/login", response_model=TokenModel)
 async def login(
@@ -90,7 +99,7 @@ async def login(
     :return: The TokenModel model with the access token and refresh token.
     :rtype: dict
     """
-    user = await repository_users.get_user_by_email(body.username, db)
+    user = await repository_users.get_user_by_email(body.username, db, active=None)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_INVALID
@@ -141,7 +150,7 @@ async def refresh_token(
         )
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
-    if user.refresh_token != token:
+    if user and user.refresh_token != token:
         await repository_users.update_token(user, None, db)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_REF_TOKEN
@@ -170,15 +179,18 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
     :rtype: dict
     """
     email = await auth_service.get_email_from_token(token)
-    user = await repository_users.get_user_by_email(email, db)
+    user = await repository_users.get_user_by_email(email, db, active=None)
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
         )
     if user.confirmed:
-        return {"message": "Your email is already confirmed"}
-    await repository_users.confirmed_email(email, db)
-    return {"message": "Email confirmed"}
+        return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
+    if await repository_users.confirmed_email(email, db):
+        return {"message": messages.AUTH_EMAIL_CONF}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
+    )
 
 
 @router.post("/request_email")
@@ -205,12 +217,12 @@ async def request_email(
     user = await repository_users.get_user_by_email(body.email, db)
 
     if user.confirmed:
-        return {"message": "Your email is already confirmed"}
+        return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
     if user:
         background_tasks.add_task(
             send_email, user.email, user.username, request.base_url
         )
-    return {"message": "Check your email for confirmation."}
+    return {"message": messages.AUTH_EMAIL_CHECK_CONF}
 
 
 @router.get("/logout", status_code=status.HTTP_204_NO_CONTENT)
@@ -281,7 +293,7 @@ async def signup_cap(
         return {
             "user": new_user,
             "role": Role.user,
-            "detail": "User successfully created. Check your email for confirmation.",
+            "detail": messages.AUTH_USER_CREATED_CONFIRM,
         }
     except Exception as err:
         raise HTTPException(

@@ -13,9 +13,9 @@ ENV_PATH = BASE_PATH.joinpath(".env")
 class Settings(BaseSettings):
     sqlalchemy_database_url: str | None = None
 
-    mail_username: str = ""
-    mail_password: str = ""
-    mail_from: str = ""
+    mail_username: str = "test@example.com"
+    mail_password: str = "SuperStronGPasswrod"
+    mail_from: str = "test@example.com"
     mail_port: int = 465
     mail_server: str = "localhost"
 

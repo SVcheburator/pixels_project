@@ -2,6 +2,7 @@ from datetime import datetime
 import os
 from pathlib import Path
 import sys
+import redis
 from unittest.mock import AsyncMock, MagicMock
 import pytest
 from fastapi.testclient import TestClient
@@ -14,7 +15,7 @@ hw_path: str = str(curr_path.parent)
 
 sys.path.append(hw_path)
 # print(f"{hw_path=}", sys.path)
-os.environ["PYTHONPATH"] += os.pathsep + hw_path
+# os.environ["PYTHONPATH"] += os.pathsep + hw_path
 
 from main import app
 from src.database.models import Base
@@ -47,6 +48,11 @@ def mock_ratelimiter(monkeypatch):
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.redis", mock_rate_limiter)
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.identifier", mock_rate_limiter)
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.http_callback", mock_rate_limiter)
+    mock_redis = MagicMock(return_value = None)
+    monkeypatch.setattr("src.services.auth.auth_service.r.delete", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.set", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.get", mock_redis)
+    monkeypatch.setattr("src.services.auth.auth_service.r.expire", mock_redis)
 
 
 @pytest.fixture(scope="module")
@@ -80,6 +86,16 @@ def user():
     return {
         "username": "testuser",
         "email": "testuser@example.com",
+        "password": "qwerty",
+        "avatar": None,
+        "role": "user",
+    }
+
+@pytest.fixture(scope="module")
+def next_user():
+    return {
+        "username": "nextuser",
+        "email": "nextuser@example.com",
         "password": "qwerty",
         "avatar": None,
         "role": "user",

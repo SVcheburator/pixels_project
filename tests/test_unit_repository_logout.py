@@ -14,7 +14,7 @@ from sqlalchemy import select, text, extract, desc, create_engine
 hw_path: str = str(Path(__file__).resolve().parent.parent)
 sys.path.append(hw_path)
 # print(f"{hw_path=}", sys.path)
-os.environ["PYTHONPATH"] += os.pathsep + hw_path
+# os.environ["PYTHONPATH"] += os.pathsep + hw_path
 # print(f'{os.environ["PYTHONPATH"]=}')
 
 from src.database.db import get_db
