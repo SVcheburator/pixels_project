@@ -1,8 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Path, status, UploadFile, File
 from sqlalchemy.orm import Session
-import cloudinary
-import cloudinary.uploader
-import hashlib 
+
 
 from src.conf import messages
 from src.database.db import get_db
@@ -10,6 +8,8 @@ from src.database.models import User, Role
 from src.repository import profile as repository_profile
 from src.repository import users as repository_users
 from src.services.auth import auth_service
+from services import cloudinary_image as cloudinary_service
+
 from src.conf.config import settings
 from src.schemas import RequestUserName, UpdateProfile, UserDb, UserRole
 
@@ -77,20 +77,7 @@ async def update_avatar(
     :return: The User with a new avatar.
     :rtype: UserDb
     """
-    cloudinary.config(
-        cloud_name=settings.cloudinary_name,
-        api_key=settings.cloudinary_api_key,
-        api_secret=settings.cloudinary_api_secret,
-        secure=True,
-    )
-    app_name = "PixelApp"
-    user_hash = hashlib.sha224("current_user.email".encode()).hexdigest()
-    r = cloudinary.uploader.upload(
-        file.file, public_id=f"{app_name}/{user_hash}", overwrite=True
-    )
-    src_url = cloudinary.CloudinaryImage(
-        f"{app_name}/{user_hash}"
-    ).build_url(width=250, height=250, crop="fill", version=r.get("version"))
+    src_url = cloudinary_service.build_avatar_cloudinary_url(file, str(current_user.email))
     user = await repository_users.update_avatar(current_user.email, src_url, db)  # type: ignore
     return user
 

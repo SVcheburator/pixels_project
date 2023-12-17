@@ -1,7 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
-import cloudinary
-import cloudinary.uploader
 
 from src.conf import messages
 from src.database.db import get_db

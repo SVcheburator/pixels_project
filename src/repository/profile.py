@@ -54,3 +54,7 @@ async def update_profile(data: UpdateProfile, user: User, db: Session) -> bool |
                 db.commit()
                 clear_user_cache(user)
                 return True
+            
+
+
+
