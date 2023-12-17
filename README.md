@@ -295,6 +295,10 @@ canceled
 ![Run](doc/deploy-koyeb-01.png)
 
 
+#### GitHub automatic deploy to Koyeb.com
+![Git2Koyeb](doc/deploy-koyeb-04.png)
+Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
+
 
 ## TEST
 
