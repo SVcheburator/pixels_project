@@ -301,24 +301,50 @@ pytest --cov=. --cov-report term  tests/
 ===================================================== test session starts ======================================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 plugins: anyio-3.7.1, cov-4.1.0
-collected 7 items
+collected 11 items
 
-tests\test_unit_repository_logout.py .......                                                                              [100%]
+tests\test_pytest_route_users.py ...                                                                                     [ 27%]
+tests\test_unit_repository_logout.py .......                                                                             [ 90%]
+tests\test_unit_repository_user.py .                                                                                     [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
-Name                                   Stmts   Miss  Cover
-----------------------------------------------------------
-main.py                                   17     17     0%
-src\conf\config.py                        16      0   100%
-src\database\db.py                        12      4    67%
-src\database\models.py                    52      0   100%
-src\repository\logout.py                  25      3    88%
-tests\test_unit_repository_logout.py      57      1    98%
-----------------------------------------------------------
-TOTAL                                    179     25    86%
+Name                                     Stmts   Miss  Cover
+------------------------------------------------------------
+main.py                                     31      6    81%
+src\conf\config.py                          28      0   100%
+src\conf\messages.py                        19      0   100%
+src\database\db.py                          12      4    67%
+src\database\models.py                      54      0   100%
+src\repository\__init__.py                   0      0   100%
+src\repository\comments.py                  30     20    33%
+src\repository\logout.py                    25      3    88%
+src\repository\profile.py                   13      6    54%
+src\repository\users.py                     78     41    47%
+src\routes\__init__.py                       0      0   100%
+src\routes\auth.py                         102     63    38%
+src\routes\comments.py                      42     17    60%
+src\routes\profile.py                       22      5    77%
+src\routes\static.py                        16      3    81%
+src\routes\tools.py                         15      8    47%
+src\routes\users.py                         58     30    48%
+src\schemas.py                              44      0   100%
+src\services\__init__.py                     0      0   100%
+src\services\auth.py                        88     59    33%
+src\services\emails.py                      15      7    53%
+src\services\hcaptcha.py                    11      7    36%
+src\services\roles.py                       14      5    64%
+tests\__init__.py                            0      0   100%
+tests\conftest.py                           50      1    98%
+tests\test_pytest_route_users.py            50      0   100%
+tests\test_route_comments.py                 0      0   100%
+tests\test_unit_repository_comments.py       0      0   100%
+tests\test_unit_repository_logout.py        57      1    98%
+tests\test_unit_repository_user.py          45      1    98%
+------------------------------------------------------------
+TOTAL                                      919    287    69%
 
 
-====================================================== 7 passed in 1.95s ======================================================= 
+===================================================== 11 passed in 2.17s ======================================================
 
 ```
 
