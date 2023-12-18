@@ -6,6 +6,14 @@ from src.schemas import UserModel
 from src.services.auth import auth_service
 
 
+def dict_is_empty(data: dict) -> bool:
+    return all(v is None for v in data.values())
+
+
+def dict_not_empty(data: dict) -> bool:
+    return any(v is not None for v in data.values())
+
+
 def clear_user_cache(user: User) -> None:
     """_summary_
 
@@ -153,7 +161,7 @@ async def update_avatar(email: str, url: str, db: Session) -> User:
     return user
 
 
-async def get_user_by_id(id: int, db: Session, active: bool = True) -> User:
+async def get_user_by_id(id: int, db: Session, active: bool | None = True) -> User:
     """
     Retrieves a user by his id.
 
@@ -164,7 +172,12 @@ async def get_user_by_id(id: int, db: Session, active: bool = True) -> User:
     :return: The user.
     :rtype: User
     """
-    return db.query(User).filter(User.id == id, User.active == active).first()
+    query = db.query(User).filter(
+        User.id == id,
+    )
+    if active is not None:
+        query = query.filter(User.active == active)
+    return query.first()
 
 
 async def update_active(user_id: int, active: bool, db: Session) -> User:
@@ -204,6 +217,37 @@ async def update_role_user(user_id: int, role: Role, db: Session) -> User:
     user = await get_user_by_id(user_id, db)
     if user:
         user.role = role  # type: ignore
+        db.commit()
+        clear_user_cache(user)
+    return user
+
+
+async def update_user(user_id: int, data: dict, db: Session) -> User | None:
+    """
+    Updates user's role.
+
+    :param user_id: id of user.
+    :type user_id: int
+    :param active: role of user.
+    :type active: str
+    :param db: The database session.
+    :type db: Session
+    :return: The user.
+    :rtype: User
+    """
+    user = await get_user_by_id(user_id, db, active=None)
+    if user:
+        if data.get("username") is not None:
+            newuser: User = await get_user_by_username(
+                str(data.get("username")), db, active=None
+            )
+            if newuser:
+                return None
+            user.username = data.get("username")  # type: ignore
+        if data.get("is_active") is not None:
+            user.active = data.get("is_active")  # type: ignore
+        if data.get("role") is not None:
+            user.role = data.get("role")  # type: ignore
         db.commit()
         clear_user_cache(user)
     return user
