@@ -68,12 +68,13 @@ async def create_comment(
     except Exception as err:
         print(f"create_comment {err=}")
 
+
 async def update_comment(
     image_id: int, comment_id: int, body: CommentBase, owner: User, db: Session
 ) -> Comment | None:
     """
     The update_comment function updates a comment in the database.
-    
+
     :param image_id: int: Identify the image that the comment belongs to
     :param comment_id: int: Filter the comment that is being updated
     :param body: CommentBase: Pass the new comment to the function
@@ -105,7 +106,7 @@ async def remove_comment(
 ) -> Comment | None:
     """
     The remove_comment function removes a comment from the database.
-    
+
     :param image_id: int: Find the image that the comment is on
     :param comment_id: int: Identify the comment to be removed
     :param owner: User: Check if the user is the owner of the comment
