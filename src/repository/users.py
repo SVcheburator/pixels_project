@@ -2,8 +2,16 @@ from libgravatar import Gravatar
 from sqlalchemy.orm import Session
 
 from src.database.models import User, Role
-from src.schemas import UpdateUser, UserModel
+from src.schemas import UserModel
 from src.services.auth import auth_service
+
+
+def dict_is_empty(data: dict) -> bool:
+    return all(v is None for v in data.values())
+
+
+def dict_not_empty(data: dict) -> bool:
+    return any(v is not None for v in data.values())
 
 
 def clear_user_cache(user: User) -> None:
@@ -214,7 +222,7 @@ async def update_role_user(user_id: int, role: Role, db: Session) -> User:
     return user
 
 
-async def update_user(user_id: int, data: UpdateUser, db: Session) -> User:
+async def update_user(user_id: int, data: dict, db: Session) -> User | None:
     """
     Updates user's role.
 
@@ -229,14 +237,17 @@ async def update_user(user_id: int, data: UpdateUser, db: Session) -> User:
     """
     user = await get_user_by_id(user_id, db, active=None)
     if user:
-        if data.username is not None:
-            newuser: User = await get_user_by_username(str(data.username), db, active=None)
-            if not newuser:
-                user.username = data.username  # type: ignore
-        if data.is_active is not None:
-            user.active = data.is_active  # type: ignore
-        if data.role is not None:
-            user.role = data.role  # type: ignore
+        if data.get("username") is not None:
+            newuser: User = await get_user_by_username(
+                str(data.get("username")), db, active=None
+            )
+            if newuser:
+                return None
+            user.username = data.get("username")  # type: ignore
+        if data.get("is_active") is not None:
+            user.active = data.get("is_active")  # type: ignore
+        if data.get("role") is not None:
+            user.role = data.get("role")  # type: ignore
         db.commit()
         clear_user_cache(user)
     return user

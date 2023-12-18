@@ -28,6 +28,7 @@ async def read_profile(user: User, db: Session) -> dict:
             "username": user.username,
             "email": user.email,
             "avatar": user.avatar,
+            "role": user.role,
             "created_at": user.created_at,
             "comments_count": comments_count,
             "images_count": images_count,

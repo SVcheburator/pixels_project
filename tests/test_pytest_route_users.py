@@ -11,6 +11,7 @@ from src.database.models import User, Bannedlist
 from src.services.auth import auth_service
 
 
+
 def test_create_admin_user(client, user, mock_ratelimiter, monkeypatch):
     mock_send_email = MagicMock()
     get_image = MagicMock(return_value="MOC_AVATAR")

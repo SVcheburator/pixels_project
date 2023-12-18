@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel, Field, EmailStr
 
 from src.database.models import Role
@@ -70,10 +69,9 @@ class RequestUserName(BaseModel):
 
 
 class UpdateProfile(BaseModel):
-    username: Optional[str] = Field(min_length=5, max_length=16)
+    username: str | None = Field(min_length=5, max_length=16)
 
 
-class UpdateUser(BaseModel):
-    username: Optional[ str | None] = Field(min_length=5, max_length=16, default=None)
-    is_active: Optional[bool | None] = None
-    role: Optional[Role | None] = None
+class UpdateFullProfile(UpdateProfile):
+    is_active: bool | None = None
+    role: Role | None = None
