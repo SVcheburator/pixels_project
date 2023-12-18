@@ -40,8 +40,8 @@ class Cloudinary:
         secure=True,
     )
 
-posts_router = APIRouter(prefix='/posts')
-tags_router = APIRouter(prefix='/tags')
+posts_router = APIRouter(prefix='/posts', tags=["Posts of picture"])
+tags_router = APIRouter(prefix='/tags', tags=["Tags of picture"])
 
 tag_services = TagServices(Tag)
 post_services = PostServices(Image)

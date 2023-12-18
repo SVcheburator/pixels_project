@@ -12,7 +12,7 @@ from src.services.roles import RoleAccess
 from src.services import cloudinary_image as cloudinary_service
 
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/users", tags=["Users"])
 
 allowed_operations_modify = RoleAccess([Role.admin])
 allowed_operations_bans = RoleAccess([Role.admin])
