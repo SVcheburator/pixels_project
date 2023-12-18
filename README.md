@@ -508,3 +508,9 @@ Coverage HTML written to dir htmlcov
 ### Change username on user profile
 
 ![username](doc/web-js-03.png)
+
+### Change avatar on user profile
+
+![username](doc/web-js-04.png)
+![username](doc/web-js-05.png)
+![username](doc/web-js-06.png)

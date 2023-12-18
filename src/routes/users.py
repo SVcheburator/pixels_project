@@ -264,7 +264,7 @@ async def delete_user(
 
 
 @router.patch(
-    "/{user_id}/avatar",
+    "/{user_id}/avatar/",
     response_model=UserDb,
     dependencies=[Depends(allowed_operations_modify)],
 )
@@ -298,7 +298,7 @@ async def update_avatar(
     )
 
 
-@router.patch("/avatar", response_model=UserDb)
+@router.patch("/avatar/", response_model=UserDb)
 async def update_avatar_me(
     file: UploadFile = File(description="Upload image file for your avatar"),
     current_user: User = Depends(auth_service.get_current_user),
@@ -323,7 +323,7 @@ async def update_avatar_me(
     return user
 
 
-@router.get("/profile", status_code=status.HTTP_200_OK)
+@router.get("/profile/", status_code=status.HTTP_200_OK)
 async def read_profile(
     current_user: User = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
@@ -340,7 +340,7 @@ async def read_profile(
     return result
 
 
-@router.patch("/profile", status_code=status.HTTP_200_OK)
+@router.patch("/profile/", status_code=status.HTTP_200_OK)
 async def update_profile(
     data: UpdateProfile,
     current_user: User = Depends(auth_service.get_current_user),
@@ -364,7 +364,7 @@ async def update_profile(
 
 
 
-@router.get("/{username}/profile", status_code=status.HTTP_200_OK)
+@router.get("/{username}/profile/", status_code=status.HTTP_200_OK)
 async def read_profile_user(
     username: str = Path(min_length=5, max_length=16),
     current_user: User = Depends(auth_service.get_current_user),

@@ -172,14 +172,13 @@ get_profile();
 // }, 15000);
 // setTimeout(()=>{get_cats},15000);
 
-
-const form = document.getElementById("form_username")
+const form = document.getElementById("form_username");
 
 form?.addEventListener("submit", async (e) => {
   e.preventDefault();
   const button = document.querySelector('input[type="submit"]');
-  if (button){
-    button.setAttribute("disabled", true)
+  if (button) {
+    button.setAttribute("disabled", true);
   }
   const t = e.target;
   const username = t.username.value;
@@ -191,13 +190,13 @@ form?.addEventListener("submit", async (e) => {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   })
     .then((response) => {
-      if (button){
-        button.removeAttribute("disabled")
+      if (button) {
+        button.removeAttribute("disabled");
       }
       if (response.status >= 500) {
         throw "ERROR STATUS: " + response.status;
@@ -229,4 +228,76 @@ form?.addEventListener("submit", async (e) => {
       console.log("ERROR", err);
       showMessage(err);
     });
+});
+
+const avatar_img = document.getElementById("avatar");
+const avatar_upload = document.getElementById("avatar_upload");
+const form_avatar = document.getElementById("form_avatar");
+
+
+
+async function send_img(t) {
+  // e.preventDefault();
+  // const t = e.target;
+  //t.preventDefault();
+  //const  w =avatar_img.clientWidth ;
+  avatar_img.src = "";
+  //avatar_img.clientWidth=w;
+  avatar_img.src = "/static/client/images/loading.gif"
+  const formData = new FormData(t);
+  const URL = `${BASE_URL}/api/users/avatar/`;
+  await fetch(URL, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  })
+    .then((response) => {
+      if (response.status >= 500) {
+        throw "ERROR STATUS: " + response.status;
+      }
+      if (response.status < 400) {
+        //window.location = "confirm.html";
+      }
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      if (json?.avatar) {
+          avatar_img.src = json?.avatar;
+      }
+      detail = json?.detail;
+      err = "";
+      if (Array.isArray(detail)) {
+        for (const d of detail) {
+          const loc = d.loc[1];
+          const mgs = d.msg;
+          err = err + " " + loc + ": " + mgs;
+          console.log(d);
+        }
+      } else {
+        err = detail;
+      }
+      if (err) {
+        showMessage(err);
+      }
+    })
+    .catch((err) => {
+      console.log("ERROR", err);
+      showMessage(err);
+    });
+};
+
+form_avatar.addEventListener("submit", send_img);
+
+avatar_img?.addEventListener("click", async (e) => {
+  e.preventDefault();
+  avatar_upload?.click();
+});
+
+avatar_upload?.addEventListener("change", (e) => {
+  e.preventDefault();
+  //form_avatar.submit();
+  send_img(form_avatar);
 });
