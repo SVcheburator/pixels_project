@@ -99,6 +99,8 @@ get_profile = async () => {
       const email = document.getElementById("email");
       if (email) email.innerHTML = item?.email;
       // if (email) email.innerHTML = "client1@example.com";
+      const role = document.getElementById("role");
+      if (role) role.innerHTML = item?.role;
       const avatar = document.getElementById("avatar");
       if (avatar) avatar.src = item?.avatar;
       const created_at = document.getElementById("created_at");
