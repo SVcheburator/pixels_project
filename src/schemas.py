@@ -82,8 +82,8 @@ class PostCreate(BaseModel):
     img: UploadFile
     description: str
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class PostBase(BaseModel):
@@ -99,7 +99,7 @@ class PostBase(BaseModel):
     # user: Optional[int] = None
 
 
-    class Config:
+    class ConfigDict:
         from_attributes = True
 
 
@@ -110,8 +110,8 @@ class PostList(PostBase):
 
     pub_date: datetime = Field(..., title="Дата публикации")
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class PostBaseCreateUpdate(PostBase):
@@ -144,8 +144,8 @@ class PostSingle(PostBase):
     description: Optional[str]
     pub_date: datetime
 
-    class Config:
-        orm_mode = True
+    class ConfigDict:
+        from_attributes = True
 
 
 class TagModel(BaseModel):
