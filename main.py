@@ -12,7 +12,7 @@ import logging
 
 
 from src.conf.config import settings
-from src.routes import users, comments, auth, tools, static, profile, posts, cloudinary
+from src.routes import users, comments, auth, tools, static, posts, cloudinary
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
