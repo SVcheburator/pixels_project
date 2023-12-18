@@ -9,7 +9,7 @@ from fastapi_limiter import FastAPILimiter
 import uvicorn
 
 from src.conf.config import settings
-from src.routes import users, comments, auth, tools, static, profile
+from src.routes import users, comments, auth, tools, static
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,7 +23,6 @@ templates = Jinja2Templates(directory="templates")
 app = FastAPI(lifespan=lifespan) # type: ignore
 
 app.include_router(users.router, prefix="/api")
-app.include_router(profile.router, prefix="/api")
 app.include_router(auth.router, prefix="/api")
 app.include_router(comments.router, prefix="/api")
 app.include_router(tools.router, prefix="/api")

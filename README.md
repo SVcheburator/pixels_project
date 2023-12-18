@@ -172,6 +172,9 @@ http://localhost:9000/docs
 
 ![](doc/web-js-01.png)
 
+JavaScript Client with automatic token update.
+![](doc/web-js-02.png)
+
 
 ## DEPLOY
 
@@ -292,6 +295,10 @@ canceled
 ![Run](doc/deploy-koyeb-01.png)
 
 
+#### GitHub automatic deploy to Koyeb.com
+![Git2Koyeb](doc/deploy-koyeb-04.png)
+Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
+
 
 ## TEST
 
@@ -370,31 +377,38 @@ pytest -v tests
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
 configfile: pyproject.toml
 plugins: anyio-3.7.1, cov-4.1.0
-collected 21 items
+collected 28 items
 
-tests/test_pytest_route_users.py::test_create_admin_user PASSED                                       [  4%]
-tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                 [  9%] 
-tests/test_pytest_route_users.py::test_create_general_user PASSED                                     [ 14%]
-tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                [ 19%] 
-tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                   [ 23%]
-tests/test_pytest_route_users.py::test_login_user PASSED                                              [ 28%]
-tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                    [ 33%]
-tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                       [ 38%] 
-tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                      [ 42%]
-tests/test_pytest_route_users.py::test_delete_general_user PASSED                                     [ 47%]
-tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                    [ 52%]
-tests/test_pytest_route_users.py::test_profile_me PASSED                                              [ 57%]
-tests/test_pytest_route_users.py::test_logout_user PASSED                                             [ 61%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                   [ 66%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED       [ 71%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED        [ 76%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED              [ 80%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED          [ 85%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                 [ 90%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED           [ 95%] 
+tests/test_pytest_route_users.py::test_create_admin_user PASSED                                       [  3%]
+tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                 [  7%]
+tests/test_pytest_route_users.py::test_create_general_user PASSED                                     [ 10%]
+tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                [ 14%] 
+tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                   [ 17%]
+tests/test_pytest_route_users.py::test_login_user PASSED                                              [ 21%]
+tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                    [ 25%]
+tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                       [ 28%]
+tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                      [ 32%]
+tests/test_pytest_route_users.py::test_delete_general_user PASSED                                     [ 35%]
+tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                    [ 39%]
+tests/test_pytest_route_users.py::test_profile_me PASSED                                              [ 42%]
+tests/test_pytest_route_users.py::test_logout_user PASSED                                             [ 46%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_create_comment PASSED            [ 50%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_found PASSED      [ 53%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_not_found PASSED  [ 57%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comment_by_id PASSED         [ 60%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comments PASSED              [ 64%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_found PASSED      [ 67%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_not_found PASSED  [ 71%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                   [ 75%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED       [ 78%] 
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED        [ 82%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED              [ 85%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED          [ 89%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                 [ 92%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED           [ 96%] 
 tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED                      [100%]
 
-============================================ 21 passed in 3.97s ============================================
+============================================ 28 passed in 5.70s ============================================
 ```
 
 
@@ -410,35 +424,36 @@ pytest --cov=. --cov-report term  tests/
 ===================================================== test session starts ======================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 plugins: anyio-3.7.1, cov-4.1.0
-collected 21 items
+collected 28 items
 
-tests\test_pytest_route_users.py .............                                                        [ 61%]
-tests\test_unit_repository_logout.py .......                                                          [ 95%]
+tests\test_pytest_route_users.py .............                                                        [ 46%]
+tests\test_unit_repository_comments.py .......                                                        [ 71%]
+tests\test_unit_repository_logout.py .......                                                          [ 96%]
 tests\test_unit_repository_user.py .                                                                  [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
 Name                                     Stmts   Miss  Cover
 ------------------------------------------------------------
-main.py                                     31      6    81%
+main.py                                     30      6    80%
 src\conf\config.py                          28      0   100%
-src\conf\messages.py                        25      0   100%
+src\conf\messages.py                        26      0   100%
 src\database\db.py                          13      4    69%
 src\database\models.py                      54      0   100%
 src\repository\__init__.py                   0      0   100%
-src\repository\comments.py                  30     20    33%
+src\repository\comments.py                  30      2    93%
 src\repository\logout.py                    25      3    88%
-src\repository\profile.py                   13      0   100%
-src\repository\users.py                     79     23    71%
+src\repository\profile.py                   23      8    65%
+src\repository\users.py                    101     39    61%
 src\routes\__init__.py                       0      0   100%
 src\routes\auth.py                         103     30    71%
 src\routes\comments.py                      42     17    60%
-src\routes\profile.py                       22      3    86%
 src\routes\static.py                        16      3    81%
 src\routes\tools.py                         15      8    47%
-src\routes\users.py                         58     25    57%
-src\schemas.py                              44      0   100%
+src\routes\users.py                         80     39    51%
+src\schemas.py                              49      0   100%
 src\services\__init__.py                     0      0   100%
 src\services\auth.py                        89     15    83%
+src\services\cloudinary_image.py            16      7    56%
 src\services\emails.py                      15      7    53%
 src\services\hcaptcha.py                    11      7    36%
 src\services\roles.py                       14      1    93%
@@ -446,14 +461,14 @@ tests\__init__.py                            0      0   100%
 tests\conftest.py                           58      1    98%
 tests\test_pytest_route_users.py           147      0   100%
 tests\test_route_comments.py                 0      0   100%
-tests\test_unit_repository_comments.py       0      0   100%
+tests\test_unit_repository_comments.py      52      1    98%
 tests\test_unit_repository_logout.py        56      1    98%
 tests\test_unit_repository_user.py          44      1    98%
 ------------------------------------------------------------
-TOTAL                                     1032    175    83%
+TOTAL                                     1137    200    82%
 
 
-============================================ 21 passed in 5.32s ============================================  
+============================================ 28 passed in 6.46s ============================================ 
 
 ```
 
@@ -490,3 +505,12 @@ Coverage HTML written to dir htmlcov
 
 ![captha](doc/auth-cap-04.png)
 
+### Change username on user profile
+
+![username](doc/web-js-03.png)
+
+### Change avatar on user profile
+
+![username](doc/web-js-04.png)
+![username](doc/web-js-05.png)
+![username](doc/web-js-06.png)
