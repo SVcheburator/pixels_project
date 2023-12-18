@@ -505,3 +505,6 @@ Coverage HTML written to dir htmlcov
 
 ![captha](doc/auth-cap-04.png)
 
+### Change username on user profile
+
+![username](doc/web-js-03.png)

@@ -4,6 +4,10 @@ let token = localStorage.getItem("access_token");
 
 //console.log(`token=${token}`);
 
+function showMessage(msg) {
+  alert(msg);
+}
+
 function setLoading(target) {
   target.innerHTML = '<div class="alert alert-primary" role="alert">Loading...</div>';
 }
@@ -94,7 +98,7 @@ get_profile = async () => {
     item = await response.json();
     if (item) {
       const username = document.getElementById("username");
-      if (username) username.innerHTML = item?.username;
+      if (username) username.value = item?.username;
       // if (username) username.innerHTML = "Client1";
       const email = document.getElementById("email");
       if (email) email.innerHTML = item?.email;
@@ -167,3 +171,62 @@ get_profile();
 //   get_cats();
 // }, 15000);
 // setTimeout(()=>{get_cats},15000);
+
+
+const form = document.getElementById("form_username")
+
+form?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const button = document.querySelector('input[type="submit"]');
+  if (button){
+    button.setAttribute("disabled", true)
+  }
+  const t = e.target;
+  const username = t.username.value;
+  const data = {
+    username: username,
+  };
+  const URL = `${BASE_URL}/api/users/me/`;
+  await fetch(URL, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (button){
+        button.removeAttribute("disabled")
+      }
+      if (response.status >= 500) {
+        throw "ERROR STATUS: " + response.status;
+      }
+      if (response.status < 400) {
+        //window.location = "confirm.html";
+      }
+      return response.json();
+    })
+    .then((json) => {
+      console.log(json);
+      detail = json?.detail;
+      err = "";
+      if (Array.isArray(detail)) {
+        for (const d of detail) {
+          const loc = d.loc[1];
+          const mgs = d.msg;
+          err = err + " " + loc + ": " + mgs;
+          console.log(d);
+        }
+      } else {
+        err = detail;
+      }
+      if (err) {
+        showMessage(err);
+      }
+    })
+    .catch((err) => {
+      console.log("ERROR", err);
+      showMessage(err);
+    });
+});
