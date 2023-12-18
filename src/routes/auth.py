@@ -32,7 +32,7 @@ from src.services import hcaptcha as hcaptcha_service
 from src.services.auth import auth_service
 from src.services.emails import send_email
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["Authorization"])
 security = HTTPBearer()
 
 

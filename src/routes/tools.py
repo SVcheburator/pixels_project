@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.database.db import get_db
 
 
-router = APIRouter(prefix="", tags=["tools"])
+router = APIRouter(prefix="", tags=["Tools"])
 
 @router.get("/healthchecker")
 def healthchecker(db: Session = Depends(get_db)):
