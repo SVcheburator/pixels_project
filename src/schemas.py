@@ -33,8 +33,8 @@ class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
 
-    class ConfigDict:
-        from_attributes = True
+    # class ConfigDict:
+    #     from_attributes = True
 
 
 
