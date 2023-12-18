@@ -36,6 +36,9 @@ class User(Base):
     active = Column(Boolean, default=False)
     created_at = Column('crated_at', DateTime, default=func.now())
 
+    class Config:
+        arbitrary_types_allowed = True
+
 
 class Image(Base):
     __tablename__ = "images"
@@ -49,6 +52,20 @@ class Image(Base):
     description = Column(String(255), nullable=True)
     created_at = Column('crated_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
+
+    def json(self):
+        return {
+            "id": self.id,
+            "owner_id": self.owner_id,
+            "url_original": self.url_original,
+            "url_transformed": self.url_transformed,
+            "url_original_qr": self.url_original_qr,
+            "url_transformed_qr": self.url_transformed_qr,
+            "tags": [tag.name for tag in self.tags],
+            "description": self.description,
+            "created_at": self.created_at.strftime("%Y-%m-%dT%H:%M:%S"),
+            "updated_at": self.updated_at.strftime("%Y-%m-%dT%H:%M:%S")
+        }
     
 
 
@@ -67,7 +84,7 @@ class Comment(Base):
 class Tag(Base):
     __tablename__ = "tags"
     id = Column(Integer, primary_key=True)
-    name = Column(String(25), nullable=False)
+    name = Column(String(25), nullable=False, unique=True)
 
 
 class Bannedlist(Base):
