@@ -137,7 +137,7 @@ async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
         'id': item.id,
         'owner_id': item.owner_id,
         'url_original': item.url_original,
-        'tags': [],
+        'tags': [tag.name for tag in item.tags],  
         'description': item.description,
         'pub_date': item.created_at,
         'img': item.url_original, 
