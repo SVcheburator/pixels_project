@@ -37,7 +37,6 @@ class UserResponse(BaseModel):
     #     from_attributes = True
 
 
-
 class TokenModel(BaseModel):
     access_token: str
     refresh_token: str
@@ -154,3 +153,10 @@ class TagModel(BaseModel):
     Схема для тегів
     """
     name: str = Field(max_length=25)
+class UpdateProfile(BaseModel):
+    username: str | None = Field(min_length=5, max_length=16)
+
+
+class UpdateFullProfile(UpdateProfile):
+    is_active: bool | None = None
+    role: Role | None = None

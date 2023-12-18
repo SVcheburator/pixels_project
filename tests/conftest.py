@@ -24,7 +24,9 @@ from src.database.db import get_db
 db_path = curr_path / "db.sqlite"
 SQLALCHEMY_DATABASE_URL = f"sqlite:///{db_path}"
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
@@ -47,8 +49,10 @@ def mock_ratelimiter(monkeypatch):
     mock_rate_limiter = AsyncMock()
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.redis", mock_rate_limiter)
     monkeypatch.setattr("fastapi_limiter.FastAPILimiter.identifier", mock_rate_limiter)
-    monkeypatch.setattr("fastapi_limiter.FastAPILimiter.http_callback", mock_rate_limiter)
-    mock_redis = MagicMock(return_value = None)
+    monkeypatch.setattr(
+        "fastapi_limiter.FastAPILimiter.http_callback", mock_rate_limiter
+    )
+    mock_redis = MagicMock(return_value=None)
     monkeypatch.setattr("src.services.auth.auth_service.r.delete", mock_redis)
     monkeypatch.setattr("src.services.auth.auth_service.r.set", mock_redis)
     monkeypatch.setattr("src.services.auth.auth_service.r.get", mock_redis)
@@ -57,7 +61,6 @@ def mock_ratelimiter(monkeypatch):
 
 @pytest.fixture(scope="module")
 def client(session):
-
     # Dependency override
 
     class Empty:
@@ -74,9 +77,9 @@ def client(session):
 
     # async def override_get_redis():
     #     return None
-    
+
     app.dependency_overrides[get_db] = override_get_db
-    #app.dependency_overrides[get_redis] = override_get_redis
+    # app.dependency_overrides[get_redis] = override_get_redis
 
     yield TestClient(app)
 
@@ -90,6 +93,7 @@ def user():
         "avatar": None,
         "role": "user",
     }
+
 
 @pytest.fixture(scope="module")
 def next_user():

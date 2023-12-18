@@ -11,6 +11,7 @@ from src.database.models import User, Bannedlist
 from src.services.auth import auth_service
 
 
+
 def test_create_admin_user(client, user, mock_ratelimiter, monkeypatch):
     mock_send_email = MagicMock()
     get_image = MagicMock(return_value="MOC_AVATAR")
@@ -179,7 +180,7 @@ def test_delete_general_user(
     )
     assert response.status_code == 200, response.text
     data = response.json()
-    assert data["detail"] == messages.USER_ACCEPDED
+    assert data["detail"] == messages.USER_ACCEPTED
 
 
 def test_confirm_general_user(
@@ -219,7 +220,7 @@ def test_profile_me(client, next_user, mock_ratelimiter, monkeypatch, session):
     token = data["access_token"]
     headers = {"Authorization": f"Bearer {token}"}
     # print(headers)
-    response = client.get("/api/users/profile/me", headers=headers)
+    response = client.get("/api/users/profile/", headers=headers)
     assert response.status_code == 200, response.text
     data = response.json()
     assert data["email"] == next_user.get("email")

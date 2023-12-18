@@ -39,7 +39,7 @@ form?.addEventListener("submit", async (e) => {
         localStorage.setItem("access_token", json?.access_token);
         localStorage.setItem("refresh_token", json?.refresh_token);
         setTimeout(() => {
-          window.location = "main.html";
+          window.location = "app.html";
         }, 500);
       }
     })
