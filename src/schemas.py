@@ -1,5 +1,7 @@
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
+from typing import List, Optional, Union
+from fastapi import UploadFile
 
 from src.database.models import Role
 
@@ -31,8 +33,8 @@ class UserResponse(BaseModel):
     user: UserDb
     detail: str = "User successfully created"
 
-    class ConfigDict:
-        from_attributes = True
+    # class ConfigDict:
+    #     from_attributes = True
 
 
 class TokenModel(BaseModel):
