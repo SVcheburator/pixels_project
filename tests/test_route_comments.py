@@ -7,6 +7,11 @@ from src.services.auth import auth_service
 from src.conf import messages
 
 
+ADMIN_TEST_COMMENT = {"comment": "admin's test comment"}
+USER_TEST_COMMENT = {"comment": "user's test comment"}
+MODERATOR_TEST_COMMENT = {"comment": "modarator's test comment"}
+
+
 @pytest.fixture()
 def user_admin(client, user, mock_ratelimiter, session, monkeypatch):
     mock_send_email = MagicMock()
@@ -127,14 +132,14 @@ def test_create_comment_by_admin(client, user_admin, token_admin, session):
         # comment response
         response = client.post(
             f"/api/comments/{image.id}/",
-            json={"comment": "test comment"},
+            json=ADMIN_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_admin}"},
         )
 
         # tests
         assert response.status_code == 201, response.text
         data = response.json()
-        assert data["comment"] == "test comment"
+        assert data["comment"] == ADMIN_TEST_COMMENT["comment"]
         assert "id" in data
 
 
@@ -153,14 +158,14 @@ def test_create_comment_by_user(client, user_simple, token_user, session):
         # comment response
         response = client.post(
             f"/api/comments/{image.id}/",
-            json={"comment": "test comment"},
+            json=USER_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_user}"},
         )
 
         # tests
         assert response.status_code == 201, response.text
         data = response.json()
-        assert data["comment"] == "test comment"
+        assert data["comment"] == USER_TEST_COMMENT["comment"]
         assert "id" in data
 
 
@@ -179,14 +184,14 @@ def test_create_comment_by_moderator(client, user_moderator, token_moderator, se
         # comment response
         response = client.post(
             f"/api/comments/{image.id}/",
-            json={"comment": "test comment"},
+            json=MODERATOR_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_moderator}"},
         )
 
         # tests
         assert response.status_code == 201, response.text
         data = response.json()
-        assert data["comment"] == "test comment"
+        assert data["comment"] == MODERATOR_TEST_COMMENT["comment"]
         assert "id" in data
 
 
@@ -199,7 +204,7 @@ def test_create_comment_by_admin_image_not_found(client, user_admin, token_admin
         # comment response
         response = client.post(
             f"/api/comments/{image_id}/",
-            json={"comment": "test comment"},
+            json=ADMIN_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_admin}"},
         )
 
@@ -218,7 +223,7 @@ def test_create_comment_by_user_image_not_found(client, user_simple, token_admin
         # comment response
         response = client.post(
             f"/api/comments/{image_id}/",
-            json={"comment": "test comment"},
+            json=USER_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_admin}"},
         )
 
@@ -239,7 +244,7 @@ def test_create_comment_by_moderator_image_not_found(
         # comment response
         response = client.post(
             f"/api/comments/{image_id}/",
-            json={"comment": "test comment"},
+            json=MODERATOR_TEST_COMMENT,
             headers={"Authorization": f"Bearer {token_admin}"},
         )
 
@@ -247,3 +252,56 @@ def test_create_comment_by_moderator_image_not_found(
         assert response.status_code == 404, response.text
         data = response.json()
         assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comments_by_admin(client, user_admin, token_admin, session, monkeypatch):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == list
+        assert data[0]["comment"] == ADMIN_TEST_COMMENT["comment"]
+
+
+def test_get_comments_by_user(client, user_simple, token_user, session, monkeypatch):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == list
+        assert data[0]["comment"] == USER_TEST_COMMENT["comment"]
+
+
+def test_get_comments_by_moderator(
+    client, user_moderator, token_moderator, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == list
+        assert data[0]["comment"] == MODERATOR_TEST_COMMENT["comment"]
