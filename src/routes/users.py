@@ -9,7 +9,7 @@ from src.repository import profile as repository_profile
 from src.services.auth import auth_service
 from src.schemas import UpdateFullProfile, UpdateProfile, UserDb
 from src.services.roles import RoleAccess
-from src.services import cloudinary_image as cloudinary_service
+from services import cloudinary_avatar as cloudinary_service
 
 
 router = APIRouter(prefix="/users", tags=["Users"])

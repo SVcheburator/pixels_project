@@ -1,7 +1,8 @@
 from sqlalchemy.orm import Session
+from starlette.responses import StreamingResponse
 from src.database.db import get_db
 from src.database.models import Image
-from src.services.cloudinary import cloudinary 
+from services.cloudinary_srv import cloudinary 
 import cloudinary
 from cloudinary.uploader import upload
 import cloudinary.api
@@ -9,8 +10,9 @@ import qrcode
 from io import BytesIO
 import cloudinary.utils
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 from src.conf.config import settings
+from src.conf import messages
 
 class CloudinaryService:
     cloudinary.config(
@@ -107,3 +109,30 @@ def qr_codes_and_update_image(image_id: str, db: Session = Depends(get_db)):
                 "url_original_qr": qr_code_original_url}
 
     return {"error": "Image not found."}
+
+
+@cloud_router.get("/qr_load/{image_id}")
+def qr_codes_image_load(image_id: str, db: Session = Depends(get_db)):
+    image = db.query(Image).filter(Image.id == image_id).first()
+    if image:
+        url_original = image.url_original
+        qr_original = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+            box_size=10,
+            border=4,
+        )
+        qr_original.add_data(url_original)
+        qr_original.make(fit=True)
+
+        # Save QR 
+        qr_code_original_image = qr_original.make_image(fill_color="black", back_color="white")
+        qr_code_original_image_io = BytesIO()
+        qr_code_original_image.save(qr_code_original_image_io, format="PNG")
+        qr_code_original_image_io.seek(0)                                # Return cursor to starting point
+        return StreamingResponse(qr_code_original_image_io, media_type="image/png")
+
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMG_NOT_FOUND
+    )

@@ -9,10 +9,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi_limiter import FastAPILimiter
 import uvicorn
 import logging
+from routes import cloudinary_route
 
 
 from src.conf.config import settings
-from src.routes import users, comments, auth, tools, static, posts, cloudinary
+from src.routes import users, comments, auth, tools, static, posts
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -31,7 +32,7 @@ app.include_router(comments.router, prefix="/api")
 app.include_router(tools.router, prefix="/api")
 app.include_router(posts.posts_router, prefix='/posts',
                    dependencies=[Depends(RateLimiter(times=2, seconds=5))])
-app.include_router(cloudinary.cloud_router, prefix='/cloudinary')
+app.include_router(cloudinary_route.cloud_router, prefix='/cloudinary')
 
 app.add_middleware(
     CORSMiddleware,

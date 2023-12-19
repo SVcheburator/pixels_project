@@ -27,7 +27,7 @@ from src.services.auth import auth_service
 from src.services.posts import PostServices
 from src.services.tags import TagServices, Tag
 from src.conf.config import settings
-from src.services.cloudinary import CloudinaryService
+from services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload
 
 
