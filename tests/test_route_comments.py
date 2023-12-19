@@ -209,7 +209,7 @@ def test_create_comment_by_admin_image_not_found(client, user_admin, token_admin
         assert data["detail"] == messages.IMAGE_NOT_FOUND
 
 
-def test_create_comment_by_user_image_not_found(client, user_admin, token_admin):
+def test_create_comment_by_user_image_not_found(client, user_simple, token_admin):
     with patch.object(auth_service, "r") as r_mock:
         r_mock.get.return_value = None
 
