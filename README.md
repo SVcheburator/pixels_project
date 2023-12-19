@@ -62,11 +62,12 @@
 
 1. [Developer](https://github.com/OleksiiHladkov) @OleksiiHladkov
 
-1. [Developer](https://github.com/lexxai) 
-@lexxai 
+1. [Developer](https://github.com/lexxai) @lexxai 
 
 #### Trello Розподілення задач мід розробниками
 ![](doc/softskill-trelo-01.png)
+
+![](doc/softskill-trelo-02.png)
 
 ### Спільний робочий простір розробки Git
 #### Розподілення git brach між розробниками
@@ -124,7 +125,7 @@ docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d
 - venv
 ```
 python -m venv .venv
-./.venv/sctipt/activate
+./.venv/script/activate
 pip install -r requirements.txt
 ```
 - poetry
@@ -148,22 +149,35 @@ INFO:     Application startup complete.
 
 Відкрити браузер за посиланням http://localhost:9000 
 
+## Розділи FastAPI реалізації 
+FastAPI docs (Swagger) - http://localhost:9000/docs
+### Аутентифікація
+![](/doc/api-auth-03.png)
+![](/doc/api-auth-04.png)
+![](/doc/api-auth-01.png)
+![](/doc/api-auth-02.png)
 
+### Користувачі
 
+![](/doc/api-users-01.png)
 
-## Auth Email Confirm
+##### Користувачі підтвердження Email 
 
 ![](/doc/auth-02.png)
-
 ![](/doc/auth-01.png)
-
 ![](/doc/auth-03.png)
 
-## FastAPI docs (Swagger)
+### Робота с світлинами
+![](/doc/api-images-01.png)
 
-http://localhost:9000/docs
+### Коментування
 
-![FastAPI docs](doc/fastapi-docs-01.png)
+![](/doc/api-comments-01.png)
+
+
+
+### Додатковий функціонал
+
 
 
 ## Тестування. Простий Front end. STATIC HTML / JavaScript Auth client.
