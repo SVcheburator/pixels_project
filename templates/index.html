@@ -46,7 +46,7 @@
 
   <main class="px-3">
     <h1>{{tilte}}</h1>
-    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -57,40 +57,56 @@
       <div class="carousel-inner" style="padding: 50px; height: 250px;">
         <div class="carousel-item active">
           <h4> Технічне завдання на створення застосунку “PhotoShare” (REST API)</h4>
-          <p class="lead">
-            <ul>
-              <ul>Аутентифікація</ul>
-              <ul>Робота с світлинами</ul>
-              <ul>Коментування</ul>
-              <ul>Додатковий функціонал</ul>
-              <ul>Додатково по можливості реалізувати наступні задачі, якщо дозволяє час.</ul>
-              <ul></ul>
-              <ul></ul>
-          </ul>
+          <p class="lead"></p>
+          <div class="w-25 m-auto">
+            <ol class="text-start">
+              <li>Аутентифікація</li>
+              <li>Робота з світлинами</li>
+              <li>Коментування</li>
+              <li>Додатковий функціонал</li>
+            </ol>
+          </div>
         </div>
         <div class="carousel-item">
-          <h4>Завдання:</h4>
-          <p class="lead">
-            1. 
-         </p>
+          <h4>Аутентифікація</h4>
+          <div class="w-50 m-auto">
+            <ol class="text-start">
+              <li>Механізм аутентифікації. JWT токени</li>
+              <li>Користувачі мають три ролі. Звичайний користувач, модератор, та адміністратор.</li>
+              <li>Для реалізації різних рівнів доступу використовуються декоратори FastAPI</li>
+            </ol>
+          </div>
         </div>
         <div class="carousel-item">
-          <h4>Завдання:</h4>
-          <p class="lead">
-            2. 
-          <p class="lead">
-          </p>
+          <h4>Робота з світлинами</h4>
+          <div class="w-75 m-auto">
+            <ol class="text-start">
+              <li>Користувачі можуть завантажувати світлини з описом, видаляти їх, та редагувати опис світлини.</li>
+              <li>Користувачі можуть отримувати світлину за унікальним посиланням та можливість додавати до 5 тегів під світлину.</li>
+              <li>Користувачі можуть виконувати базові операції над світлинами, які дозволяє сервіс Cloudinary. Ta інше.</li>
+              <li>Адміністратори можуть робить всі CRUD операції зі світлинами користувачів.</li>
+            </ol>
+          </div>
         </div>
         <div class="carousel-item">
-          <h4>Завдання:</h4>
-          <p class="lead">
-            3. 
+          <h4>Коментування</h4>
+          <div class="w-75 m-auto">
+            <ol class="text-start">
+              <li>Під кожною світлиною, є блок з коментарями. Користувачі можуть коментувати світлину один одного.</li> 
+              <li>Користувач може редагувати свій коментар, але не видаляти.</li>
+              <li>Адміністратори та модератори можуть видаляти коментарі.</li>
+              <li>Для коментарів обов'язково зберігати час створення та час редагування коментаря в базі даних.</li>
+            </ol>
+          </div>
         </div>  
         <div class="carousel-item">
           <h4>Дотаково</h4>
-          <p class="lead">
-            4. 
-          </p>
+          <div class="w-100 m-auto">
+            <ol class="text-start">
+              <li>Mаршрут для профіля користувача.  Повинна повертатися вся інформація про користувача. Імя, коли зареєстрований, кількість завантажених фото тощо. Користувач може редагувати інформацію про себе, та бачити інформацію про себе.</li>
+              <li>Адміністратор може робити користувачів неактивними (банити). Неактивні користувачі не можуть заходити в застосунок. Реалізувати механізм виходу користувача з застосунку через logout. Access token повинен бути добавлений на час його існування в чорний список.</li>
+            </ol>
+          </div>
         </div>                    
       </div>
       <button class="carousel-control-prev"  type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">

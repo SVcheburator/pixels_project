@@ -32,7 +32,7 @@ from src.services import hcaptcha as hcaptcha_service
 from src.services.auth import auth_service
 from src.services.emails import send_email
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["Authorization"])
 security = HTTPBearer()
 
 
@@ -56,7 +56,7 @@ async def signup(
     :type request: Request
     :param db: The database session.
     :type db: Session
-    :return: The UserResponse model with the new user and information about successfull user creation.
+    :return: The UserResponse model with the new user and information about successful user creation.
     :rtype: dict
     """
     exist_user = await repository_users.get_user_by_email(body.email, db, active=None)
@@ -73,7 +73,7 @@ async def signup(
     new_user = await repository_users.create_user(body, db)
     if new_user:
         background_tasks.add_task(
-            send_email, new_user.email, new_user.username, request.base_url
+            send_email, new_user.email, new_user.username, request.base_url # type: ignore
         )
         return {
             "user": new_user,
@@ -104,11 +104,11 @@ async def login(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_INVALID
         )
-    if not user.confirmed:
+    if not user.confirmed: # type: ignore
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_NOT_CONF
         )
-    if not user.active:
+    if not user.active: # type: ignore
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_EMAIL_NOT_ACTIVE
         )
@@ -150,7 +150,7 @@ async def refresh_token(
         )
     email = await auth_service.decode_refresh_token(token)
     user = await repository_users.get_user_by_email(email, db)
-    if user and user.refresh_token != token:
+    if user and user.refresh_token != token: # type: ignore
         await repository_users.update_token(user, None, db)
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail=messages.AUTH_INVALID_REF_TOKEN
@@ -184,7 +184,7 @@ async def confirmed_email(token: str, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail=messages.AUTH_VERIFY_ERROR
         )
-    if user.confirmed:
+    if user.confirmed: # type: ignore
         return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
     if await repository_users.confirmed_email(email, db):
         return {"message": messages.AUTH_EMAIL_CONF}
@@ -214,13 +214,13 @@ async def request_email(
     :return: The message about email request.
     :rtype: dict
     """
-    user = await repository_users.get_user_by_email(body.email, db)
+    user = await repository_users.get_user_by_email(body.email, db, active=None)
 
-    if user.confirmed:
+    if user and user.confirmed: # type: ignore
         return {"message": messages.AUTH_EMAIL_ALREADY_CONF}
     if user:
         background_tasks.add_task(
-            send_email, user.email, user.username, request.base_url
+            send_email, user.email, user.username, request.base_url # type: ignore
         )
     return {"message": messages.AUTH_EMAIL_CHECK_CONF}
 
@@ -270,7 +270,7 @@ async def signup_cap(
     :type request: Request
     :param db: The database session.
     :type db: Session
-    :return: The UserResponse model with the new user and information about successfull user creation.
+    :return: The UserResponse model with the new user and information about successful user creation.
     :rtype: dict
     """
     captcha_ok = await hcaptcha_service.verify(body.h_captcha_response)
@@ -288,7 +288,7 @@ async def signup_cap(
         body.password = auth_service.get_password_hash(body.password)
         new_user = await repository_users.create_user(body, db)
         background_tasks.add_task(
-            send_email, new_user.email, new_user.username, request.base_url
+            send_email, new_user.email, new_user.username, request.base_url # type: ignore
         )
         return {
             "user": new_user,

@@ -20,7 +20,7 @@ class CloudinaryService:
         secure=True,
     )
 
-cloud_router = APIRouter(prefix='')
+cloud_router = APIRouter(prefix='', tags=["Cloudinary image operations"])
 
 
 @cloud_router.get("/transformed_image/{image_id}")

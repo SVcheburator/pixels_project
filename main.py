@@ -62,7 +62,7 @@ async def startup():
 
 
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/", response_class=HTMLResponse, tags=["Main index.html"])
 async def main(request: Request):
     """
     Main HTML index page.
