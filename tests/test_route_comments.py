@@ -8,9 +8,13 @@ from src.conf import messages
 
 
 @pytest.fixture()
-def user_admin(client, user, session, monkeypatch):
+def user_admin(client, user, mock_ratelimiter, session, monkeypatch):
     mock_send_email = MagicMock()
-    monkeypatch.setattr("src.routes.auth.send_email", mock_send_email)
+    get_image = MagicMock(return_value="MOC_AVATAR")
+    add_task = MagicMock()
+    monkeypatch.setattr("src.services.emails.send_email", mock_send_email)
+    monkeypatch.setattr("libgravatar.Gravatar.get_image", get_image)
+    monkeypatch.setattr("fastapi.BackgroundTasks.add_task", add_task)
 
     client.post("/api/auth/signup", json=user)
 
@@ -26,9 +30,13 @@ def user_admin(client, user, session, monkeypatch):
 
 
 @pytest.fixture()
-def user_simple(client, next_user, session, monkeypatch):
+def user_simple(client, next_user, mock_ratelimiter, session, monkeypatch):
     mock_send_email = MagicMock()
-    monkeypatch.setattr("src.routes.auth.send_email", mock_send_email)
+    get_image = MagicMock(return_value="MOC_AVATAR")
+    add_task = MagicMock()
+    monkeypatch.setattr("src.services.emails.send_email", mock_send_email)
+    monkeypatch.setattr("libgravatar.Gravatar.get_image", get_image)
+    monkeypatch.setattr("fastapi.BackgroundTasks.add_task", add_task)
 
     client.post("/api/auth/signup", json=next_user)
 
@@ -44,9 +52,13 @@ def user_simple(client, next_user, session, monkeypatch):
 
 
 @pytest.fixture()
-def user_moderator(client, next_user_moderator, session, monkeypatch):
+def user_moderator(client, next_user_moderator, mock_ratelimiter, session, monkeypatch):
     mock_send_email = MagicMock()
-    monkeypatch.setattr("src.routes.auth.send_email", mock_send_email)
+    get_image = MagicMock(return_value="MOC_AVATAR")
+    add_task = MagicMock()
+    monkeypatch.setattr("src.services.emails.send_email", mock_send_email)
+    monkeypatch.setattr("libgravatar.Gravatar.get_image", get_image)
+    monkeypatch.setattr("fastapi.BackgroundTasks.add_task", add_task)
 
     client.post("/api/auth/signup", json=next_user_moderator)
 
@@ -178,7 +190,47 @@ def test_create_comment_by_moderator(client, user_moderator, token_moderator, se
         assert "id" in data
 
 
-def test_create_comment_image_not_found(client, token_admin):
+def test_create_comment_by_admin_image_not_found(client, user_admin, token_admin):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        # comment response
+        response = client.post(
+            f"/api/comments/{image_id}/",
+            json={"comment": "test comment"},
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_create_comment_by_user_image_not_found(client, user_admin, token_admin):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        # comment response
+        response = client.post(
+            f"/api/comments/{image_id}/",
+            json={"comment": "test comment"},
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_create_comment_by_moderator_image_not_found(
+    client, user_moderator, token_admin
+):
     with patch.object(auth_service, "r") as r_mock:
         r_mock.get.return_value = None
 
