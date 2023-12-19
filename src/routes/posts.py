@@ -40,8 +40,8 @@ class Cloudinary:
         secure=True,
     )
 
-posts_router = APIRouter(prefix='/posts')
-tags_router = APIRouter(prefix='/tags')
+posts_router = APIRouter(prefix='')
+tags_router = APIRouter(prefix='')
 
 tag_services = TagServices(Tag)
 post_services = PostServices(Image)
@@ -188,7 +188,7 @@ async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
 
 
 # отримувати світлину за параметром в БД - працює та повертає значення
-@posts_router.get('/post-description/{description}', response_model=PostSingle)
+@posts_router.get('/descriptions/{description}', response_model=PostSingle)
 async def get_post_by_description(description: str,
                                    db: Session = Depends(get_db),
                                    user: User = Depends(auth_service.get_current_user)):
