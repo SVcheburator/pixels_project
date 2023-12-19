@@ -106,6 +106,17 @@ def next_user():
     }
 
 
+@pytest.fixture(scope="module")
+def next_user_moderator():
+    return {
+        "username": "user_moderator",
+        "email": "user_moderator@example.com",
+        "password": "qwerty",
+        "avatar": None,
+        "role": "moderator",
+    }
+
+
 # @pytest.fixture(scope="module")
 # def contact():
 #     result = {
