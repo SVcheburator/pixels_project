@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import StreamingResponse
 from src.database.db import get_db
 from src.database.models import Image
-from services.cloudinary_srv import cloudinary 
+from src.services.cloudinary_srv import cloudinary 
 import cloudinary
 from cloudinary.uploader import upload
 import cloudinary.api

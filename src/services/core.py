@@ -1,11 +1,11 @@
 # pixels_project\src\services\core.py
-from sqlalchemy.orm import Session
-from src.database.models import Base, Image
-
 from typing import Any, Generic, TypeVar, Type, Optional, Union
+
+from sqlalchemy.orm import Session
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 
+from src.database.models import Base, Image
 
 ModelType = TypeVar("ModelType", bound=Base)
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
