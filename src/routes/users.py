@@ -9,7 +9,7 @@ from src.repository import profile as repository_profile
 from src.services.auth import auth_service
 from src.schemas import UpdateFullProfile, UpdateProfile, UserDb
 from src.services.roles import RoleAccess
-from src.services import cloudinary_image as cloudinary_service
+from src.services import cloudinary_avatar
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -288,7 +288,7 @@ async def update_avatar(
     """
     target_user = await repository_users.get_user_by_id(id=user_id, db=db, active=None)
     if target_user:
-        src_url = cloudinary_service.build_avatar_cloudinary_url(
+        src_url = cloudinary_avatar.build_avatar_cloudinary_url(
             file, str(target_user.email)
         )
         user = await repository_users.update_avatar(target_user.email, src_url, db)  # type: ignore
@@ -316,7 +316,7 @@ async def update_avatar_me(
     :return: The User with a new avatar.
     :rtype: UserDb
     """
-    src_url = cloudinary_service.build_avatar_cloudinary_url(
+    src_url = cloudinary_avatar.build_avatar_cloudinary_url(
         file, str(current_user.email)
     )
     user = await repository_users.update_avatar(current_user.email, src_url, db)  # type: ignore

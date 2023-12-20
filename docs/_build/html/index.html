@@ -344,7 +344,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The UserResponse model with the new user and information about successfull user creation.</p>
+<dd class="field-even"><p>The UserResponse model with the new user and information about successful user creation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
@@ -366,7 +366,7 @@
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The UserResponse model with the new user and information about successfull user creation.</p>
+<dd class="field-even"><p>The UserResponse model with the new user and information about successful user creation.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>dict</p>
@@ -400,7 +400,7 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.routes.posts.post_list_by_user">
-<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.routes.posts.</span></span><span class="sig-name descname"><span class="pre">post_list_by_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.posts.post_list_by_user" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.routes.posts.</span></span><span class="sig-name descname"><span class="pre">post_list_by_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_current_user)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Query(10)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Query(0)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.posts.post_list_by_user" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -521,22 +521,32 @@ The limit and offset parameters are used to paginate through all comments.</p>
 </dd></dl>
 
 </section>
-<section id="module-src.routes.cloudinary">
-<span id="rest-api-routes-cloudinary"></span><h1>REST API routes Cloudinary<a class="headerlink" href="#module-src.routes.cloudinary" title="Link to this heading">¶</a></h1>
+<section id="module-src.routes.cloudinary_route">
+<span id="rest-api-routes-cloudinary"></span><h1>REST API routes Cloudinary<a class="headerlink" href="#module-src.routes.cloudinary_route" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="src.routes.cloudinary.CloudinaryService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary.</span></span><span class="sig-name descname"><span class="pre">CloudinaryService</span></span><a class="headerlink" href="#src.routes.cloudinary.CloudinaryService" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.routes.cloudinary_route.CloudinaryService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary_route.</span></span><span class="sig-name descname"><span class="pre">CloudinaryService</span></span><a class="headerlink" href="#src.routes.cloudinary_route.CloudinaryService" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.routes.cloudinary.qr_codes_and_update_image">
-<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary.</span></span><span class="sig-name descname"><span class="pre">qr_codes_and_update_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary.qr_codes_and_update_image" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.routes.cloudinary_route.qr_codes_and_update_image">
+<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary_route.</span></span><span class="sig-name descname"><span class="pre">qr_codes_and_update_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary_route.qr_codes_and_update_image" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.routes.cloudinary.transform_and_update_image">
-<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary.</span></span><span class="sig-name descname"><span class="pre">transform_and_update_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary.transform_and_update_image" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.routes.cloudinary_route.qr_codes_and_update_transformed_image">
+<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary_route.</span></span><span class="sig-name descname"><span class="pre">qr_codes_and_update_transformed_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary_route.qr_codes_and_update_transformed_image" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.routes.cloudinary_route.qr_codes_image_load">
+<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary_route.</span></span><span class="sig-name descname"><span class="pre">qr_codes_image_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Query(original)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary_route.qr_codes_image_load" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.routes.cloudinary_route.transform_and_update_image">
+<span class="sig-prename descclassname"><span class="pre">src.routes.cloudinary_route.</span></span><span class="sig-name descname"><span class="pre">transform_and_update_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">45</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">Depends(get_db)</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.routes.cloudinary_route.transform_and_update_image" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
@@ -922,6 +932,23 @@ The limit and offset parameters are used to paginate through results.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="src.repository.comments.get_image_by_id">
+<em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">get_image_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.repository.comments.get_image_by_id" title="Link to this definition">¶</a></dt>
+<dd><p>The get_image_by_id function returns an image object from the database, given its id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_id</strong> – int: Specify the id of the image that is being requested</p></li>
+<li><p><strong>db</strong> – Session: Pass the database session to the function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single image object from the database</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="src.repository.comments.remove_comment">
 <em class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.repository.comments.</span></span><span class="sig-name descname"><span class="pre">remove_comment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">User</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Comment</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#src.repository.comments.remove_comment" title="Link to this definition">¶</a></dt>
 <dd><p>The remove_comment function removes a comment from the database.</p>
@@ -1072,53 +1099,53 @@ The limit and offset parameters are used to paginate through results.</p>
 </dd></dl>
 
 </section>
-<section id="module-src.services.cloudinary_image">
-<span id="rest-api-service-cloudinary-avatar"></span><h1>REST API service Cloudinary Avatar<a class="headerlink" href="#module-src.services.cloudinary_image" title="Link to this heading">¶</a></h1>
+<section id="module-src.services.cloudinary_avatar">
+<span id="rest-api-service-cloudinary-avatar"></span><h1>REST API service Cloudinary Avatar<a class="headerlink" href="#module-src.services.cloudinary_avatar" title="Link to this heading">¶</a></h1>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.services.cloudinary_image.build_avatar_cloudinary_url">
-<span class="sig-prename descclassname"><span class="pre">src.services.cloudinary_image.</span></span><span class="sig-name descname"><span class="pre">build_avatar_cloudinary_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UploadFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_image.build_avatar_cloudinary_url" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_avatar.build_avatar_cloudinary_url">
+<span class="sig-prename descclassname"><span class="pre">src.services.cloudinary_avatar.</span></span><span class="sig-name descname"><span class="pre">build_avatar_cloudinary_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">UploadFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_avatar.build_avatar_cloudinary_url" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.services.cloudinary_image.build_public_id">
-<span class="sig-prename descclassname"><span class="pre">src.services.cloudinary_image.</span></span><span class="sig-name descname"><span class="pre">build_public_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_image.build_public_id" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_avatar.build_public_id">
+<span class="sig-prename descclassname"><span class="pre">src.services.cloudinary_avatar.</span></span><span class="sig-name descname"><span class="pre">build_public_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_avatar.build_public_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
-<section id="module-src.services.cloudinary">
-<span id="rest-api-service-cloudinary"></span><h1>REST API service Cloudinary<a class="headerlink" href="#module-src.services.cloudinary" title="Link to this heading">¶</a></h1>
+<section id="module-src.services.cloudinary_srv">
+<span id="rest-api-service-cloudinary"></span><h1>REST API service Cloudinary<a class="headerlink" href="#module-src.services.cloudinary_srv" title="Link to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloudinary.</span></span><span class="sig-name descname"><span class="pre">CloudinaryService</span></span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">src.services.cloudinary_srv.</span></span><span class="sig-name descname"><span class="pre">CloudinaryService</span></span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.generate_public_id_by_email">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_public_id_by_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dxlomq1rp'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.generate_public_id_by_email" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.generate_public_id_by_email">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_public_id_by_email</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">app_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'dxlomq1rp'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.generate_public_id_by_email" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.generate_url">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.generate_url" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.generate_url">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_url</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.generate_url" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.transform_image">
-<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.transform_image" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.transform_image">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transform_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.transform_image" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.upload_and_transform_image_async">
-<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_and_transform_image_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.upload_and_transform_image_async" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.upload_and_transform_image_async">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_and_transform_image_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transformation_params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.upload_and_transform_image_async" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.upload_async">
-<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'publication'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.upload_async" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.upload_async">
+<em class="property"><span class="pre">async</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_async</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_content</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">folder</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'publication'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.upload_async" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="src.services.cloudinary.CloudinaryService.upload_image">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary.CloudinaryService.upload_image" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="src.services.cloudinary_srv.CloudinaryService.upload_image">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">upload_image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">image_data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#src.services.cloudinary_srv.CloudinaryService.upload_image" title="Link to this definition">¶</a></dt>
 <dd><p>Завантажує зображення на Cloudinary.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>image_data: Дані зображення у вигляді байтів.
@@ -1204,6 +1231,12 @@ public_id: Публічний ідентифікатор для зображен
 <dt class="sig sig-object py" id="src.services.posts.PostServices.get_post_by_url_original">
 <em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_post_by_url_original</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">url_original</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ModelType</span></span></span><a class="headerlink" href="#src.services.posts.PostServices.get_post_by_url_original" title="Link to this definition">¶</a></dt>
 <dd><p>Отримання запису за url_original</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="src.services.posts.PostServices.get_post_list_by_user_paginated">
+<span class="sig-name descname"><span class="pre">get_post_list_by_user_paginated</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">db</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Session</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">limit</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Image</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#src.services.posts.PostServices.get_post_list_by_user_paginated" title="Link to this definition">¶</a></dt>
+<dd><p>Отримання списку світлин за ID користувача з пагінацією</p>
 </dd></dl>
 
 <dl class="py method">
@@ -1327,10 +1360,12 @@ public_id: Публічний ідентифікатор для зображен
 <li><a class="reference internal" href="#src.routes.comments.update_comment"><code class="docutils literal notranslate"><span class="pre">update_comment()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-src.routes.cloudinary">REST API routes Cloudinary</a><ul>
-<li><a class="reference internal" href="#src.routes.cloudinary.CloudinaryService"><code class="docutils literal notranslate"><span class="pre">CloudinaryService</span></code></a></li>
-<li><a class="reference internal" href="#src.routes.cloudinary.qr_codes_and_update_image"><code class="docutils literal notranslate"><span class="pre">qr_codes_and_update_image()</span></code></a></li>
-<li><a class="reference internal" href="#src.routes.cloudinary.transform_and_update_image"><code class="docutils literal notranslate"><span class="pre">transform_and_update_image()</span></code></a></li>
+<li><a class="reference internal" href="#module-src.routes.cloudinary_route">REST API routes Cloudinary</a><ul>
+<li><a class="reference internal" href="#src.routes.cloudinary_route.CloudinaryService"><code class="docutils literal notranslate"><span class="pre">CloudinaryService</span></code></a></li>
+<li><a class="reference internal" href="#src.routes.cloudinary_route.qr_codes_and_update_image"><code class="docutils literal notranslate"><span class="pre">qr_codes_and_update_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.routes.cloudinary_route.qr_codes_and_update_transformed_image"><code class="docutils literal notranslate"><span class="pre">qr_codes_and_update_transformed_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.routes.cloudinary_route.qr_codes_image_load"><code class="docutils literal notranslate"><span class="pre">qr_codes_image_load()</span></code></a></li>
+<li><a class="reference internal" href="#src.routes.cloudinary_route.transform_and_update_image"><code class="docutils literal notranslate"><span class="pre">transform_and_update_image()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-src.repository.users">REST API repository Users</a><ul>
@@ -1361,6 +1396,7 @@ public_id: Публічний ідентифікатор для зображен
 <li><a class="reference internal" href="#src.repository.comments.create_comment"><code class="docutils literal notranslate"><span class="pre">create_comment()</span></code></a></li>
 <li><a class="reference internal" href="#src.repository.comments.get_comment_by_id"><code class="docutils literal notranslate"><span class="pre">get_comment_by_id()</span></code></a></li>
 <li><a class="reference internal" href="#src.repository.comments.get_comments"><code class="docutils literal notranslate"><span class="pre">get_comments()</span></code></a></li>
+<li><a class="reference internal" href="#src.repository.comments.get_image_by_id"><code class="docutils literal notranslate"><span class="pre">get_image_by_id()</span></code></a></li>
 <li><a class="reference internal" href="#src.repository.comments.remove_comment"><code class="docutils literal notranslate"><span class="pre">remove_comment()</span></code></a></li>
 <li><a class="reference internal" href="#src.repository.comments.update_comment"><code class="docutils literal notranslate"><span class="pre">update_comment()</span></code></a></li>
 </ul>
@@ -1396,19 +1432,19 @@ public_id: Публічний ідентифікатор для зображен
 <li><a class="reference internal" href="#src.services.roles.RoleAccess"><code class="docutils literal notranslate"><span class="pre">RoleAccess</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-src.services.cloudinary_image">REST API service Cloudinary Avatar</a><ul>
-<li><a class="reference internal" href="#src.services.cloudinary_image.build_avatar_cloudinary_url"><code class="docutils literal notranslate"><span class="pre">build_avatar_cloudinary_url()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary_image.build_public_id"><code class="docutils literal notranslate"><span class="pre">build_public_id()</span></code></a></li>
+<li><a class="reference internal" href="#module-src.services.cloudinary_avatar">REST API service Cloudinary Avatar</a><ul>
+<li><a class="reference internal" href="#src.services.cloudinary_avatar.build_avatar_cloudinary_url"><code class="docutils literal notranslate"><span class="pre">build_avatar_cloudinary_url()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_avatar.build_public_id"><code class="docutils literal notranslate"><span class="pre">build_public_id()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#module-src.services.cloudinary">REST API service Cloudinary</a><ul>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService"><code class="docutils literal notranslate"><span class="pre">CloudinaryService</span></code></a><ul>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.generate_public_id_by_email"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.generate_public_id_by_email()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.generate_url"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.generate_url()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.transform_image"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.transform_image()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.upload_and_transform_image_async"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_and_transform_image_async()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.upload_async"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_async()</span></code></a></li>
-<li><a class="reference internal" href="#src.services.cloudinary.CloudinaryService.upload_image"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_image()</span></code></a></li>
+<li><a class="reference internal" href="#module-src.services.cloudinary_srv">REST API service Cloudinary</a><ul>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService"><code class="docutils literal notranslate"><span class="pre">CloudinaryService</span></code></a><ul>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.generate_public_id_by_email"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.generate_public_id_by_email()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.generate_url"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.generate_url()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.transform_image"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.transform_image()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.upload_and_transform_image_async"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_and_transform_image_async()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.upload_async"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_async()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.cloudinary_srv.CloudinaryService.upload_image"><code class="docutils literal notranslate"><span class="pre">CloudinaryService.upload_image()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1432,6 +1468,7 @@ public_id: Публічний ідентифікатор для зображен
 <li><a class="reference internal" href="#src.services.posts.PostServices.get_p_by_unique_identifier"><code class="docutils literal notranslate"><span class="pre">PostServices.get_p_by_unique_identifier()</span></code></a></li>
 <li><a class="reference internal" href="#src.services.posts.PostServices.get_post_by_description"><code class="docutils literal notranslate"><span class="pre">PostServices.get_post_by_description()</span></code></a></li>
 <li><a class="reference internal" href="#src.services.posts.PostServices.get_post_by_url_original"><code class="docutils literal notranslate"><span class="pre">PostServices.get_post_by_url_original()</span></code></a></li>
+<li><a class="reference internal" href="#src.services.posts.PostServices.get_post_list_by_user_paginated"><code class="docutils literal notranslate"><span class="pre">PostServices.get_post_list_by_user_paginated()</span></code></a></li>
 <li><a class="reference internal" href="#src.services.posts.PostServices.get_post_url"><code class="docutils literal notranslate"><span class="pre">PostServices.get_post_url()</span></code></a></li>
 <li><a class="reference internal" href="#src.services.posts.PostServices.post_list_by_user"><code class="docutils literal notranslate"><span class="pre">PostServices.post_list_by_user()</span></code></a></li>
 <li><a class="reference internal" href="#src.services.posts.PostServices.update_post_image_url"><code class="docutils literal notranslate"><span class="pre">PostServices.update_post_image_url()</span></code></a></li>

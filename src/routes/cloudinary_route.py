@@ -1,16 +1,19 @@
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
-from src.database.db import get_db
-from src.database.models import Image
-from src.services.cloudinary import cloudinary 
+from starlette.responses import StreamingResponse
 import cloudinary
 from cloudinary.uploader import upload
 import cloudinary.api
+import cloudinary.utils
 import qrcode
 from io import BytesIO
-import cloudinary.utils
 
-from fastapi import APIRouter, Depends
 from src.conf.config import settings
+from src.conf import messages
+from src.database.db import get_db
+from src.database.models import Image
+from src.services.cloudinary_srv import cloudinary 
+
 
 class CloudinaryService:
     cloudinary.config(
@@ -159,3 +162,40 @@ def qr_codes_and_update_transformed_image(image_id: str, db: Session = Depends(g
 
     return {"error": "Image not found."}
 
+
+@cloud_router.get("/qr_load/{image_id}")
+def qr_codes_image_load(
+    image_id: str,
+    option: str
+    | None = Query(
+        title="Type of source of image to use", default="original", description="Type of source of image to use. Can be: original or transformed. By default used  original"
+    ),
+    db: Session = Depends(get_db),
+):
+    image: Image = db.query(Image).filter(Image.id == image_id).first()
+    if image:
+        qr_original = qrcode.QRCode( # type: ignore
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_M, # type: ignore
+            box_size=10,
+            border=4,
+        )
+        url_str: str = (
+            image.url_transformed if option == "transformed" else image.url_original
+        ) # type: ignore
+        if url_str:
+            qr_original.add_data(url_str)
+            qr_original.make(fit=True)
+
+            # Save QR
+            qr_code_original_image = qr_original.make_image(
+                fill_color="black", back_color="white"
+            )
+            qr_code_original_image_io = BytesIO()
+            qr_code_original_image.save(qr_code_original_image_io, format="PNG")
+            qr_code_original_image_io.seek(0)  # Return cursor to starting point
+            return StreamingResponse(qr_code_original_image_io, media_type="image/png")
+
+    raise HTTPException(
+        status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND
+    )

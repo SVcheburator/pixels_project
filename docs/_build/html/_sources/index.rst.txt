@@ -47,7 +47,7 @@ REST API routes Comments
 
 REST API routes Cloudinary 
 ===============================
-.. automodule:: src.routes.cloudinary
+.. automodule:: src.routes.cloudinary_route
   :members:
   :undoc-members:
   :show-inheritance:
@@ -103,14 +103,14 @@ REST API service Roles
 
 REST API service Cloudinary Avatar
 =====================================
-.. automodule:: src.services.cloudinary_image
+.. automodule:: src.services.cloudinary_avatar
   :members:
   :undoc-members:
   :show-inheritance:
 
 REST API service Cloudinary
 =====================================
-.. automodule:: src.services.cloudinary
+.. automodule:: src.services.cloudinary_srv
   :members:
   :undoc-members:
   :show-inheritance:
