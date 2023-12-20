@@ -20,7 +20,7 @@ class CloudinaryService:
         secure=True,
     )
 
-cloud_router = APIRouter(prefix='/cloudinary', tags=["Cloudinary image operations"])
+cloud_router = APIRouter(prefix='', tags=["Cloudinary image operations"])
 
 
 @cloud_router.get("/transformed_image/{image_id}")
@@ -107,3 +107,55 @@ def qr_codes_and_update_image(image_id: str, db: Session = Depends(get_db)):
                 "url_original_qr": qr_code_original_url}
 
     return {"error": "Image not found."}
+
+
+@cloud_router.get("/qr_codes_transformed_image/{image_id}")
+def qr_codes_and_update_transformed_image(image_id: str, db: Session = Depends(get_db)):
+    image = db.query(Image).filter(Image.id == image_id).first()
+
+    if image:
+        if not image.url_transformed:
+            # Якщо url_transformed пустий, викликаємо transform_and_update_image
+            transform_and_update_image(image_id=image_id, db=db)
+
+        url_transformed = image.url_transformed
+        public_id = cloudinary.utils.cloudinary_url(url_transformed)[0].split("/")[-1]
+
+        folder_path = "qr_codes"
+
+        # Створення QR-коду
+        qr_transformed = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+            box_size=10,
+            border=4,
+        )
+        qr_transformed.add_data(url_transformed)
+        qr_transformed.make(fit=True)
+
+        # Збереження QR-коду
+        qr_code_transformed_image = qr_transformed.make_image(fill_color="navy", back_color="lightyellow")
+        qr_code_transformed_image_io = BytesIO()
+        qr_code_transformed_image.save(qr_code_transformed_image_io, format="PNG")
+
+        # Завантаження QR-коду
+        qr_code_transformed_response = upload(
+            qr_code_transformed_image_io.getvalue(),
+            folder=folder_path,
+            public_id=f"{folder_path}/{public_id}_qr_code_transformed",
+            format="png",
+            overwrite=True
+        )
+
+        qr_code_transformed_url = qr_code_transformed_response['secure_url']
+
+        image = db.query(Image).filter(Image.id == image_id).first()
+        # Оновлення поля url_transformed_qr у базі даних
+        db.query(Image).filter(Image.id == image_id).update({"url_transformed_qr": qr_code_transformed_url})
+        db.commit()
+
+        return {"message": f"QR Code generated and updated successfully for the transformed image.",
+                "url_transformed_qr": qr_code_transformed_url}
+
+    return {"error": "Image not found."}
+
