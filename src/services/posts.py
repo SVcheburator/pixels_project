@@ -2,7 +2,7 @@
 from typing import List, Any
 from sqlalchemy.orm import Session, Query
 from src.services.core import BaseServices, ModelType
-from src.database.models import Image
+from src.database.models import Image, Tag
 from src.schemas import PostCreate, PostUpdate
 
 
@@ -93,12 +93,32 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         Отримання запису за параметром бази даних (description)
         """
         return db.query(Image).filter(Image.description == description).first()
+    
+
+    def get_tags_paginated(
+        self,
+        db: Session,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> List[Image]:
+        """
+        Отримання списку тегів з пагінацією
+        """
+        query: Query = db.query(Tag).order_by(Tag.name)
+        result = query.limit(limit).offset(offset).all()
+        if result:
+            return [tag.name for tag in result if tag.name]
+
+
+
 
     def search_posts_paginated(
         self,
         db: Session,
         description: str | None = None,
         tag: str | None = None,
+        sort: str | None = None,
+        user_id: int | None = None,
         limit: int = 100,
         offset: int = 0,
     ) -> List[Image]:
@@ -106,10 +126,15 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         Отримання списку світлин за пошуком з пагінацією
         """
         query: Query = db.query(self.model)
+        if user_id:
+            query = query.filter(self.model.owner_id == user_id)
         if description:
-            query = query.filter(self.model.description == f"%{description}%")
+            query = query.filter(self.model.description.contains(description))
         if tag:
-            query = query.filter(self.model.tag == f"%{tag}%")
+            query = query.join(self.model.tags).filter(Tag.name == tag)
+        if sort:
+            orderby = self.model.created_at.desc() if sort == "-" else self.model.created_at
+            query = query.order_by(orderby)
         return query.limit(limit).offset(offset).all()
 
 

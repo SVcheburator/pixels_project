@@ -2,6 +2,7 @@
 from fastapi import (
     APIRouter,
     HTTPException,
+    Path,
     UploadFile,
     Depends,
     File,
@@ -24,8 +25,9 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette import status
 from starlette.status import HTTP_404_NOT_FOUND
+from services.roles import RoleAccess
 
-from src.database.models import User, Image, Comment
+from src.database.models import Role, User, Image, Comment
 from src.schemas import PostCreate, PostList, PostSingle, UserResponse, UserDb, TagModel
 from src.database.db import get_db
 from src.services.auth import auth_service
@@ -34,6 +36,9 @@ from src.services.tags import TagServices, Tag
 from src.conf.config import settings
 from src.services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload, destroy
+
+
+allowed_operation_search_by_user = RoleAccess([Role.admin, Role.moderator])
 
 
 class Cloudinary:
@@ -305,19 +310,82 @@ async def delete_image(id: int, db: Session = Depends(get_db)) -> dict:
     return {"message": "Запис видалено успішно"}
 
 
-# отримувати світлину за параметром в БД - працює та повертає значення
-@posts_router.get("/search/", response_model=list[PostList])
-async def search_post(
-    description: str | None = Query(),
-    tag: str | None = Query(),
+@posts_router.get("/tags/")
+async def get_tags(
     db: Session = Depends(get_db),
-    user: User = Depends(auth_service.get_current_user),
-    limit: int = Query(default=10, description="Кількість елементів на сторінці", ge=1),
+    limit: int = Query(
+        default=50, description="Кількість елементів на сторінці", ge=1, le=200
+    ),
     offset: int = Query(default=0, description="Зміщення сторінки", ge=0),
 ):
-    posts = post_services.search_posts_paginated(
-        db=db, description=description, tag=tag, limit=limit, offset=offset
-    )
-    if not posts:
-        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Записи не знайдені")
-    return JSONResponse(content=[post.json() for post in posts])
+    tags = post_services.get_tags_paginated(db=db, limit=limit, offset=offset)
+    if tags:
+        return tags
+    raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Записи не знайдені")
+
+
+# отримувати світлину за параметрами в БД - працює та повертає значення
+@posts_router.get("/search/", response_model=list[PostList])
+async def search_post(
+    description: str
+    | None = Query(
+        default=None, description="Пошук частковим за входженням тексту в опис"
+    ),
+    tag: str | None = Query(default=None, description="Пошук за тегом"),
+    sort: str
+    | None = Query(default=None, description="Сортування за датою створення: +, -"),
+    db: Session = Depends(get_db),
+    limit: int = Query(
+        default=10, description="Кількість елементів на сторінці", ge=1, le=100
+    ),
+    offset: int = Query(default=0, description="Зміщення сторінки", ge=0),
+):
+    if description or tag:
+        posts = post_services.search_posts_paginated(
+            db=db,
+            description=description,
+            tag=tag,
+            sort=sort,
+            limit=limit,
+            offset=offset,
+        )
+        if posts:
+            return JSONResponse(content=[post.json() for post in posts])
+    raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Записи не знайдені")
+
+
+# отримувати світлину за параметром в БД за користувачем
+@posts_router.get(
+    "/search/{user_id}",
+    response_model=list[PostList],
+    dependencies=[Depends(auth_service.get_current_user), Depends(allowed_operation_search_by_user)],
+    description="Admins, Moderators only"
+)
+async def search_post_by_user_id(
+    description: str
+    | None = Query(
+        default=None, description="Пошук частковим за входженням тексту в опис"
+    ),
+    user_id: int = Path(description="Пошук за користувача ID"),
+    tag: str | None = Query(default=None, description="Пошук за тегом"),
+    sort: str
+    | None = Query(default=None, description="Сортування за датою створення: +, -"),
+    db: Session = Depends(get_db),
+    limit: int = Query(
+        default=10, description="Кількість елементів на сторінці", ge=1, le=100
+    ),
+    offset: int = Query(default=0, description="Зміщення сторінки", ge=0),
+):
+    if user_id or description or tag:
+        posts = post_services.search_posts_paginated(
+            db=db,
+            description=description,
+            tag=tag,
+            user_id=user_id,
+            sort=sort,
+            limit=limit,
+            offset=offset,
+        )
+        if posts:
+            return JSONResponse(content=[post.json() for post in posts])
+    raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Записи не знайдені")
