@@ -52,6 +52,7 @@ class Image(Base):
     description = Column(String(255), nullable=True)
     created_at = Column('crated_at', DateTime, default=func.now())
     updated_at = Column('updated_at', DateTime)
+    owner = relationship("User", backref="images")
 
     def json(self):
         return {

@@ -121,8 +121,8 @@ docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d
 ##### Віртуальне оточення проєкту
 - venv
 ```
-python -m venv .venv
-./.venv/script/activate
+python -m venv venv
+./venv/Script/activate
 pip install -r requirements.txt
 ```
 - poetry

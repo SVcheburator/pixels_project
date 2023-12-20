@@ -3,7 +3,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException, Depends, status, Path, Query
 from sqlalchemy.orm import Session
 
-# from fastapi_limiter.depends import RateLimiter
+from fastapi_limiter.depends import RateLimiter
 
 from src.database.db import get_db
 from src.database.models import User, Role
@@ -26,10 +26,9 @@ allowed_operation_delete = RoleAccess([Role.admin, Role.moderator])
 @router.get(
     "/",
     response_model=List[CommentResponse],
-    # description="No more than 10 requests per minute",
-    # dependencies=[Depends(RateLimiter(times=10, seconds=60))],
     name="Show comments",
-    dependencies=[Depends(allowed_operation_get)],
+    description="No more than 10 requests per minute",
+    dependencies=[Depends(allowed_operation_get), Depends(RateLimiter(times=10, seconds=60))],
 )
 async def get_comments(
     image_id: int = Path(ge=1),
@@ -49,16 +48,20 @@ async def get_comments(
     :param db: Session: Pass the database session to the repository_comments
     :return: A list of comments for a given image
     """
+    image = await repository_comments.get_image_by_id(image_id, db)
+
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND)
+    
     return await repository_comments.get_comments(image_id, limit, offset, db)
 
 
 @router.get(
     "/{comment_id}",
     response_model=CommentResponse,
-    # description="No more than 10 requests per minute",
-    # dependencies=[Depends(RateLimiter(times=10, seconds=60))],
     name="Show comment by id",
-    dependencies=[Depends(allowed_operation_get)],
+    description="No more than 10 requests per minute",
+    dependencies=[Depends(allowed_operation_get), Depends(RateLimiter(times=10, seconds=60))],
 )
 async def get_comment(
     image_id: int = Path(ge=1),
@@ -75,6 +78,11 @@ async def get_comment(
     :param db: Session: Pass the database session to the repository layer
     :return: A comment object
     """
+    image = await repository_comments.get_image_by_id(image_id, db)
+
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND)
+    
     comment = await repository_comments.get_comment_by_id(image_id, comment_id, db)
 
     if comment is None:
@@ -111,7 +119,13 @@ async def create_comment(
     :param db: Session: Pass the database session to the repository layer
     :return: A commentbase object
     """
+    image = await repository_comments.get_image_by_id(image_id, db)
+
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND)
+    
     comment = await repository_comments.create_comment(body, image_id, owner, db)
+    
     if not comment:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail=messages.COMMENT_NOT_CREATED
@@ -144,6 +158,11 @@ async def update_comment(
     :param db: Session: Get the database session
     :return: A comment
     """
+    image = await repository_comments.get_image_by_id(image_id, db)
+
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND)
+    
     comment = await repository_comments.update_comment(
         image_id, comment_id, body, owner, db
     )
@@ -180,6 +199,11 @@ async def remove_comment(
     :param db: Session: Pass the database session to the repository layer
     :return: A comment object
     """
+    image = await repository_comments.get_image_by_id(image_id, db)
+
+    if image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=messages.IMAGE_NOT_FOUND)
+    
     comment = await repository_comments.remove_comment(image_id, comment_id, owner, db)
 
     if comment is None:
