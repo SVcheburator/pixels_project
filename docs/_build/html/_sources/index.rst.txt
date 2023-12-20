@@ -31,9 +31,23 @@ REST API routes Auth
   :undoc-members:
   :show-inheritance:
 
+REST API routes Posts
+=========================
+.. automodule:: src.routes.posts
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
 REST API routes Comments 
 ===============================
 .. automodule:: src.routes.comments
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+REST API routes Cloudinary 
+===============================
+.. automodule:: src.routes.cloudinary
   :members:
   :undoc-members:
   :show-inheritance:
@@ -87,12 +101,40 @@ REST API service Roles
   :undoc-members:
   :show-inheritance:
 
-REST API service Cloudinary
+REST API service Cloudinary Avatar
 =====================================
 .. automodule:: src.services.cloudinary_image
   :members:
   :undoc-members:
   :show-inheritance:
+
+REST API service Cloudinary
+=====================================
+.. automodule:: src.services.cloudinary
+  :members:
+  :undoc-members:
+  :show-inheritance:
+
+REST API service Core
+=====================================
+.. automodule:: src.services.core
+  :members:
+  :undoc-members:
+  :show-inheritance: 
+
+REST API service Posts
+=====================================
+.. automodule:: src.services.posts
+  :members:
+  :undoc-members:
+  :show-inheritance: 
+
+REST API service Tags
+=====================================
+.. automodule:: src.services.tags
+  :members:
+  :undoc-members:
+  :show-inheritance: 
 
 
 Indices and tables
