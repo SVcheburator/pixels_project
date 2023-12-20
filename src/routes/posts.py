@@ -37,7 +37,7 @@ from src.conf.config import settings
 from src.services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload, destroy
 
-
+allowed_operation_admin = RoleAccess([Role.admin])
 allowed_operation_search_by_user = RoleAccess([Role.admin, Role.moderator])
 
 
@@ -291,9 +291,20 @@ async def update_image_description(
 
 
 # видалення світлини
-@posts_router.delete("/{id}", response_model=dict)
-async def delete_image(id: int, db: Session = Depends(get_db)) -> dict:
-    item = await post_services.get_p(db=db, id=id)
+@posts_router.delete(
+    "/{id}",
+    response_model=dict,
+    description="Видалення за id. Для власних даних. Administrator може видалити буль які.",
+)
+async def delete_image(
+    id: int,
+    db: Session = Depends(get_db),
+    user: User = Depends(auth_service.get_current_user),
+) -> dict:
+    if user.role in allowed_operation_admin.allowed_roles:
+        item = await post_services.get_p(db=db, id=id)
+    else:
+        item = await post_services.get_p_owner_id(db=db, id=id, owner_id=user.id)
 
     if not item:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Запис не знайдений")
@@ -358,8 +369,11 @@ async def search_post(
 @posts_router.get(
     "/search/{user_id}",
     response_model=list[PostList],
-    dependencies=[Depends(auth_service.get_current_user), Depends(allowed_operation_search_by_user)],
-    description="Admins, Moderators only"
+    dependencies=[
+        Depends(auth_service.get_current_user),
+        Depends(allowed_operation_search_by_user),
+    ],
+    description="Admins, Moderators only",
 )
 async def search_post_by_user_id(
     description: str
