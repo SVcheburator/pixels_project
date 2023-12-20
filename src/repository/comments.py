@@ -3,7 +3,7 @@ from typing import List
 from sqlalchemy import or_, and_
 from sqlalchemy.orm import Session
 
-from src.database.models import Comment, User
+from src.database.models import Comment, User, Image
 from src.schemas import CommentBase
 
 
@@ -130,3 +130,15 @@ async def remove_comment(
         db.commit()
 
     return comment
+
+
+async def get_image_by_id(image_id: int, db: Session):
+    """
+    The get_image_by_id function returns an image object from the database, given its id.
+
+
+    :param image_id: int: Specify the id of the image that is being requested
+    :param db: Session: Pass the database session to the function
+    :return: A single image object from the database
+    """
+    return db.query(Image).filter(Image.id == image_id).first()
