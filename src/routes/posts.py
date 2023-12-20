@@ -25,7 +25,6 @@ from sqlalchemy.orm import Session
 from starlette.requests import Request
 from starlette import status
 from starlette.status import HTTP_404_NOT_FOUND
-from services.roles import RoleAccess
 
 from src.database.models import Role, User, Image, Comment
 from src.schemas import PostCreate, PostList, PostSingle, UserResponse, UserDb, TagModel
@@ -33,6 +32,7 @@ from src.database.db import get_db
 from src.services.auth import auth_service
 from src.services.posts import PostServices
 from src.services.tags import TagServices, Tag
+from src.services.roles import RoleAccess
 from src.conf.config import settings
 from src.services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload, destroy
