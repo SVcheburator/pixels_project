@@ -6,11 +6,11 @@ from src.database.models import Image
 from src.schemas import PostCreate, PostUpdate
 
 
-
 class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
     """
     Дії з постом
     """
+
     def __init__(self, model: Image):
         self.model = model
 
@@ -23,7 +23,7 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         """
         Створення нового посту і збереження URL зображення в базі даних
         """
-        
+
         new_post_data = PostCreate(
             text=post_data.text,
             user=post_data.user,
@@ -33,7 +33,6 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
 
         post = await self.create(db, obj_in=new_post_data)
         return post
-
 
     async def update_post_image_url(
         self,
@@ -51,26 +50,25 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
             db.refresh(post)
         return post
 
-
     def post_list_by_user(self, db: Session, user_id: int) -> List[Image]:
         """
         Отримання списку світлин за ID користувача
         """
         return db.query(self.model).filter(self.model.owner_id == user_id).all()
 
-
-    def get_post_list_by_user_paginated(self, db: Session, user_id: int, limit: int, offset: int) -> List[Image]:
+    def get_post_list_by_user_paginated(
+        self, db: Session, user_id: int, limit: int, offset: int
+    ) -> List[Image]:
         """
         Отримання списку світлин за ID користувача з пагінацією
         """
         query: Query = db.query(self.model).filter(self.model.owner_id == user_id)
         return query.limit(limit).offset(offset).all()
 
-
     def get_p_by_unique_identifier(self, db: Session, unique_identifier: str) -> Any:
-            return db.query(Image).filter(Image.url_original_qr == unique_identifier).first()
-
-
+        return (
+            db.query(Image).filter(Image.url_original_qr == unique_identifier).first()
+        )
 
     async def get_post_by_url_original(
         self,
@@ -81,8 +79,6 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         Отримання запису за url_original
         """
         return db.query(self.model).filter_by(url_original=url_original).first()
-    
-
 
     @staticmethod
     async def get_post_url(db: Session, url_original: str) -> Image:
@@ -91,9 +87,6 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         """
         return db.query(Image).filter(Image.url_original == url_original).first()
 
-
-
-
     @staticmethod
     async def get_post_by_description(db: Session, description: str) -> Image:
         """
@@ -101,7 +94,23 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         """
         return db.query(Image).filter(Image.description == description).first()
 
+    def search_posts_paginated(
+        self,
+        db: Session,
+        description: str | None = None,
+        tag: str | None = None,
+        limit: int = 100,
+        offset: int = 0,
+    ) -> List[Image]:
+        """
+        Отримання списку світлин за пошуком з пагінацією
+        """
+        query: Query = db.query(self.model)
+        if description:
+            query = query.filter(self.model.description == f"%{description}%")
+        if tag:
+            query = query.filter(self.model.tag == f"%{tag}%")
+        return query.limit(limit).offset(offset).all()
 
 
 post = PostServices(Image)
-
