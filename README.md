@@ -311,39 +311,6 @@ canceled
 Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
 
 
-## TEST
-
-### UNIT TEST REPOSITORY
-#### LOGOUT
-`python.exe "tests\test_unit_repository_logout.py"`
-```
-.......
-----------------------------------------------------------------------
-Ran 7 tests in 0.365s
-
-OK
-```
-
-`pytest tests -v`
-```
-========================================================== test session starts ===========================================================
-platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
-plugins: anyio-3.7.1
-collected 7 items
-
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                                                 [ 14%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED                                     [ 28%] 
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED                                      [ 42%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED                                            [ 57%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED                                        [ 71%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                                               [ 85%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED                                         [100%]
-
-=========================================================== 7 passed in 1.36s ============================================================ 
-```
-
-
-
 ## DOCS SPHINX
 
 ```
@@ -380,7 +347,8 @@ The HTML pages are in _build\html.
 ![](doc/docs-01.png)
 
 
-## PyTEST
+## TESTS
+### PyTEST
 pytest -v tests
 
 ```
@@ -432,11 +400,11 @@ tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED
 ```
 
 
-## PyTEST Cover
+### PyTEST Cover
 
 poetry add pytest-cov -G test
 
-### Run terminal report:
+#### Run terminal report:
 
 ```
 pytest --cov=. --cov-report term  tests/
@@ -499,21 +467,26 @@ TOTAL                                     1745    451    74%
 
 ```
 
-### Run HTML report to folder htmlcov
+#### Run HTML report to folder htmlcov
 ```
 pytest --cov=. --cov-report html  tests/ 
-===================================================== test session starts ======================================================
+=========================================== test session starts =============================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 rootdir: C:\Users\lexxa\Developments\GoIT\Python\Python 15\Web\Project_group_5\pixels_project
 plugins: anyio-3.7.1, cov-4.1.0
-collected 7 items
+collected 37 items
 
-tests\test_unit_repository_logout.py .......                                                                              [100%]
+tests\test_pytest_route_users.py .............                                                         [ 35%]
+tests\test_route_comments.py .........                                                                 [ 59%]
+tests\test_unit_repository_comments.py .......                                                         [ 78%]
+tests\test_unit_repository_logout.py .......                                                           [ 97%]
+tests\test_unit_repository_user.py .                                                                   [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
 Coverage HTML written to dir htmlcov
 
-====================================================== 7 passed in 2.13s =======================================================  
+
+==================================== 37 passed in 10.79s ===================================================
 
 ```
 ![pyetst](doc/pytest-01.png)
