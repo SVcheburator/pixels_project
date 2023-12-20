@@ -525,3 +525,6 @@ Coverage HTML written to dir htmlcov
 ![username](doc/web-js-04.png)
 ![username](doc/web-js-05.png)
 ![username](doc/web-js-06.png)
+
+## Презентація
+Youtube: https://youtu.be/WCTrSa8wCJQ
