@@ -1,6 +1,6 @@
 # pixels_project\src\services\posts.py
 from typing import List, Any
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, Query
 from src.services.core import BaseServices, ModelType
 from src.database.models import Image
 from src.schemas import PostCreate, PostUpdate
@@ -57,6 +57,14 @@ class PostServices(BaseServices[Image, PostCreate, PostUpdate]):
         Отримання списку світлин за ID користувача
         """
         return db.query(self.model).filter(self.model.owner_id == user_id).all()
+
+
+    def get_post_list_by_user_paginated(self, db: Session, user_id: int, limit: int, offset: int) -> List[Image]:
+        """
+        Отримання списку світлин за ID користувача з пагінацією
+        """
+        query: Query = db.query(self.model).filter(self.model.owner_id == user_id)
+        return query.limit(limit).offset(offset).all()
 
 
     def get_p_by_unique_identifier(self, db: Session, unique_identifier: str) -> Any:
