@@ -11,6 +11,10 @@ ADMIN_TEST_COMMENT = {"comment": "admin's test comment"}
 USER_TEST_COMMENT = {"comment": "user's test comment"}
 MODERATOR_TEST_COMMENT = {"comment": "modarator's test comment"}
 
+ADMIN_TEST_COMMENT_UPD = {"comment": "admin's test comment update"}
+USER_TEST_COMMENT_UPD = {"comment": "user's test comment update"}
+MODERATOR_TEST_COMMENT_UPD = {"comment": "modarator's test comment update"}
+
 
 @pytest.fixture()
 def user_admin(client, user, mock_ratelimiter, session, monkeypatch):
@@ -265,6 +269,8 @@ def test_get_comments_by_admin(client, user_admin, token_admin, session, monkeyp
             f"/api/comments/{image.id}/",
             headers={"Authorization": f"Bearer {token_admin}"},
         )
+
+        # tests
         assert response.status_code == 200, response.text
         data = response.json()
         assert type(data) == list
@@ -301,7 +307,736 @@ def test_get_comments_by_moderator(
             f"/api/comments/{image.id}/",
             headers={"Authorization": f"Bearer {token_moderator}"},
         )
+
+        # tests
         assert response.status_code == 200, response.text
         data = response.json()
         assert type(data) == list
         assert data[0]["comment"] == MODERATOR_TEST_COMMENT["comment"]
+
+
+def test_get_comments_by_admin_image_not_found(
+    client, user_admin, token_admin, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comments_by_user_image_not_found(
+    client, user_simple, token_user, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comments_by_moderator_image_not_found(
+    client, user_moderator, token_moderator, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comment_by_admin(client, user_admin, token_admin, session, monkeypatch):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 1
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+        
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == dict
+        assert data["id"] == comment_id
+        assert data["comment"] == ADMIN_TEST_COMMENT["comment"]
+
+
+def test_get_comment_by_user(client, user_simple, token_user, session, monkeypatch):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 2
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+        
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == dict
+        assert data["id"] == comment_id
+        assert data["comment"] == USER_TEST_COMMENT["comment"]
+
+
+def test_get_comment_by_moderator(
+    client, user_moderator, token_moderator, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 3
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+        
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert type(data) == dict
+        assert data["id"] == comment_id
+        assert data["comment"] == MODERATOR_TEST_COMMENT["comment"]
+
+
+def test_get_comment_by_admin_image_not_found(
+    client, user_admin, token_admin, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comment_by_user_image_not_found(
+    client, user_simple, token_user, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comment_by_moderator_image_not_found(
+    client, user_moderator, token_moderator, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_get_comment_by_admin_comment_not_found(
+    client, user_admin, token_admin, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_get_comment_by_user_comment_not_found(
+    client, user_simple, token_user, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_get_comment_by_moderator_comment_not_found(
+    client, user_moderator, token_moderator, session, monkeypatch
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.get(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_update_comment_by_admin(client, user_admin, token_admin, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 1
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data["id"] == comment_id
+        assert data["comment"] == ADMIN_TEST_COMMENT_UPD["comment"]
+
+
+def test_update_comment_by_user(client, user_simple, token_user, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 2
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=USER_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data["id"] == comment_id
+        assert data["comment"] == USER_TEST_COMMENT_UPD["comment"]
+
+
+def test_update_comment_by_moderator(client, user_moderator, token_moderator, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 3
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=MODERATOR_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 200, response.text
+        data = response.json()
+        assert data["id"] == comment_id
+        assert data["comment"] == MODERATOR_TEST_COMMENT_UPD["comment"]
+
+
+def test_update_comment_by_admin_image_not_found(
+    client, user_admin, token_admin, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image_id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_update_comment_by_user_image_not_found(
+    client, user_simple, token_user, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image_id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_update_comment_by_moderator_image_not_found(
+    client, user_moderator, token_moderator, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image_id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_update_comment_by_admin_comment_not_found(
+    client, user_admin, token_admin, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_update_comment_by_user_comment_not_found(
+    client, user_simple, token_user, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_update_comment_by_moderator_comment_not_found(
+    client, user_moderator, token_moderator, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.patch(
+            f"/api/comments/{image.id}/{comment_id}",
+            json=ADMIN_TEST_COMMENT_UPD,
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_delete_comment_by_admin(client, user_admin, token_admin, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 1
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 200, response.text
+
+
+def test_delete_comment_by_user(client, user_simple, token_user, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 2
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 403, response.text
+
+
+def test_delete_comment_by_moderator(client, user_moderator, token_moderator, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 3
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 200, response.text
+
+
+def test_delete_comment_by_admin_repeat(client, user_admin, token_admin, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 1
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_delete_comment_by_user_repeat(client, user_simple, token_user, session):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 2
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 403, response.text
+
+
+def test_delete_comment_by_moderator_repeat(
+    client, user_moderator, token_moderator, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 3
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_delete_comment_by_admin_image_not_found(
+    client, user_admin, token_admin, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_delete_comment_by_user_image_not_found(
+    client, user_simple, token_user, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 403, response.text
+
+
+def test_delete_comment_by_moderator_image_not_found(
+    client, user_moderator, token_moderator, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        image_id = 10
+
+        comment_id = 1
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image_id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.IMAGE_NOT_FOUND
+
+
+def test_delete_comment_by_admin_comment_not_found(
+    client, user_admin, token_admin, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_admin).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_admin}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
+
+
+def test_delete_comment_by_user_comment_not_found(
+    client, user_simple, token_user, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_simple).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_user}"},
+        )
+
+        # tests
+        assert response.status_code == 403, response.text
+
+
+def test_delete_comment_by_moderator_comment_not_found(
+    client, user_moderator, token_moderator, session
+):
+    with patch.object(auth_service, "r") as r_mock:
+        r_mock.get.return_value = None
+
+        # get image
+        image = session.query(Image).filter(Image.owner == user_moderator).first()
+
+        comment_id = 10
+
+        # comment response
+        response = client.delete(
+            f"/api/comments/{image.id}/{comment_id}",
+            headers={"Authorization": f"Bearer {token_moderator}"},
+        )
+
+        # tests
+        assert response.status_code == 404, response.text
+        data = response.json()
+        assert data["detail"] == messages.COMMENT_NOT_FOUND
