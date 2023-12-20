@@ -294,7 +294,7 @@ async def update_image_description(
 @posts_router.delete(
     "/{id}",
     response_model=dict,
-    description="Видалення за id. Для власних даних. Administrator може видалити буль які.",
+    description="Видалення за id. Для власних даних. Administrator може видалити будь які.",
 )
 async def delete_image(
     id: int,
