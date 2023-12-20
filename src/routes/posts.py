@@ -259,20 +259,27 @@ async def get_post_by_description(
         return JSONResponse(content=post_data)
 
     except Exception as e:
-        raise
+        raise 
 
 
 # редагування опису світлини
-@posts_router.put("/{id}", response_model=PostSingle)
+@posts_router.put("/{id}", response_model=PostSingle, 
+                  description="Редагування за id. Для власних даних. Administrator може будь які.",)
 async def update_image_description(
-    id: int, description: str, db: Session = Depends(get_db)
-) -> Any:
-    item = await post_services.get_p(db=db, id=id)
+    id: int, 
+    description: str, 
+    db: Session = Depends(get_db),
+    user: User = Depends(auth_service.get_current_user),) -> Any:
+    if user.role in allowed_operation_admin.allowed_roles:
+        item = await post_services.get_p(db=db, id=id)
+    else:
+        item = await post_services.get_p_owner_id(db=db, id=id, owner_id=user.id)
 
     if not item:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Запис не знайдений")
 
     item.description = description
+    item.updated_at = datetime.now()
     db.commit()
 
     updated_post_data = {
