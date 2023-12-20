@@ -166,6 +166,10 @@ FastAPI docs (Swagger) - http://localhost:9000/docs
 
 ### Робота з світлинами
 ![](/doc/api-images-01.png)
+#### Давання
+![post-add](/doc/api-post-01.png)
+#### Список світлин користувача
+![post-add](/doc/api-post-02.png)
 
 ### Коментування
 
