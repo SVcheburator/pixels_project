@@ -25,6 +25,9 @@ class BaseServices(Generic[ModelType, CreateSchemaType, UpdateSchemaType]):
         return db.query(self.model).filter(self.model.id == id).first()
 
 
+    async def get_p_owner_id(self, db: Session, id: int, owner_id: int) -> Optional[ModelType]:
+        return db.query(self.model).filter(self.model.owner_id == owner_id, self.model.id == id).first()
+
 
     async def get_p_url(db: Session, id: int = None, url_original: str = None) -> Image:
         if id is not None:

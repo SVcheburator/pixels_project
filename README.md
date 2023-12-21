@@ -364,47 +364,80 @@ pytest -v tests
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0 -- 
 configfile: pyproject.toml
 plugins: anyio-3.7.1, cov-4.1.0
-collected 37 items
+collected 70 items
 
-tests/test_pytest_route_users.py::test_create_admin_user PASSED                                        [  2%]
-tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                  [  5%] 
-tests/test_pytest_route_users.py::test_create_general_user PASSED                                      [  8%]
-tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                 [ 10%]
-tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                    [ 13%]
-tests/test_pytest_route_users.py::test_login_user PASSED                                               [ 16%]
-tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                     [ 18%]
-tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                        [ 21%] 
-tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                       [ 24%]
-tests/test_pytest_route_users.py::test_delete_general_user PASSED                                      [ 27%]
-tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                     [ 29%]
-tests/test_pytest_route_users.py::test_profile_me PASSED                                               [ 32%]
-tests/test_pytest_route_users.py::test_logout_user PASSED                                              [ 35%]
-tests/test_route_comments.py::test_create_comment_by_admin PASSED                                      [ 37%]
-tests/test_route_comments.py::test_create_comment_by_user PASSED                                       [ 40%]
-tests/test_route_comments.py::test_create_comment_by_moderator PASSED                                  [ 43%]
-tests/test_route_comments.py::test_create_comment_by_admin_image_not_found PASSED                      [ 45%]
-tests/test_route_comments.py::test_create_comment_by_user_image_not_found PASSED                       [ 48%]
-tests/test_route_comments.py::test_create_comment_by_moderator_image_not_found PASSED                  [ 51%]
-tests/test_route_comments.py::test_get_comments_by_admin PASSED                                        [ 54%]
-tests/test_route_comments.py::test_get_comments_by_user PASSED                                         [ 56%]
-tests/test_route_comments.py::test_get_comments_by_moderator PASSED                                    [ 59%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_create_comment PASSED             [ 62%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_found PASSED       [ 64%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_not_found PASSED   [ 67%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comment_by_id PASSED          [ 70%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comments PASSED               [ 72%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_found PASSED       [ 75%]
-tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_not_found PASSED   [ 78%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                    [ 81%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED        [ 83%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED         [ 86%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED               [ 89%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED           [ 91%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                  [ 94%]
-tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED            [ 97%]
+tests/test_pytest_route_users.py::test_create_admin_user PASSED                                        [  1%]
+tests/test_pytest_route_users.py::test_repeat_create_same_user PASSED                                  [  2%] 
+tests/test_pytest_route_users.py::test_create_general_user PASSED                                      [  4%]
+tests/test_pytest_route_users.py::test_login_user_not_confirmed PASSED                                 [  5%] 
+tests/test_pytest_route_users.py::test_login_user_not_active PASSED                                    [  7%]
+tests/test_pytest_route_users.py::test_login_user PASSED                                               [  8%]
+tests/test_pytest_route_users.py::test_login_wrong_password PASSED                                     [ 10%]
+tests/test_pytest_route_users.py::test_login_wrong_email PASSED                                        [ 11%] 
+tests/test_pytest_route_users.py::test_refresh_token_user PASSED                                       [ 12%]
+tests/test_pytest_route_users.py::test_delete_general_user PASSED                                      [ 14%]
+tests/test_pytest_route_users.py::test_confirm_general_user PASSED                                     [ 15%]
+tests/test_pytest_route_users.py::test_profile_me PASSED                                               [ 17%]
+tests/test_pytest_route_users.py::test_logout_user PASSED                                              [ 18%]
+tests/test_route_comments.py::test_create_comment_by_admin PASSED                                      [ 20%]
+tests/test_route_comments.py::test_create_comment_by_user PASSED                                       [ 21%]
+tests/test_route_comments.py::test_create_comment_by_moderator PASSED                                  [ 22%]
+tests/test_route_comments.py::test_create_comment_by_admin_image_not_found PASSED                      [ 24%]
+tests/test_route_comments.py::test_create_comment_by_user_image_not_found PASSED                       [ 25%]
+tests/test_route_comments.py::test_create_comment_by_moderator_image_not_found PASSED                  [ 27%]
+tests/test_route_comments.py::test_get_comments_by_admin PASSED                                        [ 28%]
+tests/test_route_comments.py::test_get_comments_by_user PASSED                                         [ 30%]
+tests/test_route_comments.py::test_get_comments_by_moderator PASSED                                    [ 31%]
+tests/test_route_comments.py::test_get_comments_by_admin_image_not_found PASSED                        [ 32%]
+tests/test_route_comments.py::test_get_comments_by_user_image_not_found PASSED                         [ 34%]
+tests/test_route_comments.py::test_get_comments_by_moderator_image_not_found PASSED                    [ 35%]
+tests/test_route_comments.py::test_get_comment_by_admin PASSED                                         [ 37%]
+tests/test_route_comments.py::test_get_comment_by_user PASSED                                          [ 38%]
+tests/test_route_comments.py::test_get_comment_by_moderator PASSED                                     [ 40%]
+tests/test_route_comments.py::test_get_comment_by_admin_image_not_found PASSED                         [ 41%]
+tests/test_route_comments.py::test_get_comment_by_user_image_not_found PASSED                          [ 42%]
+tests/test_route_comments.py::test_get_comment_by_moderator_image_not_found PASSED                     [ 44%]
+tests/test_route_comments.py::test_get_comment_by_admin_comment_not_found PASSED                       [ 45%]
+tests/test_route_comments.py::test_get_comment_by_user_comment_not_found PASSED                        [ 47%]
+tests/test_route_comments.py::test_get_comment_by_moderator_comment_not_found PASSED                   [ 48%]
+tests/test_route_comments.py::test_update_comment_by_admin PASSED                                      [ 50%]
+tests/test_route_comments.py::test_update_comment_by_user PASSED                                       [ 51%]
+tests/test_route_comments.py::test_update_comment_by_moderator PASSED                                  [ 52%]
+tests/test_route_comments.py::test_update_comment_by_admin_image_not_found PASSED                      [ 54%]
+tests/test_route_comments.py::test_update_comment_by_user_image_not_found PASSED                       [ 55%]
+tests/test_route_comments.py::test_update_comment_by_moderator_image_not_found PASSED                  [ 57%]
+tests/test_route_comments.py::test_update_comment_by_admin_comment_not_found PASSED                    [ 58%]
+tests/test_route_comments.py::test_update_comment_by_user_comment_not_found PASSED                     [ 60%]
+tests/test_route_comments.py::test_update_comment_by_moderator_comment_not_found PASSED                [ 61%]
+tests/test_route_comments.py::test_delete_comment_by_admin PASSED                                      [ 62%]
+tests/test_route_comments.py::test_delete_comment_by_user PASSED                                       [ 64%]
+tests/test_route_comments.py::test_delete_comment_by_moderator PASSED                                  [ 65%]
+tests/test_route_comments.py::test_delete_comment_by_admin_repeat PASSED                               [ 67%]
+tests/test_route_comments.py::test_delete_comment_by_user_repeat PASSED                                [ 68%]
+tests/test_route_comments.py::test_delete_comment_by_moderator_repeat PASSED                           [ 70%]
+tests/test_route_comments.py::test_delete_comment_by_admin_image_not_found PASSED                      [ 71%]
+tests/test_route_comments.py::test_delete_comment_by_user_image_not_found PASSED                       [ 72%]
+tests/test_route_comments.py::test_delete_comment_by_moderator_image_not_found PASSED                  [ 74%]
+tests/test_route_comments.py::test_delete_comment_by_admin_comment_not_found PASSED                    [ 75%]
+tests/test_route_comments.py::test_delete_comment_by_user_comment_not_found PASSED                     [ 77%]
+tests/test_route_comments.py::test_delete_comment_by_moderator_comment_not_found PASSED                [ 78%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_create_comment PASSED             [ 80%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_found PASSED       [ 81%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_delete_comment_not_found PASSED   [ 82%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comment_by_id PASSED          [ 84%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_get_comments PASSED               [ 85%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_found PASSED       [ 87%]
+tests/test_unit_repository_comments.py::TestContactsRepository::test_update_comment_not_found PASSED   [ 88%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token PASSED                    [ 90%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_empty PASSED        [ 91%] 
+tests/test_unit_repository_logout.py::TestContactsRepository::test_add_token_wrong_none PASSED         [ 92%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_is PASSED               [ 94%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_check_token_missed PASSED           [ 95%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token PASSED                  [ 97%]
+tests/test_unit_repository_logout.py::TestContactsRepository::test_purge_token_empty PASSED            [ 98%]
 tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED                       [100%]
 
-============================================ 37 passed in 10.68s ============================================
+============================================ 70 passed in 22.91s ============================================
 ```
 
 
@@ -420,12 +453,12 @@ pytest --cov=. --cov-report term  tests/
 ===================================================== test session starts ======================================
 platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
 plugins: anyio-3.7.1, cov-4.1.0
-collected 37 items
+collected 70 items
 
-tests\test_pytest_route_users.py .............                                                         [ 35%]
-tests\test_route_comments.py .........                                                                 [ 59%]
-tests\test_unit_repository_comments.py .......                                                         [ 78%]
-tests\test_unit_repository_logout.py .......                                                           [ 97%]
+tests\test_pytest_route_users.py .............                                                         [ 18%]
+tests\test_route_comments.py ..........................................                                [ 78%]
+tests\test_unit_repository_comments.py .......                                                         [ 88%]
+tests\test_unit_repository_logout.py .......                                                           [ 98%]
 tests\test_unit_repository_user.py .                                                                   [100%]
 
 ---------- coverage: platform win32, python 3.11.6-final-0 -----------
@@ -444,8 +477,8 @@ src\repository\users.py                    101     39    61%
 src\routes\__init__.py                       0      0   100%
 src\routes\auth.py                         103     30    71%
 src\routes\cloudinary_route.py             100     75    25%
-src\routes\comments.py                      58     23    60%
-src\routes\posts.py                        111     69    38%
+src\routes\comments.py                      58      1    98%
+src\routes\posts.py                        133     83    38%
 src\routes\static.py                        16      3    81%
 src\routes\tools.py                         15      8    47%
 src\routes\users.py                         80     39    51%
@@ -457,46 +490,25 @@ src\services\cloudinary_srv.py              52     25    52%
 src\services\core.py                        52     35    33%
 src\services\emails.py                      15      7    53%
 src\services\hcaptcha.py                    11      7    36%
-src\services\posts.py                       35     16    54%
-src\services\roles.py                       14      1    93%
+src\services\posts.py                       52     31    40%
+src\services\roles.py                       14      0   100%
 src\services\tags.py                        35     23    34%
 tests\__init__.py                            0      0   100%
 tests\conftest.py                           61      1    98%
 tests\test_pytest_route_users.py           147      0   100%
-tests\test_route_comments.py               153      0   100%
+tests\test_route_comments.py               447      0   100%
 tests\test_unit_repository_comments.py      52      1    98%
 tests\test_unit_repository_logout.py        56      1    98%
 tests\test_unit_repository_user.py          44      1    98%
 ------------------------------------------------------------
-TOTAL                                     1745    451    74%
+TOTAL                                     2078    457    78%
 
 
-============================================ 37 passed in 10.11s ============================================ 
+============================================ 70 passed in 23.22s ============================================  
 
 ```
 
 #### Run HTML report to folder htmlcov
-```
-pytest --cov=. --cov-report html  tests/ 
-=========================================== test session starts =============================================
-platform win32 -- Python 3.11.6, pytest-7.4.3, pluggy-1.3.0
-rootdir: C:\Users\lexxa\Developments\GoIT\Python\Python 15\Web\Project_group_5\pixels_project
-plugins: anyio-3.7.1, cov-4.1.0
-collected 37 items
-
-tests\test_pytest_route_users.py .............                                                         [ 35%]
-tests\test_route_comments.py .........                                                                 [ 59%]
-tests\test_unit_repository_comments.py .......                                                         [ 78%]
-tests\test_unit_repository_logout.py .......                                                           [ 97%]
-tests\test_unit_repository_user.py .                                                                   [100%]
-
----------- coverage: platform win32, python 3.11.6-final-0 -----------
-Coverage HTML written to dir htmlcov
-
-
-==================================== 37 passed in 10.79s ===================================================
-
-```
 ![pyetst](doc/pytest-01.png)
 
 
