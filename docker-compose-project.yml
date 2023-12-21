@@ -1,0 +1,56 @@
+# docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d 
+version: "3.8"
+name: pixels
+services:
+  redis:
+    image: redis:alpine
+    # ports:
+    #   - "${REDIS_PORT}:${REDIS_PORT}"
+    expose:
+      - "${REDIS_PORT}"
+  pg:
+    image: postgres:12
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    expose:
+      - "${POSTGRES_PORT}"
+    # ports:
+    #   - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+    volumes:
+      - ./postgres-data-prod:/var/lib/postgresql/data
+
+  code :
+    build: ./
+    ports:
+      - "9000:9000"
+    environment:
+      SQLALCHEMY_DATABASE_URL: ${SQLALCHEMY_DATABASE_URL}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      MAIL_USERNAME: ${MAIL_USERNAME}
+      MAIL_PASSWORD: ${MAIL_PASSWORD}
+      MAIL_FROM: ${MAIL_FROM}
+      MAIL_PORT: ${MAIL_PORT}
+      MAIL_SERVER: ${MAIL_SERVER}
+      MAIL_FROM_NAME: ${MAIL_FROM_NAME}
+      CLOUDINARY_NAME: ${CLOUDINARY_NAME}
+      CLOUDINARY_API_KEY: ${CLOUDINARY_API_KEY}
+      CLOUDINARY_API_SECRET: ${CLOUDINARY_API_SECRET}
+      HCAPTCHA_ENABLED: ${HCAPTCHA_ENABLED}
+      HCAPTCHA_SITE_KEY: ${HCAPTCHA_SITE_KEY}
+      HCAPTCHA_SECRET_KEY: ${HCAPTCHA_SECRET_KEY}
+
+    depends_on:
+      - pg
+      - redis
+    healthcheck:
+      test: ["CMD", "curl","-f","-X","GET","http://localhost:9000/api/healthchecker","-H","accept: application/json", "||", "exit", "1" ]
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+      start_interval: 15s
+
