@@ -1,3 +1,33 @@
+const post_content = document.getElementById("post_content");
+const post_template = document.getElementById("post_template");
+
+function createPost(post) {
+  const clone = post_template.content.cloneNode(true);
+  clone.querySelector("p.card-text").innerText = post?.description;
+  const img = clone.querySelector("img");
+  img.src = post?.url_original;
+  img.alt = post?.id;
+  const date_cr = clone.querySelector("small.date-cr");
+  if (post?.created_at) date_cr.innerHTML = post?.created_at;
+  const tags = clone.querySelector("p.tags");
+  if (post?.tags) tags.innerHTML = post?.tags;
+  post_content.appendChild(clone);
+}
+post_data = {
+  id: 1,
+  created_at: "2023-12-21 12:23:54 +0000",
+  url_original:
+    "https://res.cloudinary.com/dxlomq1rp/image/upload/v1703161433/publication/image_1_5a830f33-572f-4540-a9d8-bc7d912d7f94.jpg",
+  description: "AAAAA",
+  tags: "tag1,tag2",
+};
+createPost(post_data);
+createPost(post_data);
+createPost(post_data);
+createPost(post_data);
+createPost(post_data);
+createPost(post_data);
+
 let token = localStorage.getItem("access_token");
 
 //const BASE_URL = "";
@@ -234,8 +264,6 @@ const avatar_img = document.getElementById("avatar");
 const avatar_upload = document.getElementById("avatar_upload");
 const form_avatar = document.getElementById("form_avatar");
 
-
-
 async function send_img(t) {
   // e.preventDefault();
   // const t = e.target;
@@ -243,7 +271,7 @@ async function send_img(t) {
   //const  w =avatar_img.clientWidth ;
   avatar_img.src = "";
   //avatar_img.clientWidth=w;
-  avatar_img.src = "/static/client/images/loading.gif"
+  avatar_img.src = "/static/client/images/loading.gif";
   const formData = new FormData(t);
   const URL = `${BASE_URL}/api/users/avatar/`;
   await fetch(URL, {
@@ -265,7 +293,7 @@ async function send_img(t) {
     .then((json) => {
       console.log(json);
       if (json?.avatar) {
-          avatar_img.src = json?.avatar;
+        avatar_img.src = json?.avatar;
       }
       detail = json?.detail;
       err = "";
@@ -287,7 +315,7 @@ async function send_img(t) {
       console.log("ERROR", err);
       showMessage(err);
     });
-};
+}
 
 form_avatar.addEventListener("submit", send_img);
 
