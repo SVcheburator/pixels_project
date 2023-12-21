@@ -57,11 +57,13 @@ function showMessage(msg) {
 }
 
 function setLoading(target) {
-  target.innerHTML = '<div class="alert alert-primary" role="alert">Loading...</div>';
+  post_content.classList.remove("row-cols-md-4");
+  target.innerHTML = '<div class="alert alert-primary text-center" role="alert">Loading...</div>';
 }
 
 function setLoaded(target) {
   target.innerHTML = "";
+  post_content.classList.add("row-cols-md-4");
 }
 
 get_refresh_token = async () => {
