@@ -27,7 +27,7 @@ from src.services.auth import auth_service
 from src.services.posts import PostServices
 from src.services.tags import TagServices, Tag
 from src.conf.config import settings
-from src.services.cloudinary import CloudinaryService
+from src.services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload, destroy
 from src.services.roles import RoleAccess
 
@@ -297,7 +297,7 @@ async def get_post_by_description(description: str,
             'id': item.id,
             'owner_id': item.owner_id,
             'url_original': item.url_original,
-            'tags': [],  
+            'tags': [tag.name for tag in item.tags],  
             'description': item.description,
             'pub_date': item.created_at.isoformat(),
             'img': item.url_original,
@@ -348,7 +348,7 @@ async def update_image_description(id: int, description: str,
         'id': item.id,
         'owner_id': item.owner_id,
         'url_original': item.url_original,
-        'tags': [],
+        'tags': [tag.name for tag in item.tags],
         'description': item.description,
         'pub_date': item.created_at,
         'img': item.url_original, 

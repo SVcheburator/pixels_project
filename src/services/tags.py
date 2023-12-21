@@ -1,4 +1,5 @@
 from typing import List
+
 from sqlalchemy.orm import Session
 from src.database.models import Tag
 from src.schemas import TagModel
