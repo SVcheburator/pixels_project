@@ -1,5 +1,7 @@
 const post_content = document.getElementById("post_content");
 const post_template = document.getElementById("post_template");
+const page_next = document.getElementById("page_next");
+const page_prev = document.getElementById("page_prev");
 
 function createPost(post) {
   const clone = post_template.content.cloneNode(true);
@@ -13,20 +15,6 @@ function createPost(post) {
   if (post?.tags) tags.innerHTML = post?.tags;
   post_content.appendChild(clone);
 }
-post_data = {
-  id: 1,
-  created_at: "2023-12-21 12:23:54 +0000",
-  url_original:
-    "https://res.cloudinary.com/dxlomq1rp/image/upload/v1703161433/publication/image_1_5a830f33-572f-4540-a9d8-bc7d912d7f94.jpg",
-  description: "AAAAA",
-  tags: "tag1,tag2",
-};
-createPost(post_data);
-createPost(post_data);
-createPost(post_data);
-createPost(post_data);
-createPost(post_data);
-createPost(post_data);
 
 let token = localStorage.getItem("access_token");
 
@@ -43,8 +31,9 @@ function setLoading(target) {
 }
 
 function setLoaded(target) {
-  target.innerHTML = '';
+  target.innerHTML = "";
 }
+
 get_refresh_token = async () => {
   get_refresh_token.counter = (get_refresh_token.counter || 0) + 1;
   if (get_refresh_token > 1) {
@@ -79,39 +68,7 @@ get_refresh_token = async () => {
   get_refresh_token.counter = 0;
 };
 
-// get_cats = async () => {
-//   get_cats.counter = (get_cats.counter || 0) + 1;
-//   setLoading(cats);
-//   const URL = `${BASE_URL}/api/cats`;
-//   const response = await fetch(URL, {
-//     method: "GET",
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-//   if (response.ok) {
-//     get_cats.counter = 0;
-//     cats.innerHTML = "";
-//     result = await response.json();
-//     for (cat of result) {
-//       el = document.createElement("li");
-//       el.className = "list-group-item";
-//       el.innerHTML = `ID: ${cat?.id} Name: <strong>${cat?.nickname}</strong> Status: ${cat?.vaccinated} Owner: ${cat?.owner.email}`;
-//       cats.appendChild(el);
-//     }
-//   } else if (response.status == 401) {
-//     if (get_cats.counter < 4) {
-//       console.log(`Try: refresh_token counter: ${get_cats.counter}`);
-//       token = await get_refresh_token();
-//       setTimeout(get_cats, 3000);
-//     } else {
-//       console.log(`Try: to login page counter: ${get_cats.counter}`);
-//       window.location = "index.html";
-//     }
-//   }
-// };
-
-get_user_info =  async () => {
+get_user_info = async () => {
   const URL = `${BASE_URL}/api/users/me/`;
   const response = await fetch(URL, {
     method: "GET",
@@ -124,21 +81,46 @@ get_user_info =  async () => {
     if (item) {
       return item;
     }
+  } else if (response.status == 401) {
+    if (get_posts.counter < 4) {
+      console.log(`Try: refresh_token counter: ${get_posts.counter}`);
+      token = await get_refresh_token();
+      setTimeout(get_posts, 3000);
+    } else {
+      window.location = "index.html";
+    }
   }
-}
+};
 
+function get_args() {
+  let page = 0
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+
+  read_page = parseInt(urlParams.get("page",0), 10);
+  if (read_page){
+    page = read_page;
+  }
+  
+  page_next.href = "?page=" + (page + 1);
+  if (page > 0) {
+    page_prev.href = "?page=" + (page - 1);
+  }
+  return page;
+}
 
 get_posts = async () => {
   setLoading(post_content);
-  let user_id; 
+  let user_id;
   const user_info = await get_user_info();
-  if (user_info){
-    user_id = user_info.id
+  if (user_info) {
+    user_id = user_info.id;
   }
 
   //setLoading(user_profile);
-  const offset = 0;
+  const page = get_args();
   const limit = 10;
+  const offset = limit*page;
   const URL = `${BASE_URL}/posts/user/${user_id}?limit=${limit}&offset=${offset}`;
   const response = await fetch(URL, {
     method: "GET",
@@ -150,7 +132,7 @@ get_posts = async () => {
     posts = await response.json();
     if (posts) {
       setLoaded(post_content);
-      posts.forEach(element => {
+      posts.forEach((element) => {
         createPost(element);
       });
     }
@@ -189,7 +171,6 @@ get_posts = async () => {
 //     window.location = "index.html";
 //   }
 // });
-
 
 // get_cats();
 get_posts();
