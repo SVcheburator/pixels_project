@@ -28,6 +28,18 @@ cloud_router = APIRouter(prefix='', tags=["Cloudinary image operations"])
 
 @cloud_router.get("/transformed_image/{image_id}")
 def transform_and_update_image(image_id: str, angle: int = 45, db: Session = Depends(get_db)):
+    """
+    The transform_and_update_image function takes an image_id and angle as input,
+        transforms the original image by rotating it by the specified angle,
+        uploads the transformed image to Cloudinary, and updates the database with 
+        a new url for that transformed image.
+    
+    :param image_id: str: Identify the image to be transformed
+    :param angle: int: Specify the angle by which the image should be rotated
+    :param db: Session: Get the database session
+    :return: The following:
+    :doc-author: Trelent
+    """
     image = db.query(Image).filter(Image.id == image_id).first()
     print("1:", image)
     print("Start:", image_id)
@@ -62,6 +74,15 @@ def transform_and_update_image(image_id: str, angle: int = 45, db: Session = Dep
 
 @cloud_router.get("/qr_codes_image/{image_id}")
 def qr_codes_and_update_image(image_id: str, db: Session = Depends(get_db)):
+    """
+    The qr_codes_and_update_image function generates a QR code for the original image and updates the database with it.
+    
+    
+    :param image_id: str: Pass the image id to the function
+    :param db: Session: Access the database
+    :return: The following:
+    :doc-author: Trelent
+    """
     image = db.query(Image).filter(Image.id == image_id).first()
     print("1:", image)
     print("Start:", image_id)
@@ -114,6 +135,14 @@ def qr_codes_and_update_image(image_id: str, db: Session = Depends(get_db)):
 
 @cloud_router.get("/qr_codes_transformed_image/{image_id}")
 def qr_codes_and_update_transformed_image(image_id: str, db: Session = Depends(get_db)):
+    """
+    The qr_codes_and_update_transformed_image function generates a QR code for the transformed image and updates the url_transformed_qr field in the database.
+    
+    :param image_id: str: Get the image from the database
+    :param db: Session: Get the database session
+    :return: A dictionary with the url_transformed_qr key
+    :doc-author: Trelent
+    """
     image = db.query(Image).filter(Image.id == image_id).first()
 
     if image:
