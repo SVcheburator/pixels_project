@@ -34,8 +34,9 @@ from src.services.posts import PostServices
 from src.services.tags import TagServices, Tag
 from src.services.roles import RoleAccess
 from src.conf.config import settings
-from src.services.cloudinary_srv import CloudinaryService
+# from src.services.cloudinary_srv import CloudinaryService
 from cloudinary.uploader import upload, destroy
+from src.services.roles import RoleAccess
 
 allowed_operation_admin = RoleAccess([Role.admin])
 allowed_operation_search_by_user = RoleAccess([Role.admin, Role.moderator])
@@ -57,11 +58,17 @@ tag_services = TagServices(Tag)
 post_services = PostServices(Image)
 # comment_services = CommentServices(Comment)
 
+allowed_operation_create = RoleAccess([Role.admin, Role.moderator, Role.user])
+allowed_operation_read = RoleAccess([Role.admin, Role.moderator, Role.user])
+allowed_operation_update = RoleAccess([Role.admin, Role.moderator, Role.user])
+allowed_operation_delete = RoleAccess([Role.admin, Role.moderator, Role.user])
+
 
 # публікуємо світлину
-@posts_router.post(
-    "/publication", response_model=PostSingle, response_model_exclude_unset=True
-)
+@posts_router.post("/publication", 
+                   response_model=PostSingle, 
+                   response_model_exclude_unset=True, 
+                   dependencies=[Depends(allowed_operation_create)])
 async def upload_images_user(
     file: UploadFile = File(),
     text: str = Form(...),
@@ -69,6 +76,20 @@ async def upload_images_user(
     current_user: UserDb = Depends(auth_service.get_current_user),
     db: Session = Depends(get_db),
 ):
+    """
+    The upload_images_user function uploads an image to the Cloudinary cloud storage service.
+    The function also saves the image's metadata in a PostgreSQL database.
+    
+    
+    :param file: UploadFile: Receive the file from the user
+    :param text: str: Get the description of the image
+    :param tags: List[str]: Get a list of tags from the form
+    :param current_user: UserDb: Get the current user
+    :param db: Session: Access the database
+    :param : Get the current user
+    :return: The following data:
+    :doc-author: Trelent
+    """
     try:
         img_content = await file.read()
         public_id = f"image_{current_user.id}_{uuid.uuid4()}"
@@ -147,7 +168,9 @@ async def upload_images_user(
 
 
 # отримаємо списк світлин по ідентифікації користувача
-@posts_router.get("/user/{user_id}", response_model=list[PostList])
+@posts_router.get('/user/{user_id}', 
+                  response_model=list[PostList],
+                  dependencies=[Depends(allowed_operation_read)])
 async def post_list_by_user(
     user_id: int,
     db: Session = Depends(get_db),
@@ -155,17 +178,44 @@ async def post_list_by_user(
     limit: int = Query(default=10, description="Кількість елементів на сторінці", ge=1),
     offset: int = Query(default=0, description="Зміщення сторінки", ge=0),
 ):
-    posts = post_services.get_post_list_by_user_paginated(
-        db=db, user_id=user_id, limit=limit, offset=offset
-    )
+    """
+    The post_list_by_user function returns a list of posts by the user with the given id.
+    
+    :param user_id: int: Specify the user id of the posts we want to retrieve
+    :param db: Session: Pass the database session to the function
+    :param user: User: Get the current user
+    :param limit: int: Set the number of items per page
+    :param description: Describe the parameter in the api documentation
+    :param ge: Specify the minimum value of a parameter
+    :param offset: int: Specify the offset of the page
+    :param description: Describe the parameter in the documentation
+    :param ge: Specify the minimum value for a parameter
+    :param : Get the current user
+    :return: A list of posts by the user
+    :doc-author: Trelent
+    """
+    posts = post_services.get_post_list_by_user_paginated(db=db, user_id=user_id, limit=limit, offset=offset)
     if not posts:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="Записи не знайдені")
     return JSONResponse(content=[post.json() for post in posts])
 
 
 # отримувати світлину за унікальним посиланням в БД
-@posts_router.get("/{id}", response_model=PostSingle)
-async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
+@posts_router.get('/{id}', 
+                  response_model=PostSingle, 
+                  dependencies=[Depends(allowed_operation_read)])
+async def get_post(id: int, 
+                   db: Session = Depends(get_db),
+                   user: User = Depends(auth_service.get_current_user)) -> Any:
+    """
+    The get_post function returns a single post by id.
+    
+    :param id: int: Specify the type of parameter
+    :param db: Session: Pass the database session to the function
+    :param user: User: Get the current user
+    :return: A postsingle object
+    :doc-author: Trelent
+    """
     item = await post_services.get_p(db=db, id=id)
 
     if not item:
@@ -224,12 +274,26 @@ async def get_post(id: int, db: Session = Depends(get_db)) -> Any:
 
 
 # отримувати світлину за параметром в БД - працює та повертає значення
-@posts_router.get("/descriptions/{description}", response_model=PostSingle)
-async def get_post_by_description(
-    description: str,
-    db: Session = Depends(get_db),
-    user: User = Depends(auth_service.get_current_user),
-):
+@posts_router.get('/descriptions/{description}', 
+                  response_model=PostSingle, 
+                  dependencies=[Depends(allowed_operation_read)])
+async def get_post_by_description(description: str,
+                                   db: Session = Depends(get_db),
+                                   user: User = Depends(auth_service.get_current_user)):
+    """
+    The get_post_by_description function returns a post by description.
+        Args:
+            description (str): The post's description.
+            db (Session, optional): SQLAlchemy Session. Defaults to Depends(get_db).
+            user (User, optional): User object from auth_service.get_current_user(). Defaults to Depends(auth_service.get_current_user).
+
+    :param description: str: Pass the description of the post to be retrieved
+    :param db: Session: Pass the database session to the function
+    :param user: User: Get the current user
+    :return: A jsonresponse object
+    :doc-author: Trelent
+    """
+
     try:
         item = await post_services.get_post_by_description(
             db=db, description=description
@@ -262,14 +326,32 @@ async def get_post_by_description(
         raise 
 
 
-# редагування опису світлини
-@posts_router.put("/{id}", response_model=PostSingle, 
-                  description="Редагування за id. Для власних даних. Administrator може будь які.",)
+
+# редагування опису світлини 
+@posts_router.put('/{id}', 
+                  response_model=PostSingle,
+                  description="Редагування за id. Для власних даних. Administrator може будь які.", 
+                  dependencies=[Depends(allowed_operation_update)])
+
 async def update_image_description(
     id: int, 
     description: str, 
     db: Session = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),) -> Any:
+    """
+    The update_image_description function updates the description of an image.
+        Args:
+            id (int): The ID of the image to update.
+            description (str): The new description for the image.
+    
+    :param id: int: Specify the id of the image that we want to update
+    :param description: str: Pass the new description to the function
+    :param db: Session: Get the database connection
+    :param user: User: Get the current user
+    :return: A postsingle object
+    :doc-author: Trelent
+    """
+    
     if user.role in allowed_operation_admin.allowed_roles:
         item = await post_services.get_p(db=db, id=id)
     else:
@@ -298,16 +380,27 @@ async def update_image_description(
 
 
 # видалення світлини
-@posts_router.delete(
-    "/{id}",
-    response_model=dict,
-    description="Видалення за id. Для власних даних. Administrator може видалити будь які.",
-)
+@posts_router.delete('/{id}', 
+                     response_model=dict, 
+                     description="Видалення за id. Для власних даних. Administrator може видалити будь які.",
+                     dependencies=[Depends(allowed_operation_delete)])
+
 async def delete_image(
     id: int,
     db: Session = Depends(get_db),
     user: User = Depends(auth_service.get_current_user),
 ) -> dict:
+    
+    """
+    The delete_image function deletes an image from the database and Cloudinary.
+    
+    :param id: int: Specify the id of the image to be deleted
+    :param db: Session: Access the database
+    :param user: User: Get the current user from the database
+    :return: A dictionary with a message
+    :doc-author: Trelent
+    """
+
     if user.role in allowed_operation_admin.allowed_roles:
         item = await post_services.get_p(db=db, id=id)
     else:
