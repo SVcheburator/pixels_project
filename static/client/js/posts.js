@@ -42,6 +42,9 @@ function setLoading(target) {
   target.innerHTML = '<div class="alert alert-primary" role="alert">Loading...</div>';
 }
 
+function setLoaded(target) {
+  target.innerHTML = '';
+}
 get_refresh_token = async () => {
   get_refresh_token.counter = (get_refresh_token.counter || 0) + 1;
   if (get_refresh_token > 1) {
@@ -108,10 +111,8 @@ get_refresh_token = async () => {
 //   }
 // };
 
-get_profile = async () => {
-  get_profile.counter = (get_profile.counter || 0) + 1;
-  //setLoading(user_profile);
-  const URL = `${BASE_URL}/api/users/profile/`;
+get_user_info =  async () => {
+  const URL = `${BASE_URL}/api/users/me/`;
   const response = await fetch(URL, {
     method: "GET",
     headers: {
@@ -119,48 +120,45 @@ get_profile = async () => {
     },
   });
   if (response.ok) {
-    get_profile.counter = 0;
-    //user_profile.innerHTML = "";
-    const user_profile_loading = document.getElementById("user_profile_loading");
-    user_profile_loading?.classList.add("invisible");
-    const user_profile = document.getElementById("user_profile");
-
     item = await response.json();
     if (item) {
-      const username = document.getElementById("username");
-      if (username) username.value = item?.username;
-      // if (username) username.innerHTML = "Client1";
-      const email = document.getElementById("email");
-      if (email) email.innerHTML = item?.email;
-      // if (email) email.innerHTML = "client1@example.com";
-      const role = document.getElementById("role");
-      if (role) role.innerHTML = item?.role;
-      const avatar = document.getElementById("avatar");
-      if (avatar) avatar.src = item?.avatar;
-      const created_at = document.getElementById("created_at");
-      if (created_at) {
-        d = new Date(item?.created_at);
-        created_at.innerHTML = d;
-      }
-      const images_count = document.getElementById("images_count");
-      if (images_count) images_count.innerHTML = item?.images_count;
-      const comments_count = document.getElementById("comments_count");
-      if (comments_count) comments_count.innerHTML = item?.comments_count;
+      return item;
+    }
+  }
+}
 
-      // const el = document.createElement("li");
-      // el.className = "list-group-item";
-      // el.innerHTML = `ID: ${item?.id} ${item?.username}, Email: <strong>${item?.email}</strong>. Created: ${item?.created_at} `;
-      // user_profile.appendChild(el);
-      // const img = document.createElement("img");
-      // img.src = item?.avatar;
-      // user_profile.appendChild(img);
-      user_profile?.classList.remove("invisible");
+
+get_posts = async () => {
+  setLoading(post_content);
+  let user_id; 
+  const user_info = await get_user_info();
+  if (user_info){
+    user_id = user_info.id
+  }
+
+  //setLoading(user_profile);
+  const offset = 0;
+  const limit = 10;
+  const URL = `${BASE_URL}/posts/user/${user_id}?limit=${limit}&offset=${offset}`;
+  const response = await fetch(URL, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (response.ok) {
+    posts = await response.json();
+    if (posts) {
+      setLoaded(post_content);
+      posts.forEach(element => {
+        createPost(element);
+      });
     }
   } else if (response.status == 401) {
-    if (get_profile.counter < 4) {
-      console.log(`Try: refresh_token counter: ${get_profile.counter}`);
+    if (get_posts.counter < 4) {
+      console.log(`Try: refresh_token counter: ${get_posts.counter}`);
       token = await get_refresh_token();
-      setTimeout(get_profile, 3000);
+      setTimeout(get_posts, 3000);
     } else {
       window.location = "index.html";
     }
@@ -183,7 +181,7 @@ get_profile = async () => {
 //   });
 //   if (response.status == 201) {
 //     ownerCreate.reset();
-//     get_profile();
+//     get_posts();
 //   } else if (response.status == 401) {
 //     token = await get_refresh_token();
 //     console.log("Try again");
@@ -192,10 +190,9 @@ get_profile = async () => {
 //   }
 // });
 
-const user_profile = document.getElementById("user_profile");
 
 // get_cats();
-get_profile();
+get_posts();
 
 // setTimeout(() => {
 //   get_cats();
