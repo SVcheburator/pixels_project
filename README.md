@@ -535,5 +535,9 @@ TOTAL                                     2078    457    78%
 ![username](doc/web-js-05.png)
 ![username](doc/web-js-06.png)
 
+### A simple image album
+
+![username](doc/web-js-07.png)
+
 ## Презентація
 Youtube: https://youtu.be/WCTrSa8wCJQ
