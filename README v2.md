@@ -404,6 +404,7 @@ Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
 
 <details>
 <summary>Add</summary>
+
 ```
 sphinx-quickstart docs
 cd docs
