@@ -1,6 +1,10 @@
 ![Python 3.11](https://img.shields.io/badge/python-3.11-blueviolet)
 ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SVcheburator/pixels_project?color=blueviolet)
 ![Forks](https://img.shields.io/github/forks/SVcheburator/pixels_project?style=social)
+![Latest Release](https://img.shields.io/github/v/release/SVcheburator/pixels_project?include_prereleases&label=latest%20release)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/SVcheburator/pixels_project?label=Version%20for%20development)
+
+
 
 
 
