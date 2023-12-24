@@ -192,14 +192,18 @@ FastAPI docs (Swagger) - http://localhost:9000/docs
 ### Користувачі
 <details>
 <summary>API користувачі</summary>
+
 ![](/doc/api-users-01.png)
+
 </details>
 
 <details>
 <summary>Користувачі підтвердження Email</summary>
+
 ![](/doc/auth-02.png)
 ![](/doc/auth-01.png)
 ![](/doc/auth-03.png)
+
 </details>
 
 ### Робота з світлинами
