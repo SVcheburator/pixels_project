@@ -1,4 +1,7 @@
-![Python 3.11](https://img.shields.io/badge/python-3.11-blueviolet) ![GitHub Pull Requests](https://img.shields.io/github/issues-pr/peopl3s/club-house-api?color=blueviolet) ![Forks](https://img.shields.io/github/forks/peopl3s/club-house-api?style=social)
+![Python 3.11](https://img.shields.io/badge/python-3.11-blueviolet)
+![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SVcheburator/pixels_project?color=blueviolet)
+![Forks](https://img.shields.io/github/forks/SVcheburator/pixels_project?style=social)
+
 
 
 # pixels_project
