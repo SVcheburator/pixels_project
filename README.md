@@ -1,3 +1,13 @@
+![Python 3.11](https://img.shields.io/badge/python-3.11-blueviolet)
+![GitHub Pull Requests](https://img.shields.io/github/issues-pr/SVcheburator/pixels_project?color=blueviolet)
+![Forks](https://img.shields.io/github/forks/SVcheburator/pixels_project?style=social)
+![Latest Release](https://img.shields.io/github/v/release/SVcheburator/pixels_project?include_prereleases&label=latest%20release)
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/SVcheburator/pixels_project?label=Version%20for%20development)
+
+
+
+
+
 # pixels_project
 
 # Технічне завдання на створення застосунку “PhotoShare” (REST API)
@@ -52,6 +62,12 @@
 
 # Виконання
 
+#### deploy to Koyeb.com
+click on the link : https://pixels-project-goit-gr5-lexxai.koyeb.app/
+
+#### Презентація
+Youtube: https://youtu.be/WCTrSa8wCJQ
+
 ## Спільна робота
 
 ### Організаційні процеси
@@ -61,12 +77,18 @@
 1. [Developer](https://github.com/OleksiiHladkov) @OleksiiHladkov
 1. [Developer](https://github.com/lexxai) @lexxai 
 
-#### Trello Розподілення задач мід розробниками
+<details>
+<summary>Trello Розподілення задач мід розробниками</summary>
+
 ![](doc/softskill-trelo-01.png)
 
 ![](doc/softskill-trelo-02.png)
 
-### Спільний робочий простір розробки Git
+</details>
+
+<details>
+<summary>Спільний робочий простір розробки Git</summary>
+
 #### Розподілення git brach між розробниками
 - Основна гілка розробки - built
 - main - фінальна для релізів
@@ -88,24 +110,34 @@
 
 ![GitHub Action](doc/deploy-github-action-02.png)
 
-
+</details>
 
 ## Розділи завдань
 
 ## Встановлення
 
-### Завантаження проєкту
+<details>
+<summary>Завантаження проєкту</summary>
+
 ```
 git clone https://github.com/SVcheburator/pixels_project
 cd ./pixels_project
 git checkout *developer_branch*
 ```
-### Створення змінних оточення для проєкту
+</details>
+
+
+<details>
+<summary>Створення змінних оточення для проєкту</summary>
+
 - На овнові `env-example` створюємо новий файл `.env`
 - На овнові `env_prod-example` створюємо новий файл `.env_prod`
+</details>
 
 
-### Docker
+<details>
+<summary>Docker</summary>
+
 ```
 docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d 
 
@@ -115,8 +147,10 @@ docker-compose  --file docker-compose-project.yml --env-file .env_prod  up -d
  ✔ Container pixels-pg-1     Started                                                                   0.0s 
  ✔ Container pixels-code-1   Started                                                                   0.0s
 ```
+</details>
 
-### Середовище розробника
+<details>
+<summary>Середовище розробника</summary>
 
 ##### Віртуальне оточення проєкту
 - venv
@@ -145,47 +179,86 @@ INFO:     Application startup complete.
 ##### Підключення до проєкту
 
 Відкрити браузер за посиланням http://localhost:9000 
+</details>
 
 ## Розділи FastAPI реалізації 
 FastAPI docs (Swagger) - http://localhost:9000/docs
 ### Аутентифікація
+<details>
+<summary>API аутентифікації</summary>
+
 ![](/doc/api-auth-03.png)
 ![](/doc/api-auth-04.png)
 ![](/doc/api-auth-01.png)
 ![](/doc/api-auth-02.png)
+</details>
 
 ### Користувачі
+<details>
+<summary>API користувачі</summary>
 
 ![](/doc/api-users-01.png)
 
-##### Користувачі підтвердження Email 
+</details>
+
+<details>
+<summary>Користувачі підтвердження Email</summary>
 
 ![](/doc/auth-02.png)
 ![](/doc/auth-01.png)
 ![](/doc/auth-03.png)
 
+</details>
+
 ### Робота з світлинами
+<details>
+<summary>API для публікації</summary>
+
 ![](/doc/api-images-01.png)
-#### Додавання світлини для поточного користувача
+</details>
+
+<details>
+<summary>Додавання світлини для поточного користувача</summary>
+
 ![post-add](/doc/api-post-01.png)
-#### Список світлин за id користувача
+</details>
+
+<details>
+<summary>Список світлин за id користувача</summary>
+
 ![post-list](/doc/api-post-02.png)
+</details>
 
 ### Коментування
 
+<details>
+<summary>API коментарів</summary>
+
 ![](/doc/api-comments-01.png)
 
-#### Додавання коментаря до світлини за id
-![comm-add](/doc/api-comments-02.png )
-#### Список коментарів до світлини за id
-![comm-list](/doc/api-comments-03.png )
+</details>
 
+
+<details>
+<summary>Додавання коментаря до світлини за id</summary>
+
+![comm-add](/doc/api-comments-02.png )
+</details>
+
+<details>
+<summary>Список коментарів до світлини за id</summary>
+
+![comm-list](/doc/api-comments-03.png )
+</details>
 
 ### Додатковий функціонал
 
 
 
-## Тестування. Простий Front end. STATIC HTML / JavaScript Auth client.
+## Тестування. Простий Front end. 
+
+<details>
+<summary>STATIC HTML / JavaScript Auth client</summary>
 
 ![](doc/web-index-01.png)
 
@@ -194,12 +267,14 @@ FastAPI docs (Swagger) - http://localhost:9000/docs
 JavaScript Client with automatic token update.
 ![](doc/web-js-02.png)
 
+</details>
 
 ## DEPLOY
 
 ### DOCKER COMPOSE PROJECT PIXELS
 
-#### DOCKER BUILD
+<details>
+<summary>DOCKER BUILD</summary>
 
 `docker-compose  --file docker-compose-project.yml --env-file .env_prod build`
 
@@ -228,7 +303,10 @@ JavaScript Client with automatic token update.
  => => naming to docker.io/library/pixels-code                                                                                                     0.0s 
 
 ```
-#### DOCKER RUN
+</details>
+
+<details>
+<summary>DOCKER RUN</summary>
 
 `docker-compose  --file docker-compose-project.yml --env-file .env_prod up`
 
@@ -299,33 +377,51 @@ Aborting on container exit...
  ✔ Container pixels-pg-1     Stopped                                                                                 2.4s     
 canceled
 ```
+</details>
 
 ### DEPLOY TO koyeb.com
 
-#### Config env
+<details>
+<summary>Config env</summary>
+
 ![Config](doc/deploy-koyeb-03.png)
+</details>
 
 
-#### Build
+<details>
+<summary>Build</summary>
+
 ![Build](doc/deploy-koyeb-02.png)
+</details>
 
+<details>
+<summary>Run</summary>
 
-#### Run
 ![Run](doc/deploy-koyeb-01.png)
+</details>
 
+<details open>
+<summary>GitHub automatic deploy to Koyeb.com</summary>
 
-#### GitHub automatic deploy to Koyeb.com
 ![Git2Koyeb](doc/deploy-koyeb-04.png)
-Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
 
+Result of deploy : https://pixels-project-goit-gr5-lexxai.koyeb.app/
+</details>
 
 ## DOCS SPHINX
+
+<details>
+<summary>Add</summary>
 
 ```
 sphinx-quickstart docs
 cd docs
 .\make.bat html
 ```
+</details>
+
+<details>
+<summary>Run</summary>
 
 ```
 Running Sphinx v7.2.6
@@ -352,11 +448,20 @@ build succeeded.
 The HTML pages are in _build\html.
 
 ```
-![](doc/docs-01.png)
 
+</details>
+
+<details>
+<summary>Docs</summary>
+
+![](doc/docs-01.png)
+</details>
 
 ## TESTS
-### PyTEST
+
+<details>
+<summary>PyTEST</summary>
+
 pytest -v tests
 
 ```
@@ -439,9 +544,10 @@ tests/test_unit_repository_user.py::TestContactsRepository::test_add_user PASSED
 
 ============================================ 70 passed in 22.91s ============================================
 ```
+</details>
 
-
-### PyTEST Cover
+<details>
+<summary>PyTEST Cover</summary>
 
 poetry add pytest-cov -G test
 
@@ -510,12 +616,15 @@ TOTAL                                     2078    457    78%
 
 #### Run HTML report to folder htmlcov
 ![pyetst](doc/pytest-01.png)
-
+</details>
 
 ## Бонусне завдання
 ### Простий JavaScript client (Front-end)
 
-### Signup with hCaptha service.
+
+
+<details>
+<summary>Signup with Captha service.</summary>
 
 ![captha](doc/auth-cap-01.png)
 
@@ -524,20 +633,28 @@ TOTAL                                     2078    457    78%
 ![captha](doc/auth-cap-03.png)
 
 ![captha](doc/auth-cap-04.png)
+</details>
 
-### Change username on user profile
+<details>
+<summary>Change username on user profile</summary>
 
 ![username](doc/web-js-03.png)
+</details>
 
-### Change avatar on user profile
+<details>
+<summary>Change avatar on user profile</summary>
 
 ![username](doc/web-js-04.png)
 ![username](doc/web-js-05.png)
 ![username](doc/web-js-06.png)
+</details>
 
-### A simple image album
+
+<details>
+<summary>A simple image album</summary>
 
 ![username](doc/web-js-07.png)
+</details>
 
 ## Презентація
 Youtube: https://youtu.be/WCTrSa8wCJQ
